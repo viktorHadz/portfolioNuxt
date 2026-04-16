@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useHead, useSeoMeta, withSiteUrl } from '#imports'
 import { allProjects } from './portfolioContent'
+import TheButton from '../TheButton.vue'
 import PortfolioTechBadge from './PortfolioTechBadge.vue'
 
 const props = defineProps({
@@ -43,6 +44,11 @@ const relatedProjects = computed(() =>
   allProjects.filter((project) => project.id !== props.project.id).slice(0, 3),
 )
 
+function openExternal(url) {
+  const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+  if (newWindow) newWindow.opener = null
+}
+
 useSeoMeta({
   title,
   description,
@@ -82,6 +88,18 @@ useHead({
             <p class="mt-5 max-w-2xl text-base leading-8 text-fg-sec sm:text-lg">
               {{ description }}
             </p>
+
+            <div
+              v-if="project.liveUrl"
+              class="mt-7"
+            >
+              <TheButton
+                variant="primary"
+                @click="openExternal(project.liveUrl)"
+              >
+                Visit Site
+              </TheButton>
+            </div>
           </div>
 
           <figure

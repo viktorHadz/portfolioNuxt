@@ -1,9 +1,11 @@
 import asciiGeneratorImage from '~/assets/projectPictures/asciiGenerator.webp'
 import fuklaImage from '~/assets/projectPictures/fukla.webp'
-import invoiceAndGoImage from '~/assets/projectPictures/invoiceAndGo.webp'
-import samCreationsImage from '~/assets/projectPictures/samCreations.webp'
 import surveyGeneratorImage from '~/assets/projectPictures/surveyGenerator.webp'
-import watchMakerImage from '~/assets/projectPictures/watchMaker.webp'
+
+import posterIDO from '@/assets/projectPictures/posters/idoGroupBgPoster.webp'
+import posterInvoice from '@/assets/projectPictures/posters/invoiceAndGoPoster.webp'
+import posterWatchmaker from '@/assets/projectPictures/posters/theWatchMakerPoster.webp'
+import posterSamCreations from '@/assets/projectPictures/posters/samCreationsPoster.webp'
 
 import alpineIcon from '~/assets/icons/techIcons/Alpine.js.svg'
 import canvasApiIcon from '~/assets/icons/techIcons/Canvas-Api.svg'
@@ -39,6 +41,7 @@ type ProjectBase = {
     name: string
     path: string
     gitHub: string
+    liveUrl?: string
     eyebrow: string
     image: string | null
     imageAlt: string
@@ -68,10 +71,11 @@ export type PortfolioProject = (FeaturedProject | ArchiveProject) & {
 const projectImages = {
     asciiGenerator: asciiGeneratorImage,
     fukla: fuklaImage,
-    invoiceAndGo: invoiceAndGoImage,
-    samCreations: samCreationsImage,
+    invoiceAndGo: posterInvoice,
+    samCreations: posterSamCreations,
     surveyGenerator: surveyGeneratorImage,
-    watchMaker: watchMakerImage,
+    watchMaker: posterWatchmaker,
+    carPPF: posterIDO,
 }
 
 const techIcons = {
@@ -141,6 +145,7 @@ export const portfolioContent = {
             name: 'Invoice and Go',
             path: '/projects/invoice-and-go',
             gitHub: 'https://github.com/viktorHadz/goInvoice26',
+            liveUrl: 'https://invoiceandgo.app',
             eyebrow: 'Production finance workflow',
             image: projectImages.invoiceAndGo,
             imageAlt: 'Invoicing app interface with invoice management controls.',
@@ -157,11 +162,12 @@ export const portfolioContent = {
         },
         {
             id: 'ido-group-bg',
-            name: 'IDOGroupBg.com',
+            name: 'IDO Elite Protection',
             path: '/projects/ido-group-bg',
             gitHub: 'https://github.com/viktorHadz/ppf',
+            liveUrl: 'https://idogroupbg.com',
             eyebrow: 'Static-generated business platform',
-            image: null,
+            image: projectImages.carPPF,
             imageAlt: 'IDOGroupBg.com generated business website preview.',
             seoTitle: 'Detailing Website IDOGroupBg',
             seoDescription:
@@ -179,6 +185,7 @@ export const portfolioContent = {
             name: 'The Watch Maker',
             path: '/projects/watch-maker',
             gitHub: 'https://github.com/viktorHadz/watchmaker-express',
+            liveUrl: 'https://thewatchmaker.uk',
             eyebrow: 'Authenticated product site',
             image: projectImages.watchMaker,
             imageAlt: 'Watch Maker website interface with product and admin content.',
@@ -192,6 +199,26 @@ export const portfolioContent = {
             access: 'Live project work with production-style admin and security concerns.',
             stack: ['Vue.js', 'Vite.js', 'Supabase', 'Resend', 'TailwindCSS'],
             responsibilities: ['Frontend', 'Backend', 'Auth/Data', 'Deployment', 'Blog'],
+        },
+        {
+            id: 'sam-creations',
+            name: 'S.A.M. Creations',
+            path: '/projects/sam-creations',
+            liveUrl: 'https://samcreations.uk/',
+            gitHub: 'https://github.com/viktorHadz/samCreationsTailorStudio',
+            eyebrow: 'Business website',
+            image: projectImages.samCreations,
+            imageAlt: 'S.A.M. Creations website homepage for a garment manufacturer.',
+            seoTitle: 'S.A.M. Creations',
+            seoDescription:
+                'A Next and React business website with SEO-minded content, Tailwind styling, and Resend-powered mailing.',
+            problem:
+                'A garment manufacturer needed a clear business website that could present their work, support enquiries, and feel credible to new customers.',
+            built: 'A responsive Next and React site with Tailwind styling, SEO-minded page content, project imagery, and a Resend-powered mail path.',
+            result: 'The business has a polished public presence with a direct enquiry route and a maintainable frontend foundation.',
+            access: 'Live business website built for a client.',
+            stack: ['Next.js', 'React', 'TailwindCSS', 'Resend', 'Cloudflare'],
+            responsibilities: ['Frontend', 'Content', 'Email', 'Deployment'],
         },
     ] satisfies FeaturedProject[],
     capabilities: [
@@ -258,24 +285,10 @@ export const portfolioContent = {
     ],
     archiveProjects: [
         {
-            id: 'sam-creations',
-            name: 'S.A.M. Creations',
-            path: '/projects/sam-creations',
-            gitHub: 'https://github.com/viktorHadz/samCreationsTailorStudio',
-            eyebrow: 'Business website',
-            image: projectImages.samCreations,
-            imageAlt: 'S.A.M. Creations website homepage for a garment manufacturer.',
-            seoTitle: 'S.A.M. Creations',
-            seoDescription:
-                'A Next and React business website with SEO-minded content, Tailwind styling, and Resend-powered mailing.',
-            summary:
-                'Next and React business site with SEO-minded content, Tailwind styling, and Resend-powered mailing.',
-            stack: ['Next.js', 'React', 'TailwindCSS', 'Resend', 'Cloudflare'],
-        },
-        {
             id: 'ascii-generator',
             name: 'ASCII Generator',
             path: '/projects/ascii-generator',
+            liveUrl: undefined,
             gitHub: 'https://github.com/viktorHadz/ascii-generator',
             eyebrow: 'Browser creative tool',
             image: projectImages.asciiGenerator,
@@ -291,6 +304,7 @@ export const portfolioContent = {
             id: 'survey-generator',
             name: 'Survey Generator',
             path: '/projects/survey-generator',
+            liveUrl: undefined,
             gitHub: 'https://github.com/viktorHadz/pythonSurveyGenerator',
             eyebrow: 'Python automation',
             image: projectImages.surveyGenerator,
@@ -306,6 +320,7 @@ export const portfolioContent = {
             id: 'fukla',
             name: 'FUKLA',
             path: '/projects/fukla',
+            liveUrl: 'https://www.fukla.me/',
             gitHub: 'https://github.com/viktorHadz/fukla',
             eyebrow: 'Beauty Salon website',
             image: projectImages.fukla,

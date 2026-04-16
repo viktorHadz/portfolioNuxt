@@ -1,8 +1,7 @@
 <script setup>
-import { GlobeAltIcon } from '@heroicons/vue/24/outline'
+import { ArrowRightStartOnRectangleIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
 import { portfolioContent } from './portfolioContent'
 import PortfolioTechBadge from './PortfolioTechBadge.vue'
-import gitHubIcon from '/assets/icons/techIcons/GitHub.svg'
 </script>
 
 <template>
@@ -50,7 +49,7 @@ import gitHubIcon from '/assets/icons/techIcons/GitHub.svg'
                 class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-4 py-2 text-xs font-bold text-fg-prim hover:border-acc-prim"
               >
                 <GlobeAltIcon class="size-4" />
-                Link
+                Visit
               </NuxtLink>
               <NuxtLink
                 :to="project.gitHub"
@@ -59,6 +58,13 @@ import gitHubIcon from '/assets/icons/techIcons/GitHub.svg'
                 <GittHubIco class="size-4" />
 
                 GitHub
+              </NuxtLink>
+              <NuxtLink
+                :to="project.path"
+                class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-4 py-2 text-xs font-bold text-fg-prim hover:border-acc-prim"
+              >
+                <ArrowRightStartOnRectangleIcon class="size-4" />
+                More Info
               </NuxtLink>
             </div>
           </div>

@@ -97,16 +97,16 @@ onMounted(() => {
       {
         duration: 2,
         scale: 0.5,
-        opacity: 0.3,
-        yoyo: true,
+        opacity: 1,
         repeat: -1,
+        yoyo: false,
         transformOrigin: '50% 50%',
       },
       {
         duration: 2,
         scale: 1.2,
-        opacity: 0.5,
-        yoyo: true,
+        opacity: 0,
+        yoyo: false,
         repeat: -1,
         transformOrigin: '50% 50%',
       },
@@ -205,8 +205,8 @@ onMounted(() => {
 
   <OrbitPlanet
     v-for="p in planets"
-    :key="p.id"
     :id="p.id"
+    :key="p.id"
     :size="p.size"
     :colors="p.colors"
     :opacity="p.opacity"

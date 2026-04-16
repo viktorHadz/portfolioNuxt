@@ -1,59 +1,72 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   variant: {
     type: String,
-    validator: (value) =>
-      ['primary', 'secondary', 'tertiary', 'oxiliary'].includes(value),
+    validator: (v) => ['primary', 'secondary', 'tertiary', 'oxiliary'].includes(v),
   },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  bold: {
+  size: {
     type: String,
+    default: 'default',
+    validator: (v) => ['default', 'compact'].includes(v),
   },
+  block: Boolean,
+  disabled: Boolean,
+})
+
+const accentMap = {
+  primary:
+    'hover:border-acc-prim active:border-acc-prim hover:text-acc-prim active:text-acc-prim active:shadow-sm',
+  secondary: 'hover:border-acc-sec active:border-acc-sec hover:text-acc-sec active:text-acc-sec',
+  tertiary: 'hover:border-acc-ter active:border-acc-ter hover:text-acc-ter active:text-acc-ter',
+}
+
+const sizeMap = {
+  compact: 'min-h-9 rounded-lg px-2 py-1.5 text-tiny',
+  default: 'rounded-xl px-4 py-3 text-sm',
+}
+
+const isBoxed = computed(() => props.variant in accentMap)
+
+const buttonClass = computed(() => {
+  const width = props.block ? 'w-full text-center' : ''
+
+  if (isBoxed.value) {
+    return [
+      'group relative border-2 border-brdr bg-transparent font-bold tracking-wide text-fg-prim uppercase shadow-[0_4px_0_rgba(0,0,0,0.2)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_0_rgba(0,0,0,0.3)] active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50',
+      accentMap[props.variant],
+      sizeMap[props.size],
+      width,
+    ]
+  }
+
+  if (props.variant === 'oxiliary') {
+    return ['group hover:text-acc-sec', width]
+  }
+
+  return width
 })
 </script>
 
 <template>
-  <!-- primary -->
   <button
-    v-if="variant === 'primary'"
+    type="button"
     :disabled="disabled"
-    class="group border-brdr hover:border-acc-prim active:border-acc-prim text-fg-prim hover:text-acc-prim active:text-acc-prim relative rounded-xl border-2 bg-transparent px-4 py-3 text-sm font-bold tracking-wide uppercase shadow-[0_4px_0_rgba(0,0,0,0.2)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_0_rgba(0,0,0,0.3)] active:translate-y-0.5 active:shadow-[0_2px_0_rgba(0,0,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+    :class="buttonClass"
   >
-    <span class="relative z-10">
-      <slot></slot>
+    <span
+      v-if="isBoxed"
+      class="relative z-10"
+    >
+      <slot />
     </span>
-  </button>
 
-  <!-- secondary -->
-  <button
-    v-else-if="variant === 'secondary'"
-    :disabled="disabled"
-    class="group border-brdr hover:border-acc-sec active:border-acc-sec text-fg-prim hover:text-acc-sec active:text-acc-sec relative rounded-xl border-2 bg-transparent px-4 py-3 text-sm font-bold tracking-wide uppercase shadow-[0_4px_0_rgba(0,0,0,0.2)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_0_rgba(0,0,0,0.3)] active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <span class="relative z-10">
-      <slot></slot>
-    </span>
-  </button>
-
-  <!-- tertiary -->
-  <button
-    v-else-if="variant === 'tertiary'"
-    :disabled="disabled"
-    class="text-fg-prim hover:text-acc-prim cursor-pointer rounded-lg p-2 capitalize drop-shadow-lg transition-all duration-150 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <slot></slot>
-  </button>
-  <!-- Oxiliary -->
-  <button
-    v-else-if="variant === 'oxiliary'"
-    :disabled="disabled"
-    class="hover:text-acc-sec group"
-  >
-    <div class="flex items-center font-bold">
-      <slot></slot>
+    <div
+      v-else-if="variant === 'oxiliary'"
+      class="flex items-center font-bold"
+    >
+      <slot />
       <slot name="icon">
         <svg
           class="size-6 transition-transform duration-300 group-hover:translate-x-6"
@@ -71,8 +84,7 @@ defineProps({
         </svg>
       </slot>
     </div>
-  </button>
-  <button v-else :disabled="disabled">
-    <slot></slot>
+
+    <slot v-else />
   </button>
 </template>

@@ -72,15 +72,11 @@ function openProject(path) {
 <template>
   <section
     v-if="projects.length"
-    class="project-preview mt-10 -mr-6 sm:-mr-8 lg:mr-0"
+    class="project-preview mt-10"
     aria-label="Featured project preview"
   >
-    <div
-      class="flex snap-x gap-4 overflow-x-auto pr-6 sm:pr-8 lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.8fr)] lg:overflow-visible lg:pr-0"
-    >
-      <article
-        class="h-136 w-[84vw] max-w-xl shrink-0 snap-start overflow-hidden rounded-lg sm:h-160 sm:w-[76vw] lg:h-152 lg:w-auto lg:max-w-none"
-      >
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.8fr)]">
+      <article class="h-136 w-full overflow-hidden rounded-lg sm:h-160 lg:h-152">
         <div class="grid h-full grid-cols-3 grid-rows-4 place-items-stretch gap-2">
           <button
             v-for="item in projects"
@@ -137,7 +133,7 @@ function openProject(path) {
 
       <aside
         v-if="activeProject"
-        class="flex h-136 w-[84vw] max-w-xl shrink-0 snap-start flex-col overflow-hidden rounded-lg border border-brdr bg-bg-prim shadow-2xl shadow-black/20 sm:h-160 sm:w-[76vw] lg:h-152 lg:w-auto lg:max-w-none"
+        class="flex w-full flex-col overflow-hidden rounded-lg border border-brdr bg-bg-prim shadow-2xl shadow-black/20 lg:h-152"
       >
         <div class="sticky top-0 border-b border-brdr bg-bg-sec px-4 py-3">
           <p class="text-tiny font-bold text-acc-sec uppercase">

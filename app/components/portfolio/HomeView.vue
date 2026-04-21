@@ -27,14 +27,13 @@ useHead({
 
 const portfolioRoot = ref(null)
 let gsapContext
-let reduceMotionQuery
 
 onMounted(async () => {
   const { default: gsap } = await import('gsap')
   const { ScrollTrigger } = await import('gsap/ScrollTrigger')
 
   gsap.registerPlugin(ScrollTrigger)
-  reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
 
   gsapContext = gsap.context(() => {
     if (reduceMotionQuery.matches) {
@@ -45,28 +44,12 @@ onMounted(async () => {
           '.portfolio-process-card',
           '.portfolio-archive-item',
           '.portfolio-journey-card',
+          '.portfolio-journey-date',
         ],
-        { autoAlpha: 1, y: 0 },
+        { autoAlpha: 1, y: 0, scale: 1 },
       )
       return
     }
-
-    gsap.to('.portfolio-portal-ring', {
-      rotation: 360,
-      transformOrigin: '50% 50%',
-      repeat: -1,
-      ease: 'none',
-      duration: 34,
-      stagger: 3,
-    })
-
-    gsap.to('.portfolio-contact-signal', {
-      rotation: 360,
-      transformOrigin: '78% 47%',
-      repeat: -1,
-      ease: 'none',
-      duration: 42,
-    })
 
     gsap.utils.toArray('.portfolio-reveal').forEach((element) => {
       gsap.fromTo(
@@ -140,6 +123,7 @@ onBeforeUnmount(() => {
     ref="portfolioRoot"
     class="portfolio-view min-h-screen bg-bg-prim"
   >
+    <PortfolioHero2 />
     <PortfolioHero />
     <PortfolioProofStrip />
     <PortfolioFeaturedProjects />

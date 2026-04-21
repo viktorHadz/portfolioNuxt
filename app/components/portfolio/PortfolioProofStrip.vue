@@ -17,7 +17,7 @@ import { portfolioContent } from './portfolioContent'
         <p class="text-2xl leading-none font-bold text-acc-prim sm:text-3xl">
           {{ stat.value }}
         </p>
-        <p class="mx-auto mt-5 max-w-52 text-sm leading-6 text-balance text-fg-sec lg:mx-0">
+        <p class="mt-5 text-sm leading-6 text-balance text-fg-sec lg:mx-0">
           {{ stat.label }}
         </p>
       </article>

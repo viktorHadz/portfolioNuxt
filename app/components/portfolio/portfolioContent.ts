@@ -354,6 +354,11 @@ export const portfolioContent = {
             title: 'Creative engineering',
             body: 'Kept shipping live project work while pushing deeper into Vue, GSAP, SVG systems, backend depth, Go, and product craft.',
         },
+        {
+            year: '2026',
+            title: 'Sharper production focus',
+            body: 'Building more polished Nuxt interfaces, cleaner backend boundaries, and client-ready workflows with a stronger eye for maintainability.',
+        },
     ],
     contact: {
         heading: 'Got a product, workflow, or idea that needs turning into software?',

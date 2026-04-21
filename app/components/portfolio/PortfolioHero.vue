@@ -24,6 +24,8 @@ onMounted(async () => {
           '[data-hero="copy"]',
           '[data-hero="actions"]',
           '[data-hero="visual"]',
+          '[data-hero="portal-glow"]',
+          '[data-hero="portal-ring"]',
           '[data-hero="mench"]',
         ],
         { autoAlpha: 1, clearProps: 'transform' },
@@ -31,37 +33,67 @@ onMounted(async () => {
       return
     }
 
-    gsap
-      .timeline({ defaults: { duration: 0.7, ease: 'power3.out' } })
-      .fromTo(
-        '[data-hero="kicker"]',
-        { autoAlpha: 0, y: 12 },
-        { autoAlpha: 1, y: 0 },
-      )
-      .fromTo(
-        '[data-hero="title"]',
-        { autoAlpha: 0, y: 18 },
-        { autoAlpha: 1, y: 0 },
-        '-=0.35',
-      )
-      .fromTo(
-        '[data-hero="copy"]',
-        { autoAlpha: 0, y: 16 },
-        { autoAlpha: 1, y: 0 },
-        '-=0.35',
-      )
-      .fromTo(
-        '[data-hero="actions"]',
-        { autoAlpha: 0, y: 14 },
-        { autoAlpha: 1, y: 0 },
-        '-=0.35',
-      )
+    const heroCopy = [
+      ['[data-hero="kicker"]', { autoAlpha: 0, y: 12 }, 0.16],
+      ['[data-hero="title"]', { autoAlpha: 0, y: 18 }, '-=0.28'],
+      ['[data-hero="copy"]', { autoAlpha: 0, y: 16 }, '-=0.28'],
+      ['[data-hero="actions"]', { autoAlpha: 0, y: 14 }, '-=0.24'],
+    ]
+
+    const intro = gsap.timeline({ defaults: { duration: 0.65, ease: 'power3.out' } })
+    heroCopy.forEach(([selector, fromVars, position]) => {
+      intro.fromTo(selector, fromVars, { autoAlpha: 1, y: 0 }, position)
+    })
+
+    intro
       .fromTo(
         '[data-hero="visual"]',
-        { autoAlpha: 0, scale: 0.96, x: 20 },
-        { autoAlpha: 1, scale: 1, x: 0 },
-        '-=0.55',
+        { autoAlpha: 0, scale: 0.88, x: 20 },
+        { autoAlpha: 1, scale: 1, x: 0, duration: 0.72 },
+        0.34,
       )
+      .fromTo(
+        '[data-hero="portal-glow"]',
+        { autoAlpha: 0, scale: 0.55 },
+        { autoAlpha: 0.9, scale: 1, duration: 0.75, ease: 'power2.out' },
+        '<',
+      )
+      .fromTo(
+        '[data-hero="portal-ring"]',
+        { autoAlpha: 0, rotation: -32, scale: 0.62, transformOrigin: '50% 50%' },
+        {
+          autoAlpha: 1,
+          rotation: 0,
+          scale: 1,
+          duration: 0.95,
+          ease: 'back.out(1.7)',
+          stagger: 0.08,
+        },
+        '<0.06',
+      )
+      .fromTo(
+        '[data-hero="mench"]',
+        { autoAlpha: 0, y: 18, scale: 0.92 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 0.72 },
+        '-=0.42',
+      )
+      .call(() => {
+        gsap.to('[data-hero="portal-ring"]', {
+          rotation: '+=360',
+          transformOrigin: '50% 50%',
+          repeat: -1,
+          ease: 'none',
+          duration: 28,
+        })
+
+        gsap.to('[data-hero="mench"]', {
+          y: -10,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          duration: 3.6,
+        })
+      })
 
     gsap.utils.toArray('[data-hero="wave"]').forEach((wave, index) => {
       const dashCycle = 96
@@ -79,14 +111,6 @@ onMounted(async () => {
         },
       )
     })
-
-    gsap.to('[data-hero="mench"]', {
-      y: -10,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-      duration: 3.6,
-    })
   }, heroRoot.value)
 })
 
@@ -99,11 +123,15 @@ onBeforeUnmount(() => {
   <section
     id="portfolio-top"
     ref="heroRoot"
-    class="bg-bg-prim text-fg-prim relative isolate min-h-svh overflow-hidden lg:min-h-dvh"
+    class="relative isolate min-h-svh overflow-hidden bg-bg-prim text-fg-prim lg:min-h-dvh"
     aria-labelledby="portfolio-hero-title"
   >
-    <div class="bg-stars absolute inset-0 opacity-70" aria-hidden="true" />
+    <div
+      class="bg-stars absolute inset-0 opacity-70"
+      aria-hidden="true"
+    />
 
+    <!-- Moving Lines -->
     <svg
       class="pointer-events-none absolute inset-x-[-10%] top-10 h-[82%] w-[120%] opacity-45 sm:top-8 sm:h-[88%] lg:inset-0 lg:h-full lg:w-full"
       viewBox="0 0 1200 700"
@@ -146,7 +174,10 @@ onBeforeUnmount(() => {
       class="relative z-10 mx-auto grid min-h-svh w-full max-w-7xl items-center justify-items-center gap-8 px-6 pt-24 pb-14 text-center sm:px-8 sm:pt-28 lg:min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.92fr)] lg:justify-items-stretch lg:gap-14 lg:pb-16 lg:text-left"
     >
       <div class="max-w-2xl lg:max-w-none">
-        <p data-hero="kicker" class="text-acc-prim font-bold uppercase">
+        <p
+          data-hero="kicker"
+          class="font-bold text-acc-prim uppercase"
+        >
           {{ hero.eyebrow }}
         </p>
         <h1
@@ -158,7 +189,7 @@ onBeforeUnmount(() => {
         </h1>
         <p
           data-hero="copy"
-          class="text-fg-sec mx-auto mt-5 max-w-xl text-sm leading-7 sm:text-base lg:mx-0"
+          class="mx-auto mt-5 max-w-xl text-sm leading-7 text-fg-sec sm:text-base lg:mx-0"
         >
           {{ hero.subheadline }}
         </p>
@@ -167,15 +198,21 @@ onBeforeUnmount(() => {
           data-hero="actions"
           class="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start"
         >
-          <TheButton variant="primary" @click="scrollToId('featured-work')">
+          <TheButton
+            variant="primary"
+            @click="scrollToId('featured-work')"
+          >
             {{ hero.primaryCta }}
           </TheButton>
-          <TheButton variant="secondary" @click="scrollToId('contact')">
+          <TheButton
+            variant="secondary"
+            @click="scrollToId('contact')"
+          >
             {{ hero.secondaryCta }}
           </TheButton>
         </div>
       </div>
-
+      <!-- Portal Character  -->
       <div
         data-hero="visual"
         class="relative mx-auto w-[min(92vw,31rem)] sm:w-[min(84vw,35rem)] md:w-[min(70vw,38rem)] lg:w-full lg:max-w-xl xl:max-w-2xl"
@@ -192,6 +229,7 @@ onBeforeUnmount(() => {
               vector-effect="non-scaling-stroke"
             >
               <circle
+                data-hero="portal-ring"
                 cx="50"
                 cy="50"
                 r="31"
@@ -201,6 +239,7 @@ onBeforeUnmount(() => {
                 opacity="0.62"
               />
               <circle
+                data-hero="portal-ring"
                 cx="50"
                 cy="50"
                 r="37"
@@ -210,6 +249,7 @@ onBeforeUnmount(() => {
                 opacity="0.76"
               />
               <circle
+                data-hero="portal-ring"
                 cx="50"
                 cy="50"
                 r="43"
@@ -221,12 +261,16 @@ onBeforeUnmount(() => {
             </g>
           </svg>
           <div
-            class="bg-acc-prim/15 absolute inset-[18%] rounded-full opacity-70 blur-2xl lg:opacity-90"
+            data-hero="portal-glow"
+            class="absolute inset-[18%] rounded-full bg-acc-prim/15 opacity-70 blur-2xl lg:opacity-90"
             aria-hidden="true"
           />
 
           <div class="absolute inset-0 grid place-items-center">
-            <div data-hero="mench" class="h-[84%] w-[84%]">
+            <div
+              data-hero="mench"
+              class="h-[84%] w-[84%]"
+            >
               <HeroMench class="h-full w-full drop-shadow-2xl" />
             </div>
           </div>

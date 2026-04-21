@@ -33,6 +33,7 @@ export default defineNuxtConfig({
                 '@vue/devtools-core',
                 '@vue/devtools-kit',
                 'gsap',
+                'gsap/MorphSVGPlugin',
                 'gsap/ScrollTrigger',
                 'gsap/MotionPathPlugin',
                 '@heroicons/vue/24/outline',

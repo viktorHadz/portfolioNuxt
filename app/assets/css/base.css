@@ -31,11 +31,10 @@
     --offwhite: hsl(210, 15%, 95%);
     --gray: hsl(210, 8%, 65%);
 
-    --grad-stop-1: hsl(77, 64%, 57%);
-    --grad-stop-2: hsl(78, 48%, 50%);
-    --grad-stop-3: hsl(78, 48%, 43%);
-    --grad-stop-4: hsl(77, 48%, 36%);
-    --grad-stop-5: hsl(78, 48%, 30%);
+    --grad-stop-1: hsl(78, 100%, 50%);
+    --grad-stop-2: hsl(78, 87%, 49%);
+    --grad-stop-3: hsl(78, 59%, 40%);
+    --grad-stop-4: hsl(77, 48%, 35%);
 }
 
 /* ---------- TAILWIND THEME TOKENS ---------- */
@@ -135,10 +134,11 @@
 }
 @utility text-grad {
     background-image: linear-gradient(
-        to right,
-        var(--acc-primary),
-        var(--acc-secondary),
-        var(--acc-tertiary)
+        to bottom,
+        var(--grad-stop-1),
+        var(--grad-stop-2),
+        var(--grad-stop-3),
+        var(--grad-stop-4)
     );
     -webkit-background-clip: text;
     background-clip: text;

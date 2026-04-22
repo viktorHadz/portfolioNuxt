@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HeroRings from '@/components/HeroRings.vue'
+import HeroMench2 from './HeroMench2.vue'
 </script>
 
 <template>
@@ -16,16 +17,19 @@ import HeroRings from '@/components/HeroRings.vue'
         </div>
       </div>
 
-      <h1 class="mt-2 text-6xl tracking-tight">
+      <h1 class="mt-2 text-6xl font-bold tracking-tight">
         I build practical
         <div>software that</div>
-        <span class="text-acc-prim">people can rely on</span>
+        <span class="text-grad">people can rely on</span>
       </h1>
       <p class="mt-6 text-lg/loose">
         Vue and React UI, Go, Node and Express backends, auth, databases, automation and deployment
         work that keeps paid production projects running.
       </p>
     </div>
-    <HeroRings class="max-w-1/2 flex-1" />
+    <div class="flex-1">
+      <HeroMench2 />
+      <HeroRings class="" />
+    </div>
   </div>
 </template>

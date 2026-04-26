@@ -16,7 +16,8 @@
     --fg-secondary: hsl(154, 5%, 80%);
     --fg-tertiary: hsl(0, 0%, 50%);
 
-    --acc-primary: hsl(78, 74%, 49%);
+    --acc-primary: hsl(77, 64%, 57%);
+    /* --acc-primary: hsl(78, 74%, 49%); */
     --acc-secondary: hsl(53, 100%, 67%);
     --acc-tertiary: hsl(210, 100%, 65%);
 
@@ -31,10 +32,10 @@
     --offwhite: hsl(210, 15%, 95%);
     --gray: hsl(210, 8%, 65%);
 
-    --grad-stop-1: hsl(78, 100%, 50%);
-    --grad-stop-2: hsl(78, 87%, 49%);
-    --grad-stop-3: hsl(78, 59%, 40%);
-    --grad-stop-4: hsl(77, 48%, 35%);
+    --grad-stop-1: hsl(79, 80%, 50%);
+    --grad-stop-2: hsl(77, 64%, 57%);
+    --grad-stop-3: hsl(77, 44%, 37%);
+    --grad-stop-4: hsl(77, 44%, 27%);
 }
 
 /* ---------- TAILWIND THEME TOKENS ---------- */

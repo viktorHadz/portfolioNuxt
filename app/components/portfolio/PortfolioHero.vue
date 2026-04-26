@@ -1,5 +1,6 @@
 <script setup>
 import HeroMench from '@/components/Hero/HeroMench.vue'
+import HeroSpeedLines from '@/components/Hero/HeroSpeedLines.vue'
 import TheButton from '@/components/TheButton.vue'
 import { portfolioContent } from './portfolioContent'
 import Dividers from '../Decor/Dividers.vue'
@@ -22,6 +23,11 @@ function scrollTo(e) {
   <section
     class="relative isolate flex min-h-screen flex-col overflow-hidden bg-bg-prim pt-20 text-fg-prim lg:pt-24"
   >
+    <HeroSpeedLines />
+    <div
+      class="absolute inset-0 bg-stars opacity-50"
+      aria-hidden="true"
+    />
     <div
       class="relative flex w-full flex-1 flex-col justify-center overflow-hidden px-6 pb-10 sm:px-8 lg:flex-row lg:items-center lg:px-20 lg:pb-0"
     >
@@ -33,7 +39,7 @@ function scrollTo(e) {
           <span class="text-acc-prim">{{ yrsCoded }}+ {{ heroData.eyebrow[1] }}</span>
         </p>
 
-        <h1 class="text-5xl font-bold tracking-tight text-nowrap sm:text-7xl">
+        <h1 class="text-5xl font-bold tracking-tight text-nowrap text-fg-prim sm:text-7xl">
           <span class="block">
             Practical
             <span class="text-grad">software</span>

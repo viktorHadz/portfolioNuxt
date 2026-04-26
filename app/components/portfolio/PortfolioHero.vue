@@ -4,6 +4,7 @@ import HeroSpeedLines from '@/components/Hero/HeroSpeedLines.vue'
 import TheButton from '@/components/TheButton.vue'
 import { portfolioContent } from './portfolioContent'
 import Dividers from '../Decor/Dividers.vue'
+import HeroIcons from '../Hero/HeroIcons.vue'
 
 const heroData = portfolioContent.hero
 const { yrsCoded } = useTimeCoded()
@@ -70,8 +71,8 @@ function scrollTo(e) {
           </TheButton>
         </div>
       </div>
-
       <HeroMench class="z-10 w-full max-w-sm sm:max-w-md lg:max-w-2xl" />
+      <HeroIcons class="z-10" />
     </div>
   </section>
 </template>

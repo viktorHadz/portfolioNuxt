@@ -187,9 +187,9 @@ function checkDizzyFromMouse(e) {
     return
   }
 
-  // Scale every distance to the reference width.
-  // Big monitor (3840px) → scale 0.375 → counts for less.
-  // Small monitor (1280px) → scale 1.125 → counts for slightly more.
+  // Scale every distance to the reference width
+  // Big monitor (3840px) → scale 0.375 counts for less
+  // Small monitor (1280px) → scale 1.125 counts for slightly more
   const widthScale = REFERENCE_WIDTH / window.innerWidth
   const dist = Math.hypot(e.clientX - lastMouseX, e.clientY - lastMouseY) * widthScale
 
@@ -207,6 +207,7 @@ function checkDizzyFromMouse(e) {
   lastMouseX = e.clientX
   lastMouseY = e.clientY
 }
+
 // Eyes
 const MAX = { x: 12, yUp: 16, yDown: 12, brow: 10 }
 let setLeftPupilX, setLeftPupilY, setRightPupilX, setRightPupilY

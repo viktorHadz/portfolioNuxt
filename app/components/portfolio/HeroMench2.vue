@@ -1,6 +1,9 @@
 <script setup>
 import { onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
+
+gsap.registerPlugin(MotionPathPlugin)
 
 const defaultFace = ['#default-left-eye', '#default-right-eye', '#mouth']
 const defaultBrows = ['#default-eyebrow-left', '#default-eyebrow-right']
@@ -17,10 +20,10 @@ const dizzyFace = [
 
 const clamp = (n, min = -1, max = 1) => Math.max(min, Math.min(max, n))
 
-const MAX = { x: 12, yUp: 16, yDown: 12 }
+const MAX = { x: 12, yUp: 16, yDown: 12, brow: 7 }
 const RAPID_WINDOW = 650
 const RAPID_INTERVAL = 110
-const RAPID_DISTANCE = 44
+const RAPID_DISTANCE = 40
 const DIZZY_COOLDOWN = 5000
 
 let moveHandler
@@ -34,6 +37,9 @@ let setLeftPupilX
 let setLeftPupilY
 let setRightPupilX
 let setRightPupilY
+let setLeftBrowY
+let setRightBrowY
+let starTweens = []
 
 const resetPupils = () => {
   setLeftPupilX?.(0)
@@ -42,20 +48,30 @@ const resetPupils = () => {
   setRightPupilY?.(0)
 }
 
+const resetBrows = () => {
+  setLeftBrowY?.(0)
+  setRightBrowY?.(0)
+}
+
+const stopBrows = () => gsap.killTweensOf(defaultBrows)
+
 function playGrouchy(hold = 1.2) {
   mode = 'grouchy'
   rapidMoves = []
   lastRapidVector = null
   activeTl?.kill()
+  stopBrows()
   activeTl = gsap
     .timeline({
       onComplete: () => {
         mode = 'idle'
         resetPupils()
+        resetBrows()
       },
     })
     .to(defaultFace, { opacity: 0, duration: 0.22, ease: 'power2.inOut' }, 0)
     .to(grouchyFace, { opacity: 1, duration: 0.22, ease: 'power2.inOut' }, 0)
+    .to('#default-eyebrow-right', { y: 0, duration: 0.22, ease: 'power2.inOut' }, 0)
     .to('#default-eyebrow-left', { y: -8, duration: 0.22, ease: 'power2.inOut' }, 0)
     .to({}, { duration: hold })
     .to(grouchyFace, { opacity: 0, duration: 0.3, ease: 'power2.inOut' })
@@ -73,12 +89,15 @@ function playDizzy() {
   rapidMoves = []
   lastRapidVector = null
   activeTl?.kill()
+  stopBrows()
+  resetBrows()
 
   activeTl = gsap
     .timeline({
       onComplete: () => {
         mode = 'idle'
         resetPupils()
+        resetBrows()
       },
     })
     .to([...defaultFace, ...defaultBrows], { opacity: 0, duration: 0.22, ease: 'power2.inOut' }, 0)
@@ -104,6 +123,7 @@ onMounted(() => {
   gsap.set(dizzyFace, { opacity: 0 })
   gsap.set(grouchyFace, { opacity: 0 })
   gsap.set('#grin', { opacity: 0 })
+  gsap.set('#star-path', { opacity: 0 })
 
   // Firefox SVG transform jitter fix
   gsap.set(['#pupil', '#pupil_2'], {
@@ -117,6 +137,39 @@ onMounted(() => {
   setRightPupilX = gsap.quickTo('#pupil_2', 'x', { duration: 0.5, ease: 'power3' })
   setRightPupilY = gsap.quickTo('#pupil_2', 'y', { duration: 0.5, ease: 'power3' })
 
+  setLeftBrowY = gsap.quickTo('#default-eyebrow-left', 'y', { ease: 'power3' })
+  setRightBrowY = gsap.quickTo('#default-eyebrow-right', 'y', { ease: 'power3' })
+
+  const starPath = document.querySelector('#star-path')
+  const starTrack = starPath?.getAttribute('d')?.match(/^M[^M]+/)?.[0]
+
+  if (starPath && starTrack) {
+    const track = starPath.cloneNode()
+    track.setAttribute('id', 'star-track')
+    track.setAttribute('d', starTrack)
+    track.setAttribute('opacity', '0')
+    starPath.parentNode?.appendChild(track)
+
+    starTweens = [
+      ['#star', 0],
+      ['#star_2', 1 / 3],
+      ['#star_3', 2 / 3],
+    ].map(([target, start]) =>
+      gsap.to(target, {
+        duration: 3.2,
+        repeat: -1,
+        ease: 'none',
+        motionPath: {
+          path: '#star-track',
+          align: '#star-track',
+          alignOrigin: [0.5, 0.5],
+          start,
+          end: start + 1,
+        },
+      }),
+    )
+  }
+
   moveHandler = (event) => {
     const now = performance.now()
     const x = clamp((event.clientX - window.innerWidth / 2) / (window.innerWidth / 2))
@@ -129,6 +182,14 @@ onMounted(() => {
       setLeftPupilY(eyeY)
       setRightPupilX(eyeX)
       setRightPupilY(eyeY)
+
+      if (x < 0) {
+        setLeftBrowY(x * MAX.brow)
+        setRightBrowY(0)
+      } else {
+        setRightBrowY(x * -MAX.brow)
+        setLeftBrowY(0)
+      }
     }
 
     rapidMoves = rapidMoves.filter((time) => now - time < RAPID_WINDOW)
@@ -166,14 +227,15 @@ onMounted(() => {
 onUnmounted(() => {
   if (moveHandler) window.removeEventListener('mousemove', moveHandler)
   activeTl?.kill()
+  starTweens.forEach((tween) => tween.kill())
 })
 </script>
 <template>
   <svg
-    @click="handleClick"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 929 1023"
+    @click="handleClick"
   >
     <g id="hero-mench">
       <g id="portal">

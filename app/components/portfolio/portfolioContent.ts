@@ -126,10 +126,9 @@ export function getTechIcon(name: string) {
 
 export const portfolioContent = {
     hero: {
-        eyebrow: 'Full-stack developer shipping live software',
-        headline: 'I build practical software that people already rely on',
+        eyebrow: ['Full-stack developer', 'years of shipping'],
         subheadline:
-            'Vue and React interfaces, Node and Express backends, auth, databases, automation, and the deployment work that keeps paid production projects running.',
+            'Vue & React UIs. Go, Node and Express backends. Auth, data automation and the deployment work that keeps paid production projects running.',
         primaryCta: 'View featured work',
         secondaryCta: 'Contact',
     },

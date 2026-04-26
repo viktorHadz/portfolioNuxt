@@ -16,6 +16,7 @@ const archiveStats = [
 
 <template>
   <section
+    id="archive"
     class="relative isolate overflow-hidden bg-bg-sec py-20 text-fg-prim sm:py-28"
     aria-labelledby="archive-title"
   >

@@ -13,6 +13,8 @@ const props = defineProps({
   },
   block: Boolean,
   disabled: Boolean,
+  href: String,
+  target: String,
 })
 
 const accentMap = {
@@ -50,9 +52,13 @@ const buttonClass = computed(() => {
 </script>
 
 <template>
-  <button
-    type="button"
-    :disabled="disabled"
+  <component
+    :is="href ? 'a' : 'button'"
+    :href="href"
+    :target="href ? target : undefined"
+    :rel="href && target === '_blank' ? 'noopener noreferrer' : undefined"
+    :type="href ? undefined : 'button'"
+    :disabled="href ? undefined : disabled"
     :class="buttonClass"
   >
     <span
@@ -86,5 +92,5 @@ const buttonClass = computed(() => {
     </div>
 
     <slot v-else />
-  </button>
+  </component>
 </template>

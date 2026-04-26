@@ -1,6 +1,5 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import PortfolioHero from './PortfolioHero.vue'
 import PortfolioProofStrip from './PortfolioProofStrip.vue'
 import PortfolioFeaturedProjects from './PortfolioFeaturedProjects.vue'
 import PortfolioCapabilityMap from './PortfolioCapabilityMap.vue'
@@ -119,11 +118,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <TheHeader />
   <main
     ref="portfolioRoot"
     class="portfolio-view min-h-screen bg-bg-prim"
   >
-    <PortfolioHero2 />
     <PortfolioHero />
     <PortfolioProofStrip />
     <PortfolioFeaturedProjects />

@@ -169,7 +169,7 @@ onBeforeUnmount(() => {
     aria-labelledby="contact-title"
   >
     <div
-      class="bg-stars absolute inset-0 opacity-50"
+      class="absolute inset-0 bg-stars opacity-50"
       aria-hidden="true"
     />
     <svg

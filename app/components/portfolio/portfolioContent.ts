@@ -51,10 +51,9 @@ type ProjectBase = {
 }
 
 type FeaturedProject = ProjectBase & {
-    problem: string
-    built: string
-    result: string
-    access: string
+    summary: string
+    outcome: string
+    build: string
     responsibilities: string[]
 }
 
@@ -128,16 +127,11 @@ export const portfolioContent = {
     hero: {
         eyebrow: ['Full-stack developer', 'years of shipping'],
         subheadline:
-            'Vue & React UIs. Go, Node and Express backends. Auth, data automation and the deployment work that keeps paid production projects running.',
+            'Vue & React UIs. Go, Node and Express backends. Auth, data automation and the deployment work that keeps production projects running.',
         primaryCta: 'View featured work',
         secondaryCta: 'Contact',
     },
-    stats: [
-        { value: '3+', label: 'years building' },
-        { value: '7+', label: 'shipped projects' },
-        { value: 'Live', label: 'tools used by real businesses' },
-        { value: 'Paid work', label: 'frontend, backend, auth, data, deployment' },
-    ],
+
     featuredProjects: [
         {
             id: 'invoice-and-go',
@@ -151,11 +145,11 @@ export const portfolioContent = {
             seoTitle: 'Invoice and Go',
             seoDescription:
                 'A full-stack invoicing app with OAuth, SQLite, invoice generation, and a production finance workflow for a small business.',
-            problem:
-                'A small business needed to replace manual invoice templates with a dependable workflow for recurring admin.',
-            built: 'A full-stack invoicing system with client records, invoice generation, OAuth login, persistence, and a lightweight Alpine.js interface.',
-            result: 'This is a production app with active users. The team can create, manage, and track invoices from one working business tool instead of stitching documents together by hand.',
-            access: 'Recruiters can use the promo code RECRUITER-VH to request demo access from the login flow.',
+            summary:
+                'A production invoicing app built to replace manual templates with a proper finance workflow.',
+            outcome:
+                'Active users can create, manage, and track invoices from one business tool instead of stitching documents together by hand.',
+            build: 'Built with Go, SQLite, OAuth, invoice generation, persistence, and a lightweight Vue/Tailwind interface.',
             stack: ['Go', 'SQLite', 'OAuth2', 'VueJS', 'TailwindCSS'],
             responsibilities: ['Frontend', 'Backend', 'Auth/Data', 'Payments', 'Deployment'],
         },
@@ -165,17 +159,17 @@ export const portfolioContent = {
             path: '/projects/ido-group-bg',
             gitHub: 'https://github.com/viktorHadz/ppf',
             liveUrl: 'https://idogroupbg.com',
-            eyebrow: 'Static-generated business platform',
+            eyebrow: 'Client marketing site',
             image: projectImages.carPPF,
             imageAlt: 'IDOGroupBg.com generated business website preview.',
             seoTitle: 'Detailing Website IDOGroupBg',
             seoDescription:
                 'A static-generated Vue business site using ViteSSG, Cloudflare Pages Functions, Resend, and a serverless enquiry flow.',
-            problem:
-                'A business needed a professional web presence with low hosting overhead, reliable enquiry delivery, and fast static pages.',
-            built: 'A static-generated Vue site with ViteSSG, Tailwind CSS, Cloudflare Pages hosting, serverless Pages Functions, and Resend email delivery.',
-            result: 'The company gets a sharp business site, a serverless contact path, and reduced hosting costs without carrying a traditional server.',
-            access: 'Live business website built for a paying client.',
+            summary:
+                'A fast business website for a car PPF and detailing company, built around trust, speed, and enquiries.',
+            outcome:
+                'The business gets a sharp public presence, reliable enquiry delivery, and low hosting overhead.',
+            build: 'Built with Vue, ViteSSG, Tailwind CSS, Cloudflare Pages Functions, and Resend.',
             stack: ['Vue.js', 'ViteSSG', 'TailwindCSS', 'Cloudflare Pages', 'Resend'],
             responsibilities: ['Frontend', 'Backend', 'Auth/Data', 'Deployment'],
         },
@@ -185,17 +179,17 @@ export const portfolioContent = {
             path: '/projects/watch-maker',
             gitHub: 'https://github.com/viktorHadz/watchmaker-express',
             liveUrl: 'https://thewatchmaker.uk',
-            eyebrow: 'Authenticated product site',
+            eyebrow: 'Production content site',
             image: projectImages.watchMaker,
             imageAlt: 'Watch Maker website interface with product and admin content.',
             seoTitle: 'The Watch Maker',
             seoDescription:
                 'A Vue and Supabase product site with admin login, content workflows, Resend email, image compression, and security logging.',
-            problem:
-                'The site needed richer content management, secure admin flows, email handling, and reliable image processing.',
-            built: 'A Vue and Vite app using Supabase and Resend, with admin login, blog tooling, custom image compression, rate limiting, and server-side security logging.',
-            result: 'A modern web app with a controlled publishing workflow and stronger operational foundations than a static brochure site.',
-            access: 'Live project work with production-style admin and security concerns.',
+            summary:
+                'A production-style website for a watch repair business with admin, content, image, and email workflows.',
+            outcome:
+                'The site supports controlled publishing, enquiries, and stronger operational foundations than a static brochure site.',
+            build: 'Built with Vue, Vite, Supabase, Resend, custom image compression, rate limiting, and security logging.',
             stack: ['Vue.js', 'Vite.js', 'Supabase', 'Resend', 'TailwindCSS'],
             responsibilities: ['Frontend', 'Backend', 'Auth/Data', 'Deployment', 'Blog'],
         },
@@ -205,17 +199,17 @@ export const portfolioContent = {
             path: '/projects/sam-creations',
             liveUrl: 'https://samcreations.uk/',
             gitHub: 'https://github.com/viktorHadz/samCreationsTailorStudio',
-            eyebrow: 'Business website',
+            eyebrow: 'Client marketing site',
             image: projectImages.samCreations,
             imageAlt: 'S.A.M. Creations website homepage for a garment manufacturer.',
             seoTitle: 'S.A.M. Creations',
             seoDescription:
                 'A Next and React business website with SEO-minded content, Tailwind styling, and Resend-powered mailing.',
-            problem:
-                'A garment manufacturer needed a clear business website that could present their work, support enquiries, and feel credible to new customers.',
-            built: 'A responsive Next and React site with Tailwind styling, SEO-minded page content, project imagery, and a Resend-powered mail path.',
-            result: 'The business has a polished public presence with a direct enquiry route and a maintainable frontend foundation.',
-            access: 'Live business website built for a client.',
+            summary:
+                'A polished business website for a garment manufacturer, designed to present services clearly and drive enquiries.',
+            outcome:
+                'The business gets a credible public presence with a direct enquiry route and a maintainable frontend foundation.',
+            build: 'Built with Next.js, React, Tailwind CSS, SEO-focused page content, and Resend email delivery.',
             stack: ['Next.js', 'React', 'TailwindCSS', 'Resend', 'Cloudflare'],
             responsibilities: ['Frontend', 'Content', 'Email', 'Deployment'],
         },

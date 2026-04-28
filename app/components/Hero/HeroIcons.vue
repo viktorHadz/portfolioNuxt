@@ -8,28 +8,28 @@ import DB from '@/components/Hero/hics/DB.vue'
 import EX from '@/components/Hero/hics/EX.vue'
 import Go from '@/components/Hero/hics/Go.vue'
 import Node from '@/components/Hero/hics/Node.vue'
-import ReactIcon from '@/components/Hero/hics/React.vue'
+import React from '@/components/Hero/hics/React.vue'
 import TabCode from '@/components/Hero/hics/TabCode.vue'
 import TabDiagram from '@/components/Hero/hics/TabDiagram.vue'
 import TabIde from '@/components/Hero/hics/TabIde.vue'
 import TabTerm from '@/components/Hero/hics/TabTerm.vue'
 import Twind from '@/components/Hero/hics/Twind.vue'
-import VueIcon from '@/components/Hero/hics/Vue.vue'
+import Vue from '@/components/Hero/hics/Vue.vue'
 
 const icons = [
-  [ReactIcon, 'left-2/5 top-1/5 w-12 -rotate-6 sm:w-14'],
-  [Node, 'left-7/12 top-1/6 w-14 rotate-6 sm:w-16'],
-  [TabCode, 'hidden left-3/4 top-1/6 w-24 -rotate-3 sm:block lg:w-28'],
-  [VueIcon, 'left-1/4 top-2/5 w-16 sm:w-20'],
-  [EX, 'hidden left-3/4 top-1/3 w-14 sm:block lg:w-16'],
-  [TabIde, 'hidden left-5/12 top-1/2 w-24 rotate-6 md:block lg:w-32'],
-  [BubDev, 'hidden left-1/3 top-7/12 w-28 -rotate-6 lg:block'],
-  [Twind, 'hidden left-5/6 top-7/12 w-16 sm:block lg:w-20'],
-  [Go, 'left-1/4 top-3/4 w-14 sm:w-16'],
-  [TabTerm, 'left-5/6 top-3/4 w-24 sm:w-28'],
-  [BubSoft, 'hidden left-1/3 top-11/12 w-32 -rotate-12 lg:block'],
-  [DB, 'hidden left-7/12 top-11/12 w-14 sm:block lg:w-20'],
-  [TabDiagram, 'hidden left-3/4 top-11/12 w-32 rotate-6 xl:block'],
+  [TabCode, 'hidden left-3/4 bottom-0 w-24 sm:block lg:w-32'],
+  [TabIde, 'hidden left-32 bottom-6 w-24 rotate-6 md:block lg:w-28'],
+  [TabTerm, 'right-12 -top-24 w-24 sm:w-28'],
+  [TabDiagram, 'hidden left-3/4 bottom-1/3 w-32 rotate-6 xl:block'],
+  [BubSoft, 'hidden left-1/5 top-1/3 w-32 lg:block'],
+  [BubDev, 'hidden left-1/4 top-0 w-28 -rotate-6 lg:block'],
+  [React, 'left-22 top-12 w-12 sm:w-20'],
+  [Node, 'left-7/12 -top-18 w-16 rotate-6 sm:w-18'],
+  [Vue, 'left-0 bottom-1/3 w-16 sm:w-22'],
+  [EX, 'hidden left-3/4 top-0 w-16 sm:block lg:w-20'],
+  [Twind, 'hidden right-12 top-1/3 w-16 sm:block lg:w-22'],
+  [Go, 'left-1/4 -top-32 w-14 sm:w-20 '],
+  [DB, 'hidden left-1/3 top-11/12 w-14 sm:block lg:w-22'],
 ]
 
 let iconFloatTween
@@ -39,13 +39,12 @@ function floatIcons() {
   iconFloatTween?.kill()
 
   iconFloatTween = gsap.to('.hero-icon-inner', {
-    x: (index) => (index % 2 ? 5 : -5),
+    x: -5,
     y: -10,
-    duration: (index) => 5 + (index % 3) * 0.35,
+    duration: 6,
     repeat: -1,
     yoyo: true,
     ease: 'sine.inOut',
-    stagger: 0.08,
   })
 }
 
@@ -59,7 +58,7 @@ function playIconsEntry() {
   }
 
   iconEntryTl = gsap
-    .timeline()
+    .timeline({ delay: 1 })
     .fromTo(
       '.hero-icon-inner',
       { autoAlpha: 0, scale: 0.2 },
@@ -67,8 +66,8 @@ function playIconsEntry() {
         autoAlpha: 1,
         scale: 1,
         duration: 0.62,
-        ease: 'back.out(1.8)',
-        stagger: 0.05,
+        ease: 'back.out',
+        stagger: 0.1,
       },
     )
     .add(floatIcons)
@@ -101,7 +100,7 @@ onUnmounted(() => {
       <div class="hero-icon-inner will-change-transform">
         <component
           :is="icon[0]"
-          class="h-auto w-full drop-shadow-xl"
+          class="h-auto w-full"
         />
       </div>
     </div>

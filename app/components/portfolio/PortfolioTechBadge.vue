@@ -27,7 +27,7 @@ const initials = computed(() =>
 
 <template>
   <span
-    class="border-brdr bg-bg-prim/80 text-fg-prim inline-flex min-h-8 items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold shadow-sm"
+    class="inline-flex min-h-8 items-center gap-2 rounded-lg border border-brdr bg-bg-ter px-3 py-1.5 text-xs font-semibold text-fg-prim shadow-sm"
     :class="compact ? 'px-2 py-1 text-tiny' : ''"
   >
     <img
@@ -40,7 +40,7 @@ const initials = computed(() =>
     />
     <span
       v-else
-      class="bg-acc-prim text-bg-prim inline-flex size-4 shrink-0 items-center justify-center rounded-sm text-[0.55rem] font-bold"
+      class="inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-acc-prim text-[0.55rem] font-bold text-bg-prim"
       aria-hidden="true"
     >
       {{ initials }}

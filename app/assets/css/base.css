@@ -8,21 +8,21 @@
 [data-theme='dark'] {
     color-scheme: dark;
 
-    --bg-primary: hsl(228, 45%, 2%);
-    --bg-secondary: hsl(0, 0%, 10%);
-    --bg-tertiary: hsl(150, 0%, 23%);
+    --bg-primary: hsl(228, 25%, 5%);
+    --bg-secondary: hsl(228, 15%, 10%);
+    --bg-tertiary: hsl(228, 15%, 15%);
 
-    --fg-primary: hsl(0, 0%, 90%);
-    --fg-secondary: hsl(154, 5%, 80%);
-    --fg-tertiary: hsl(0, 0%, 50%);
+    --fg-primary: hsl(0, 0%, 95%);
+    --fg-secondary: hsl(0, 6%, 80%);
+    --fg-tertiary: hsl(0, 5%, 75%);
 
     --acc-primary: hsl(77, 64%, 57%);
-    /* --acc-primary: hsl(78, 74%, 49%); */
     --acc-secondary: hsl(53, 100%, 67%);
-    --acc-tertiary: hsl(210, 100%, 65%);
+    --acc-tertiary: hsl(210, 100%, 75%);
 
-    --border-color: hsl(0, 0%, 25%);
-    --border-color-secondary: hsl(0, 0%, 40%);
+    --border-subtle: hsl(228, 10%, 20%);
+    --border: hsl(228, 10%, 28%);
+    --border-strong: hsl(228, 10%, 36%);
 
     --red: hsl(358, 65%, 65%);
     --green: hsl(160, 40%, 55%);
@@ -64,8 +64,9 @@
     --color-acc-sec: var(--acc-secondary);
     --color-acc-ter: var(--acc-tertiary);
 
-    --color-brdr: var(--border-color);
-    --color-brdr-sec: var(--border-color-secondary);
+    --color-brdr-subtle: var(--border-subtle);
+    --color-brdr: var(--border);
+    --color-brdr-strong: var(--border-strong);
 
     --color-red: var(--red);
     --color-green: var(--green);

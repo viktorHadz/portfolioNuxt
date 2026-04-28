@@ -9,7 +9,7 @@ import { portfolioContent } from './portfolioContent'
     aria-labelledby="process-title"
   >
     <div
-      class="bg-stars absolute inset-0 opacity-40"
+      class="absolute inset-0 bg-stars opacity-40"
       aria-hidden="true"
     />
 

@@ -1,5 +1,5 @@
 <script setup>
-import LogoMark from '@/components/Hero/GrouchyHead.vue'
+import GrouchyHead from '@/components/Hero/GrouchyHead.vue'
 
 const nav = [
   ['01', 'Work', '#featured-work'],
@@ -32,7 +32,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 <template>
   <header
-    class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-x-6 bg-bg-prim/95 px-6 py-5 backdrop-blur-sm transition-transform duration-300 sm:px-8 lg:px-20"
+    class="fixed inset-x-0 top-0 z-50 flex items-center justify-between bg-bg-prim/95 px-4 py-5 backdrop-blur-sm transition-transform duration-300 sm:px-8 lg:px-20"
     :class="hidden ? '-translate-y-full' : 'translate-y-0'"
   >
     <NuxtLink
@@ -44,8 +44,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
         aria-hidden="true"
         class="absolute top-1/2 left-7 h-px w-72 -translate-y-1/2 bg-linear-to-r from-acc-sec to-transparent blur-sm"
       />
-      <LogoMark class="relative z-10 size-11 shrink-0" />
-      <span class="relative z-10 text-xl leading-none font-bold uppercase sm:text-2xl">
+      <GrouchyHead class="relative z-10 size-8 shrink-0 sm:size-11" />
+      <span class="text-md relative z-10 leading-none font-bold uppercase sm:text-2xl">
         Bits
         <span class="text-acc-prim">by</span>
         Vik
@@ -65,7 +65,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
       </a>
     </nav>
 
-    <div class="flex items-center gap-3 font-mono text-sm text-acc-prim uppercase">
+    <div class="flex items-center gap-3 font-mono text-xs tracking-tighter text-acc-prim uppercase">
       <div class="relative z-10 mr-2 flex items-center justify-center">
         <div class="absolute size-4 shrink-0 rounded-full bg-acc-prim opacity-90 blur-md" />
         <div

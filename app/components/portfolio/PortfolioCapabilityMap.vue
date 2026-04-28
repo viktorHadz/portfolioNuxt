@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 import { portfolioContent } from './portfolioContent'
 import PortfolioTechBadge from './PortfolioTechBadge.vue'
 import FormMan from '../Decor/FormMan.vue'
@@ -27,11 +27,9 @@ onBeforeUnmount(() => {
 <template>
   <section
     ref="capabilityMap"
-    class="portfolio-capability-map relative isolate bg-bg-sec py-20 text-fg-prim sm:py-28"
+    class="portfolio-capability-map relative isolate bg-bg-prim py-20 text-fg-prim sm:py-28"
     aria-labelledby="capability-map-title"
   >
-    <DecorField />
-
     <div class="relative mx-auto max-w-7xl px-6 sm:px-8">
       <div class="portfolio-reveal sm:flex">
         <header class="max-w-2xl sm:mt-16">

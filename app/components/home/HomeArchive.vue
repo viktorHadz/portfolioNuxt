@@ -5,7 +5,7 @@ import {
   CodeBracketIcon,
 } from '@heroicons/vue/24/outline'
 import { portfolioContent } from './portfolioContent'
-import PortfolioTechBadge from './PortfolioTechBadge.vue'
+import HomeTechBadge from './HomeTechBadge.vue'
 
 const archiveStats = [
   { value: `${portfolioContent.archiveProjects.length}`, label: 'archive builds' },
@@ -77,7 +77,7 @@ const archiveStats = [
               </dl>
 
               <div class="mt-5 flex flex-wrap gap-2">
-                <PortfolioTechBadge
+                <HomeTechBadge
                   v-for="tech in project.stack"
                   :key="tech"
                   :name="tech"

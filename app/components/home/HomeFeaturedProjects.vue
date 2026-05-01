@@ -1,6 +1,6 @@
 <script setup>
 import { portfolioContent } from './portfolioContent'
-import ProjectPreview from './PortfolioProjectPreview.vue'
+import ProjectPreview from './HomeFlipFeatured.vue'
 </script>
 
 <template>
@@ -21,13 +21,14 @@ import ProjectPreview from './PortfolioProjectPreview.vue'
           id="featured-work-title"
           class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl lg:text-5xl"
         >
-          Live products, client work, and the
+          Production
+          <span class="text-grad">work</span>
+          and the
           <span class="text-grad">stack</span>
-          behind them
+          behind it
         </h2>
         <p class="mt-4 text-base leading-7 text-fg-sec sm:text-lg">
-          These are not toy screenshots. They are projects shaped around real workflows, real
-          clients, and software that has to behave once it is online.
+          Find out a bit more about the client projects i have produced and the workflow behind it.
         </p>
       </header>
 

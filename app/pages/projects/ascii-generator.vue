@@ -1,10 +1,10 @@
 <script setup>
-import PortfolioProjectPage from '../../components/portfolio/PortfolioProjectPage.vue'
-import { getProjectById } from '../../components/portfolio/portfolioContent'
+import ProjectPage from '../../components/home/ProjectPage.vue'
+import { getProjectById } from '../../components/home/portfolioContent'
 
 const project = getProjectById('ascii-generator')
 </script>
 
 <template>
-  <PortfolioProjectPage :project="project" />
+  <ProjectPage :project="project" />
 </template>

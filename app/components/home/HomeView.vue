@@ -1,10 +1,10 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import PortfolioFeaturedProjects from './PortfolioFeaturedProjects.vue'
-import PortfolioCapabilityMap from './PortfolioCapabilityMap.vue'
-import PortfolioProcess from './PortfolioProcess.vue'
-import PortfolioArchive from './PortfolioArchive.vue'
-import PortfolioContact from './PortfolioContact.vue'
+import HomeFeaturedProjects from './HomeFeaturedProjects.vue'
+import HomeSkills from './HomeSkills.vue'
+import HomeProcess from './HomeProcess.vue'
+import HomeArchive from './HomeArchive.vue'
+import HomeContact from './HomeContact.vue'
 
 const title = 'Home'
 const description =
@@ -122,12 +122,12 @@ onBeforeUnmount(() => {
     ref="portfolioRoot"
     class="portfolio-view min-h-screen bg-bg-prim"
   >
-    <PortfolioHero />
-    <PortfolioFeaturedProjects />
-    <PortfolioCapabilityMap />
-    <PortfolioProcess />
-    <PortfolioArchive />
-    <PortfolioContact />
+    <HomeHero />
+    <HomeFeaturedProjects />
+    <HomeSkills />
+    <HomeProcess />
+    <HomeArchive />
+    <HomeContact />
   </main>
 </template>
 

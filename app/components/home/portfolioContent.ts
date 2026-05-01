@@ -127,9 +127,10 @@ export const portfolioContent = {
     hero: {
         eyebrow: ['Full-stack developer', 'years of shipping'],
         subheadline:
-            'Vue & React UIs. Go, Node and Express backends. Auth, data automation and the deployment work that keeps production projects running.',
-        primaryCta: 'View featured work',
+            'Vue & React UIs with Go or Node backends, built and deployed to run reliably in production.',
+        primaryCta: 'Featured work',
         secondaryCta: 'Contact',
+        stack: ['Vue', 'React', 'Go', 'Node'],
     },
 
     featuredProjects: [

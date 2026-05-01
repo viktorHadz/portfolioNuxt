@@ -17,19 +17,23 @@ import Twind from '@/components/Hero/hics/Twind.vue'
 import Vue from '@/components/Hero/hics/Vue.vue'
 
 const icons = [
-  [TabCode, 'hidden left-3/4 bottom-0 w-24 sm:block lg:w-32'],
-  [TabIde, 'hidden left-32 bottom-6 w-24 rotate-6 md:block lg:w-28'],
-  [TabTerm, 'right-12 -top-24 w-24 sm:w-28'],
-  [TabDiagram, 'hidden left-3/4 bottom-1/3 w-32 rotate-6 xl:block'],
-  [BubSoft, 'hidden left-1/5 top-1/3 w-32 lg:block'],
-  [BubDev, 'hidden left-1/4 top-0 w-28 -rotate-6 lg:block'],
-  [React, 'left-22 top-12 w-12 sm:w-20'],
-  [Node, 'left-7/12 -top-18 w-16 rotate-6 sm:w-18'],
-  [Vue, 'left-0 bottom-1/3 w-16 sm:w-22'],
-  [EX, 'hidden left-3/4 top-0 w-16 sm:block lg:w-20'],
-  [Twind, 'hidden right-12 top-1/3 w-16 sm:block lg:w-22'],
-  [Go, 'left-1/4 -top-32 w-14 sm:w-20 '],
-  [DB, 'hidden left-1/3 top-11/12 w-14 sm:block lg:w-22'],
+  [TabCode, 'hidden sm:block left-[15%] lg:left-[75%] top-[35%] lg:top-[70%] w-18 lg:w-24'],
+  [TabIde, 'hidden sm:block left-[15%] md:left-[20%] top-[85%] w-16 lg:w-24 rotate-6'],
+  [TabTerm, 'hidden sm:block left-[85%] top-[25%] w-16 lg:w-24'],
+  [TabDiagram, 'hidden sm:block lg:hidden left-[75%] top-[70%] w-18'],
+  // Speech bubbles
+  [BubDev, 'hidden lg:block left-[25%] top-[5%] w-32 -rotate-8 '],
+  [BubSoft, 'hidden lg:block left-[20%] top-[33%] w-34'],
+  // Icons left
+  [Go, 'left-0 sm:left-[15%] lg:left-[10%] -top-[15%] w-14 lg:w-20'],
+  [React, '-left-[10%] sm:left-[5%] lg:left-[0%] top-[15%] w-14 lg:w-18'],
+  [Vue, '-left-[10%] sm:left-0  bottom-[25%] w-14 lg:w-20'],
+  // Icons right
+  [Node, 'left-[60%] -top-[4.5rem] w-14 lg:w-18'],
+  [EX, 'left-[75%] top-0 w-14 lg:w-18'],
+  [Twind, 'left-[75%] top-[45%] w-14 lg:w-20'],
+
+  [DB, 'left-[33%] sm:left-[50%] top-[80%] lg:top-[90%] sm:bottom-0 w-16 lg:w-22'],
 ]
 
 let iconFloatTween

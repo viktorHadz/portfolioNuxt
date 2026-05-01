@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeUnmount, onMounted } from 'vue'
 import { portfolioContent } from './portfolioContent'
-import PortfolioTechBadge from './PortfolioTechBadge.vue'
+import HomeTechBadge from './HomeTechBadge.vue'
 import FormMan from '../Decor/FormMan.vue'
 
 let gsapContext
@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
             id="capability-map-title"
             class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl lg:text-5xl"
           >
-            A full-stack route through strange dimensions
+            A holistic aproach to development
           </h2>
           <p class="mt-4 text-base leading-7 text-fg-sec sm:text-lg">
             Interfaces, data, trust, and deployment tuned into one navigable system.
@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
           </p>
 
           <div class="mt-5 flex flex-wrap gap-2">
-            <PortfolioTechBadge
+            <HomeTechBadge
               v-for="skill in capability.skills"
               :key="skill"
               :name="skill"

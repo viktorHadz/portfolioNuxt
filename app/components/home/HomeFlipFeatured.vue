@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { Flip } from 'gsap/Flip'
 import { navigateTo } from '#imports'
 import TheButton from '../TheButton.vue'
-import PortfolioTechBadge from './PortfolioTechBadge.vue'
+import HomeTechBadge from './HomeTechBadge.vue'
 
 gsap.registerPlugin(Flip)
 
@@ -160,7 +160,7 @@ function openProject(path) {
             <section>
               <h4 class="text-xs font-bold text-acc-prim uppercase">Stack</h4>
               <div class="mt-2 flex flex-wrap gap-2">
-                <PortfolioTechBadge
+                <HomeTechBadge
                   v-for="tech in activeProject.stack"
                   :key="tech"
                   :name="tech"

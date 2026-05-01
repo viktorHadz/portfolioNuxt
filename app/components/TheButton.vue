@@ -1,20 +1,27 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
 const props = defineProps({
   variant: {
     type: String,
-    validator: (v) => ['primary', 'secondary', 'tertiary', 'oxiliary'].includes(v),
+    default: 'primary',
+    validator: (v: string) => ['primary', 'secondary', 'tertiary', 'auxiliary'].includes(v),
   },
   size: {
     type: String,
     default: 'default',
-    validator: (v) => ['default', 'compact'].includes(v),
+    validator: (v: string) => ['default', 'compact'].includes(v),
   },
   block: Boolean,
   disabled: Boolean,
-  href: String,
-  target: String,
+  href: {
+    type: String,
+    default: '',
+  },
+  target: {
+    type: String,
+    default: '',
+  },
 })
 
 const accentMap = {
@@ -37,8 +44,8 @@ const buttonClass = computed(() => {
   if (isBoxed.value) {
     return [
       'group relative border-2 border-brdr bg-transparent font-bold tracking-wide text-fg-prim uppercase shadow-[0_4px_0_rgba(0,0,0,0.2)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_0_rgba(0,0,0,0.3)] active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50',
-      accentMap[props.variant],
-      sizeMap[props.size],
+      accentMap[props.variant as keyof typeof accentMap],
+      sizeMap[props.size as keyof typeof sizeMap],
       width,
     ]
   }

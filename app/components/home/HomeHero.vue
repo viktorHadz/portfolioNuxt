@@ -37,7 +37,7 @@ function scrollTo(e) {
     >
       <div class="z-20 mx-auto max-w-4xl text-center">
         <p
-          class="mb-5 flex flex-wrap items-center justify-center gap-3 font-mono text-xs font-bold text-acc-prim uppercase sm:mb-7 sm:text-sm"
+          class="flex flex-wrap items-center justify-center gap-3 font-mono text-xs font-bold text-acc-prim uppercase sm:text-sm"
         >
           <Dividers />
           <span>{{ heroData.eyebrow[0] }}</span>
@@ -46,7 +46,7 @@ function scrollTo(e) {
         </p>
 
         <h1
-          class="text-5xl leading-none font-bold tracking-tight text-fg-prim sm:text-6xl md:text-7xl xl:text-8xl"
+          class="my-5 text-5xl leading-none font-bold tracking-tight text-fg-prim sm:my-7 sm:text-6xl md:text-7xl xl:text-8xl"
         >
           <span class="block">
             Practical
@@ -56,7 +56,7 @@ function scrollTo(e) {
         </h1>
 
         <p
-          class="mx-auto mt-5 max-w-2xl text-sm leading-6 text-fg-sec sm:text-base sm:leading-7 lg:text-lg"
+          class="mx-auto max-w-2xl text-sm leading-6 text-fg-sec sm:text-base sm:leading-7 lg:text-lg"
         >
           {{ heroData.subheadline }}
         </p>

@@ -9,7 +9,7 @@ import {
 import { useHead, useSeoMeta, withSiteUrl } from '#imports'
 import { allProjects } from './portfolioContent'
 import TheButton from '../TheButton.vue'
-import PortfolioTechBadge from './PortfolioTechBadge.vue'
+import HomeTechBadge from './HomeTechBadge.vue'
 
 const props = defineProps({
   project: {
@@ -251,7 +251,7 @@ useHead({
               <h2 class="text-lg font-bold">Project stack</h2>
             </div>
             <div class="mt-4 flex flex-wrap gap-2">
-              <PortfolioTechBadge
+              <HomeTechBadge
                 v-for="tech in project.stack"
                 :key="tech"
                 :name="tech"
@@ -307,7 +307,7 @@ useHead({
               :to="related.path"
               class="group overflow-hidden rounded-lg border border-brdr bg-bg-sec hover:border-acc-prim"
             >
-              <div class="aspect-[16/10] overflow-hidden bg-bg-ter">
+              <div class="aspect-16/10 overflow-hidden bg-bg-ter">
                 <img
                   v-if="related.image"
                   :src="related.image"

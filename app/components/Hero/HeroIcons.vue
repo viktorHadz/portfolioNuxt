@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 import gsap from 'gsap'
 
 import BubDev from '@/components/Hero/hics/BubDev.vue'
@@ -16,28 +16,42 @@ import TabTerm from '@/components/Hero/hics/TabTerm.vue'
 import Twind from '@/components/Hero/hics/Twind.vue'
 import Vue from '@/components/Hero/hics/Vue.vue'
 
+const props = defineProps({
+  active: {
+    type: Boolean,
+    default: true,
+  },
+})
+
 const icons = [
-  [TabCode, 'hidden sm:block left-[15%] lg:left-[75%] top-[35%] lg:top-[70%] w-18 lg:w-24'],
+  [
+    TabCode,
+    'hidden sm:block left-[15%] sm:left-[20%] lg:left-[80%] top-[35%] lg:top-[90%] w-18 lg:w-24',
+  ],
   [TabIde, 'hidden sm:block left-[15%] md:left-[20%] top-[85%] w-16 lg:w-24 rotate-6'],
-  [TabTerm, 'hidden sm:block left-[85%] top-[25%] w-16 lg:w-24'],
+  [TabTerm, 'hidden sm:block left-[75%] top-[30%] w-16 lg:w-20'],
   [TabDiagram, 'hidden sm:block lg:hidden left-[75%] top-[70%] w-18'],
   // Speech bubbles
-  [BubDev, 'hidden lg:block left-[25%] top-[5%] w-32 -rotate-8 '],
-  [BubSoft, 'hidden lg:block left-[20%] top-[33%] w-34'],
+  [BubDev, 'hidden lg:block left-[30%] top-[15%] w-32 -rotate-8 '],
+  [BubSoft, 'hidden lg:block left-[25%] top-[50%] w-34'],
   // Icons left
-  [Go, 'left-0 sm:left-[15%] lg:left-[10%] -top-[15%] w-14 lg:w-20'],
-  [React, '-left-[10%] sm:left-[5%] lg:left-[0%] top-[15%] w-14 lg:w-18'],
-  [Vue, '-left-[10%] sm:left-0  bottom-[25%] w-14 lg:w-20'],
+  [Go, 'left-10 sm:left-[15%] lg:left-[10%] top-0 lg:-top-[15%] w-14 lg:w-20'],
+  [React, 'left-0 sm:left-[5%] lg:left-[0%] top-[35%] w-14 lg:w-18'],
+  [Vue, 'left-[0%] sm:left-0 lg:left-[10%] bottom-0 lg:bottom-[25%] w-14 lg:w-20'],
   // Icons right
-  [Node, 'left-[60%] -top-[4.5rem] w-14 lg:w-18'],
-  [EX, 'left-[75%] top-0 w-14 lg:w-18'],
-  [Twind, 'left-[75%] top-[45%] w-14 lg:w-20'],
-
-  [DB, 'left-[33%] sm:left-[50%] top-[80%] lg:top-[90%] sm:bottom-0 w-16 lg:w-22'],
+  [Node, 'left-[80%] top-[10%] lg:top-0 w-14 lg:w-18'],
+  [EX, 'left-[90%] lg:left-[95%] top-[45%] lg:top-[30%] w-14 lg:w-18'],
+  [Twind, 'left-[90%] top-[80%] lg:top-[65%] w-14 lg:w-20'],
+  [DB, 'left-[45%] sm:left-[50%] top-[95%]  w-16 lg:w-22'],
 ]
 
 let iconFloatTween
 let iconEntryTl
+
+function setIconState(active = props.active) {
+  iconEntryTl?.[active ? 'resume' : 'pause']()
+  iconFloatTween?.[active ? 'resume' : 'pause']()
+}
 
 function floatIcons() {
   iconFloatTween?.kill()
@@ -50,6 +64,8 @@ function floatIcons() {
     yoyo: true,
     ease: 'sine.inOut',
   })
+
+  setIconState()
 }
 
 function playIconsEntry() {
@@ -75,6 +91,8 @@ function playIconsEntry() {
       },
     )
     .add(floatIcons)
+
+  setIconState()
 }
 
 defineExpose({
@@ -84,7 +102,10 @@ defineExpose({
 
 onMounted(() => {
   playIconsEntry()
+  setIconState()
 })
+
+watch(() => props.active, setIconState)
 
 onUnmounted(() => {
   iconEntryTl?.kill()
@@ -97,7 +118,7 @@ onUnmounted(() => {
     <div
       v-for="(icon, index) in icons"
       :key="index"
-      class="hero-icon absolute -translate-x-1/2 -translate-y-1/2"
+      class="hero-icon absolute"
       :class="icon[1]"
       aria-hidden="true"
     >

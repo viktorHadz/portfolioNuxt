@@ -42,7 +42,12 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
     >
       <span
         aria-hidden="true"
-        class="absolute top-1/2 left-7 h-px w-72 -translate-y-1/2 bg-linear-to-r from-acc-sec to-transparent blur-sm"
+        class="absolute top-1/2 -left-1/6 h-3 w-72 -translate-y-1/2 bg-linear-to-r from-transparent via-acc-sec/20 to-transparent blur-md"
+      />
+
+      <span
+        aria-hidden="true"
+        class="absolute top-1/2 -left-1/6 h-px w-64 -translate-y-1/2 bg-linear-to-r from-transparent via-acc-sec/30 to-transparent"
       />
       <GrouchyHead class="relative z-10 size-8 shrink-0 sm:size-11" />
       <span class="text-md relative z-10 leading-none font-bold uppercase sm:text-2xl">

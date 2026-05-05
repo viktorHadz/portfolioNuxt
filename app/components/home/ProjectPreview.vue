@@ -68,7 +68,7 @@ function openProject(path) {
     class="project-preview mt-10"
     aria-label="Featured project preview"
   >
-    <div class="grid gap-4 lg:grid-cols-[1.05fr_0.8fr]">
+    <div class="grid gap-4 lg:grid-cols-[1fr_0.6fr]">
       <article class="z-20 h-136 overflow-hidden rounded-lg sm:h-160 lg:h-152">
         <div class="grid h-full grid-cols-3 grid-rows-4 gap-2">
           <button
@@ -86,20 +86,18 @@ function openProject(path) {
           >
             <div class="flex h-full flex-col">
               <div
-                class="flex min-h-8 items-center justify-between gap-2 rounded-t-lg bg-bg-prim px-2 py-1.5 sm:min-h-9"
+                class="flex min-h-8 items-center justify-between rounded-t-lg bg-bg-prim px-2 py-1.5 sm:min-h-9"
               >
-                <div
-                  class="mb-2 flex gap-1.5"
-                  aria-hidden="true"
-                >
-                  <span class="size-1.5 rounded-sm bg-red" />
-                  <span class="size-1.5 rounded-sm bg-acc-sec" />
-                  <span class="size-1.5 rounded-sm bg-acc-ter" />
-                </div>
-
                 <span class="truncate text-tiny font-bold text-fg-ter uppercase">
                   {{ item.name }}
                 </span>
+                <div
+                  class="flex gap-2"
+                  aria-hidden="true"
+                >
+                  <span class="size-2 rounded-sm bg-red" />
+                  <span class="size-2 rounded-sm bg-green" />
+                </div>
               </div>
 
               <div class="relative min-h-0 flex-1 overflow-hidden rounded-b-lg">
@@ -124,38 +122,45 @@ function openProject(path) {
 
       <aside
         v-if="activeProject"
-        class="pannelShadow z-10 flex flex-col overflow-hidden rounded-lg bg-bg-sec lg:h-152"
+        class="pannelShadow z-10 flex flex-col overflow-hidden rounded-lg bg-bg-sec ring-4 ring-acc-prim/50 lg:h-152"
       >
-        <div class="bg-bg-prim px-4 py-3">
-          <h3 class="text-xl leading-tight font-bold text-fg-prim sm:text-2xl">
-            {{ activeProject.name }}
-          </h3>
-          <p class="text-xs font-bold text-acc-prim uppercase">
-            {{ activeProject.eyebrow }}
-          </p>
+        <div class="flex justify-between bg-bg-prim px-4 py-3">
+          <div>
+            <h3 class="text-xl leading-tight font-bold text-fg-prim sm:text-2xl">
+              {{ activeProject.name }}
+            </h3>
+            <p class="text-xs font-bold text-acc-prim uppercase">
+              {{ activeProject.eyebrow }}
+            </p>
+          </div>
+          <div
+            class="flex gap-3"
+            aria-hidden="true"
+          >
+            <span class="mt-1 size-3 rounded-full bg-red" />
+            <span class="mt-1 size-3 rounded-full bg-green" />
+          </div>
         </div>
 
-        <div class="grid flex-1 gap-4 overflow-y-auto p-4">
-          <div class="grid flex-1 content-start gap-5 overflow-y-auto">
+        <div class="flex min-h-0 flex-1 flex-col justify-between gap-5 overflow-y-auto p-4">
+          <div class="space-y-5">
             <p class="text-sm leading-6 text-fg-sec">
               {{ activeProject.summary }}
             </p>
 
-            <div class="grid gap-3">
-              <section class="rounded-lg bg-bg-ter p-3">
-                <h4 class="text-xs font-bold text-acc-prim uppercase">Outcome</h4>
-                <p class="mt-1 text-sm leading-6 text-fg-sec">
-                  {{ activeProject.outcome }}
-                </p>
-              </section>
+            <section class="rounded-lg bg-bg-ter p-3">
+              <h4 class="text-xs font-bold text-acc-prim uppercase">Outcome</h4>
+              <p class="mt-1 text-sm leading-6 text-fg-sec">
+                {{ activeProject.outcome }}
+              </p>
+            </section>
 
-              <section class="rounded-lg bg-bg-ter p-3">
-                <h4 class="text-xs font-bold text-acc-prim uppercase">Build</h4>
-                <p class="mt-1 text-sm leading-6 text-fg-sec">
-                  {{ activeProject.build }}
-                </p>
-              </section>
-            </div>
+            <section class="rounded-lg bg-bg-ter p-3">
+              <h4 class="text-xs font-bold text-acc-prim uppercase">Build</h4>
+              <p class="mt-1 text-sm leading-6 text-fg-sec">
+                {{ activeProject.build }}
+              </p>
+            </section>
 
             <section>
               <h4 class="text-xs font-bold text-acc-prim uppercase">Stack</h4>
@@ -168,37 +173,37 @@ function openProject(path) {
                 />
               </div>
             </section>
+          </div>
 
-            <div class="mt-auto grid grid-cols-3 gap-2 pt-2">
-              <TheButton
-                v-if="activeProject.liveUrl"
-                variant="primary"
-                size="compact"
-                block
-                @click="openExternal(activeProject.liveUrl)"
-              >
-                Visit
-              </TheButton>
+          <div class="grid grid-cols-3 gap-2 pt-2">
+            <TheButton
+              v-if="activeProject.liveUrl"
+              variant="primary"
+              size="compact"
+              block
+              @click="openExternal(activeProject.liveUrl)"
+            >
+              Visit
+            </TheButton>
 
-              <TheButton
-                variant="secondary"
-                size="compact"
-                block
-                @click="openExternal(activeProject.gitHub)"
-              >
-                GitHub
-              </TheButton>
+            <TheButton
+              variant="secondary"
+              size="compact"
+              block
+              @click="openExternal(activeProject.gitHub)"
+            >
+              GitHub
+            </TheButton>
 
-              <TheButton
-                variant="tertiary"
-                color
-                size="compact"
-                block
-                @click="openProject(activeProject.path)"
-              >
-                More Info
-              </TheButton>
-            </div>
+            <TheButton
+              variant="tertiary"
+              color
+              size="compact"
+              block
+              @click="openProject(activeProject.path)"
+            >
+              See More
+            </TheButton>
           </div>
         </div>
       </aside>
@@ -210,9 +215,11 @@ function openProject(path) {
 .project-preview {
   overflow-anchor: none;
 }
+/*
 .pannelShadow {
   box-shadow:
     0 0 0 1px hsl(228 10% 20%),
     0 10px 50px -10px hsl(77 64% 57% / 0.25);
 }
+*/
 </style>

@@ -1,4 +1,11 @@
 <script setup>
+const props = defineProps({
+  active: {
+    type: Boolean,
+    default: true,
+  },
+})
+
 const colors = ['var(--acc-primary)', 'var(--acc-secondary)', 'var(--acc-tertiary)']
 
 const streaks = Array.from({ length: 36 }, (_, i) => ({
@@ -19,7 +26,10 @@ const streaks = Array.from({ length: 36 }, (_, i) => ({
 </script>
 
 <template>
-  <div class="pointer-events-none absolute inset-0 overflow-hidden">
+  <div
+    class="pointer-events-none absolute inset-0 overflow-hidden"
+    :class="{ 'hero-speed-lines-paused': !props.active }"
+  >
     <span
       v-for="streak in streaks"
       :key="streak.id"
@@ -35,6 +45,10 @@ const streaks = Array.from({ length: 36 }, (_, i) => ({
   color: var(--line-color);
   transform: translate3d(calc(var(--line-shift) * -1), 0, 0);
   animation: hero-speed-line var(--line-duration) linear var(--line-delay) infinite;
+}
+
+.hero-speed-lines-paused .hero-speed-line {
+  animation-play-state: paused;
 }
 
 .hero-speed-line::before,

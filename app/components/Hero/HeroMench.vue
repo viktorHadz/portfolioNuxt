@@ -1,9 +1,19 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import MotionPathPlugin from 'gsap/MotionPathPlugin'
+import ThePortal from './ThePortal.vue'
 
 gsap.registerPlugin(MotionPathPlugin)
+
+const props = defineProps({
+  active: {
+    type: Boolean,
+    default: true,
+  },
+})
+
+const root = useTemplateRef('root')
+let ctx
 
 const faceStates = {
   default: ['#default-brows', '#default-eyes', '#default-mouth'],
@@ -12,19 +22,68 @@ const faceStates = {
   dizzy: ['#dizzy-brows', '#dizzy-eyes', '#dizzy-mouth', '#dizzy-stars', '#star-path-cover-front'],
 }
 
-const faceParts = Object.values(faceStates).flat()
+const faceParts = [...new Set(Object.values(faceStates).flat())]
 const starIds = ['#star', '#star_2', '#star_3', '#star_4', '#star_5', '#star_6']
 const dizzyBits = ['#dizzy-stars', ...starIds]
 
+let idleDelay
 let mode = 'idle'
 let faceTl
 let faceTimer
 let fxTl
-let portalTl
 let headBobTween
-let entryTl
+let blinkTl
+let isTracking = false
+
+const viewport = {
+  w: 1,
+  h: 1,
+  widthScale: 1,
+}
+
+function updateViewport() {
+  viewport.w = window.innerWidth
+  viewport.h = window.innerHeight
+  viewport.widthScale = REFERENCE_WIDTH / viewport.w
+}
+
+function setTweenState(tween, active = props.active) {
+  tween?.[active ? 'resume' : 'pause']()
+}
+
+function resetMouseTracking() {
+  dizziness = 0
+  lastMouseX = 0
+  lastMouseY = 0
+  lastMoveTime = 0
+}
+
+function setMouseTracking(active = props.active) {
+  if (active && !isTracking) {
+    document.addEventListener('mousemove', moveEyes, { passive: true })
+    isTracking = true
+    return
+  }
+
+  if (!active && isTracking) {
+    document.removeEventListener('mousemove', moveEyes)
+    isTracking = false
+    resetMouseTracking()
+  }
+}
+
+function setHeroState(active = props.active) {
+  setMouseTracking(active)
+  setTweenState(idleDelay, active)
+  setTweenState(faceTl, active)
+  setTweenState(fxTl, active)
+  setTweenState(headBobTween, active)
+  setTweenState(blinkTl, active)
+}
 
 function spinStars() {
+  fxTl?.kill()
+
   fxTl = gsap.timeline({ repeat: -1 })
 
   starIds.forEach((id, idx) => {
@@ -44,72 +103,70 @@ function spinStars() {
       0,
     )
   })
+
+  setTweenState(fxTl)
 }
 
 function showFace(state = 'default', duration = 0) {
   if (!faceStates[state]) return
+
   clearTimeout(faceTimer)
+
   faceTl?.kill()
   fxTl?.kill()
+
   mode = state === 'default' ? 'idle' : state
+
   gsap.killTweensOf(faceParts)
   gsap.set(dizzyBits, { clearProps: 'transform' })
   gsap.set(faceParts, { opacity: 0 })
   gsap.set(faceStates[state], { opacity: 1 })
+
   if (state === 'dizzy') spinStars()
-  if (duration) faceTimer = setTimeout(showFace, duration * 1000)
+
+  if (duration) {
+    faceTimer = setTimeout(() => {
+      showFace()
+    }, duration * 1000)
+  }
 }
 
-defineExpose({ showFace })
+const blinkCovers = [
+  ['#blink-cover-l', 460, 555],
+  ['#blink-cover-r', 465, 559],
+]
 
-function portalTw() {
-  portalTl?.kill()
-  const tl = gsap.timeline({ repeat: -1 })
+function blink(repeatDuration = 2) {
+  blinkTl?.kill()
 
-  tl.to(
-    '#rotator',
-    {
-      ease: 'sine.inOut',
-      transformOrigin: '50% 50%',
-      repeat: -1,
-      scale: 1.05,
-      yoyo: true,
-      duration: 2,
-      opacity: 0.8,
-    },
-    0,
-  )
-  tl.to(
-    '#swirl-main',
-    {
-      ease: 'sine.inOut',
-      transformOrigin: '50% 50%',
-      repeat: -1,
-      scale: 0.95,
-      yoyo: true,
-      duration: 2,
-      opacity: 0.8,
-      delay: 0.5,
-    },
-    0,
-  )
-  portalTl = tl
-  return tl
+  blinkTl = gsap.timeline({ repeat: -1, repeatDelay: repeatDuration })
+
+  blinkCovers.forEach(([id, openY, closedY]) => {
+    blinkTl.to(id, { attr: { y: closedY }, duration: 0.3, ease: 'power2.in' }, 0)
+    blinkTl.to(id, { attr: { y: openY }, duration: 0.2, ease: 'power2.out' }, '>')
+  })
+
+  setTweenState(blinkTl)
 }
 
 function bobHead() {
   headBobTween?.kill()
+
   headBobTween = gsap.to('#head', {
-    y: 10,
-    duration: 1.15,
+    y: 8,
+    duration: 2,
     repeat: -1,
     yoyo: true,
     ease: 'sine.inOut',
   })
+
+  setTweenState(headBobTween)
 }
 
 function initialGrin(delay = 0.2) {
-  return (faceTl = gsap
+  faceTl?.kill()
+
+  faceTl = gsap
     .timeline({
       delay,
       repeat: 1,
@@ -119,45 +176,13 @@ function initialGrin(delay = 0.2) {
     })
     .to(['#default-eyes', '#default-mouth'], { opacity: 0, duration: 0.08 }, 0)
     .to(['#grin-eyes', '#grin'], { opacity: 1, duration: 0.08 }, 0)
-    .to({}, { duration: 0.5 }))
+    .to({}, { duration: 0.7 })
+
+  setTweenState(faceTl)
+
+  return faceTl
 }
 
-function playEntry() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    gsap.set(['.hero-portal-svg', '.hero-character-svg'], { autoAlpha: 1 })
-    return
-  }
-
-  entryTl?.kill()
-  entryTl = gsap
-    .timeline({ delay: 0.5 })
-    .fromTo(
-      '.hero-portal-svg',
-      { autoAlpha: 0, scale: 0.25, y: 34, rotate: -8, transformOrigin: '50% 50%' },
-      { autoAlpha: 1, scale: 1, y: 0, rotate: 0, duration: 0.75, ease: 'back.out(1.8)' },
-      0,
-    )
-    .fromTo(
-      ['#swirl-main', '#rotator'],
-      { autoAlpha: 0, scale: 0.45, transformOrigin: '50% 50%' },
-      { autoAlpha: 1, scale: 1, duration: 0.62, ease: 'power3.out', stagger: 0.08 },
-      0.12,
-    )
-
-    .fromTo(
-      '.hero-character-svg',
-      { autoAlpha: 0, y: 90, scale: 0.9, transformOrigin: '58% 72%' },
-      { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(1.5)' },
-      1,
-    )
-    .add(() => {
-      portalTw()
-      initialGrin(0)
-      bobHead()
-    }, 2)
-}
-
-// Brows
 let setLeftBrowY, setRightBrowY
 
 // Dizzy
@@ -190,8 +215,9 @@ function checkDizzyFromMouse(e) {
   // Scale every distance to the reference width
   // Big monitor (3840px) → scale 0.375 counts for less
   // Small monitor (1280px) → scale 1.125 counts for slightly more
-  const widthScale = REFERENCE_WIDTH / window.innerWidth
-  const dist = Math.hypot(e.clientX - lastMouseX, e.clientY - lastMouseY) * widthScale
+
+  // const widthScale = REFERENCE_WIDTH / window.innerWidth
+  const dist = Math.hypot(e.clientX - lastMouseX, e.clientY - lastMouseY) * viewport.widthScale
 
   dizziness = Math.max(0, dizziness - DIZZY_DECAY_PER_SEC * (dt / 1000))
 
@@ -214,69 +240,97 @@ let setLeftPupilX, setLeftPupilY, setRightPupilX, setRightPupilY
 const clamp = (e, min = -1, max = 1) => Math.max(min, Math.min(max, e))
 
 function moveEyes(e) {
+  if (!props.active) return
+
   checkDizzyFromMouse(e)
-  const x = clamp((e.clientX - window.innerWidth / 2) / (window.innerWidth / 2))
-  const y = clamp((e.clientY - window.innerHeight / 2) / (window.innerHeight / 2))
+  const x = clamp((e.clientX - viewport.w / 2) / (viewport.w / 2))
+  const y = clamp((e.clientY - viewport.h / 2) / (viewport.h / 2))
 
-  if (mode === 'idle') {
-    const eyeX = x * MAX.x
-    const eyeY = y < 0 ? y * MAX.yUp : y * MAX.yDown
-    setLeftPupilX(eyeX)
-    setLeftPupilY(eyeY)
-    setRightPupilX(eyeX)
-    setRightPupilY(eyeY)
-
-    if (x < 0) {
-      setLeftBrowY(x * MAX.brow)
-      setRightBrowY(0)
-    } else {
-      setRightBrowY(x * -MAX.brow)
-      setLeftBrowY(0)
-    }
+  if (mode !== 'idle') return
+  const eyeX = x * MAX.x
+  const eyeY = y < 0 ? y * MAX.yUp : y * MAX.yDown
+  setLeftPupilX(eyeX)
+  setLeftPupilY(eyeY)
+  setRightPupilX(eyeX)
+  setRightPupilY(eyeY)
+  if (x < 0) {
+    setLeftBrowY(x * MAX.brow)
+    setRightBrowY(0)
+  } else {
+    setRightBrowY(x * -MAX.brow)
+    setLeftBrowY(0)
   }
 }
 
 onMounted(() => {
-  showFace()
-  gsap.set('#rotator', { scaleX: 0.9 })
+  ctx = gsap.context(() => {
+    showFace()
 
-  playEntry()
+    // ---------------------------- Eyes logic ----------------------------------------------
+    // Firefox SVG transform jitter fix
+    // gsap.set(['#default-pupil-l', '#default-pupil-r'], {
+    //   rotation: 0.01,
+    //   skewX: 0.1,
+    //   transformOrigin: '50% 50%',
+    // })
+    gsap.set(root.value, {
+      rotation: 0.01,
+      skewX: 0.1,
+      transformOrigin: '50% 50%',
+    })
 
-  // ---------------------------- Eyes logic ----------------------------------------------
-  // Firefox SVG transform jitter fix
-  gsap.set(['#default-pupil-l', '#default-pupil-r'], {
-    rotation: 0.01,
-    skewX: 0.1,
-    transformOrigin: '50% 50%',
-  })
+    setLeftPupilX = gsap.quickTo('#default-pupil-l', 'x', { duration: 0.2, ease: 'sine' })
+    setLeftPupilY = gsap.quickTo('#default-pupil-l', 'y', { duration: 0.2, ease: 'sine' })
+    setRightPupilX = gsap.quickTo('#default-pupil-r', 'x', { duration: 0.2, ease: 'sine' })
+    setRightPupilY = gsap.quickTo('#default-pupil-r', 'y', { duration: 0.2, ease: 'sine' })
 
-  setLeftPupilX = gsap.quickTo('#default-pupil-l', 'x', { duration: 0.2, ease: 'sine' })
-  setLeftPupilY = gsap.quickTo('#default-pupil-l', 'y', { duration: 0.2, ease: 'sine' })
-  setRightPupilX = gsap.quickTo('#default-pupil-r', 'x', { duration: 0.2, ease: 'sine' })
-  setRightPupilY = gsap.quickTo('#default-pupil-r', 'y', { duration: 0.2, ease: 'sine' })
+    setLeftBrowY = gsap.quickTo('#default-brow-left', 'y', { ease: 'power3' })
+    setRightBrowY = gsap.quickTo('#default-brow-right', 'y', { ease: 'power3' })
 
-  setLeftBrowY = gsap.quickTo('#default-brow-left', 'y', { ease: 'power3' })
-  setRightBrowY = gsap.quickTo('#default-brow-right', 'y', { ease: 'power3' })
-
-  document.addEventListener('mousemove', moveEyes)
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      idleDelay = gsap.delayedCall(2.5, () => {
+        initialGrin(0)
+        bobHead()
+      })
+      setTweenState(idleDelay)
+      blink(8)
+    }
+  }, root.value)
+  updateViewport()
+  window.addEventListener('resize', updateViewport, { passive: true })
+  setHeroState()
 })
 
+watch(() => props.active, setHeroState)
+
 onUnmounted(() => {
-  document.removeEventListener('mousemove', moveEyes)
+  setMouseTracking(false)
+  window.removeEventListener('resize', updateViewport)
   clearTimeout(faceTimer)
-  entryTl?.kill()
-  portalTl?.kill()
+
+  idleDelay?.kill()
   headBobTween?.kill()
   faceTl?.kill()
   fxTl?.kill()
+  blinkTl?.kill()
+
+  ctx?.revert()
+
+  idleDelay = null
+  headBobTween = null
+  faceTl = null
+  fxTl = null
+  ctx = null
+  blinkTl = null
 })
 </script>
 
 <template>
   <svg
+    ref="root"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
-    viewBox="0 0 1200 1664"
+    viewBox="0 0 1200 1200"
     class="hero-character-svg pointer-events-auto overflow-visible"
   >
     <g
@@ -291,6 +345,7 @@ onUnmounted(() => {
         fill-opacity=".05"
       />
     </g>
+    <ThePortal :active="props.active" />
     <g id="hero-3">
       <g
         id="hero-mench-3"
@@ -299,33 +354,26 @@ onUnmounted(() => {
         <path
           id="fill-arm-left"
           fill="color(display-p3 1 .713 .58)"
-          fill-opacity="1"
           d="M581.08 974.98c9.43-6.4 23.63-1.43 25.95 0 17.87-8.09 13.15-7.42 24.61-8.09 2.54 1.9 6.46-10.73 9.22-8.97 3.58 2.28 10.15-1.15 10.03-5.38-.3-10.48-15.14-22.48-22.74-27.91-24.55-17.56-55.93-22.22-85.29-24.17-14.75-.99-29.1-4.92-43.48-8.09-.56-2.89 8.25-7.32 6.52-9.76-12.35-17.37-37.29-33.13-59-33.03-15.87.07-39.53 13.18-50.9 22.92-15.15 13-30.04 29.7-36.74 48.88-1.83 5.24-5.2 13.67-3.7 19.22 3.13 11.59 15.79 16.22 25.62 17.32 4.36.49 17.72 3.87 27.64 3.58 25.45-.76 51.08-3.7 76.52-4.72 2.87-.12 17.87 1.14 17.87 1.14s19.13 7.54 28.31 7.62c2.56.03 13.27 1.9 15.17 0 11.8-2.48 21.23 12.98 34.39 9.44"
         />
         <path
           id="shadow-arm-left"
           fill="color(display-p3 .8078 .5608 .4627)"
-          fill-opacity="1"
           d="m404.43 959.14 83.26-16.85 11.46 14.5z"
         />
         <path
           id="shadow-arm-left_2"
           fill="color(display-p3 .8078 .5608 .4627)"
-          fill-opacity="1"
           d="m436.8 884.65 54.6-12.48 12.82 17.53z"
         />
         <path
           id="shirt-extra"
           fill="#000"
-          fill-opacity="1"
           fill-rule="evenodd"
           d="M824.46 740.52c3.92.64 2.06 7.92 9.1 8.43 53.12 3.82 111.25 36.74 139.23 93.7 26.29 43.5 40.01 105.19 34.38 112.6-4.77 6.28 18.26 73.28-173.6 73.33-23.8.01-44.45-1.32-62.37-3.6-91.98-11.73-112.16-48.68-117.03-59.95-1-2.3-1.35-3.53-1.55-3.27-1.85 2.34-5.38 3.41-10.14 3.07-3.86-.28-3.93-.25-4.96 1.92-2.08 4.37-10.67 6.33-16.57 3.79-3-1.3-3-1.3-4.38 1.45-3.62 7.15-13.7 8.36-22 2.65-3.37-2.31-3.37-2.31-5.17-.17-6.29 7.48-21.75 5.9-34.32-3.49-2.99-2.22-3.76-2.51-5.45-2.02-11.35 3.25-32.4.31-45.7-6.39-6.06-3.05-6.06-3.06-17.52-2.01-74.9 6.82-115.17 4.98-128.49-7-21.37-19.2 13.47-74.87 62.92-102.22 3.24-1.8 10.63-7.48 16.3-11.71 39.65-29.7 58.62-40.11 103.14-57.31 57.61-22.25 98.98-26.25 159.12-32.14 48.35-4.73 77.13-17.57 125.06-9.66M453.71 854.76c-28.17-6.8-75.93 28.84-91.08 67.98-12.14 31.36 4.66 37.2 91.76 31.86 41-2.5 38.26-2.18 36.17-4.36-5.86-6.12-5.5-12.47.38-6.78 17.75 17.16 38.78 24 56.82 18.5 4.94-1.5 5.49-1.37 9.67 2.37 9.01 8.05 22.59 11.1 26.03 5.83 3.26-4.98-6.45-18.24-20.04-27.36-2.89-1.94-5.07-3.81-4.85-4.16 2.23-3.6 18.58 7.18 27.13 17.9 10.7 13.4 12.4 14.71 19.26 14.79 16.42.17 1.21-27.48-23.66-43.02q-5-3.13-.94-3.12c7.94 0 27.3 17.75 35.45 32.52 3.84 6.94 7.59 9.01 13.25 7.32 12.22-3.67-2.83-25.78-28.1-41.27-7-4.3-6.14-5.11 1.76-1.68 13.91 6.02 28.48 18.91 34 30.07 1 2.04 2.07 4.17 2.35 4.72.67 1.3 5.86 1.71 7.88.63 5.45-2.91 1.52-12.12-9.95-23.36-19.98-19.56-48.88-29.56-93.96-32.5-7.99-.53-13.5-1.33-21.24-3.1-51.84-11.88-75.14-14.38-100.11-10.75-3.75.55-1.93-.65 3.7-2.42 15.06-4.75 58.92-4.06 72.44 1.13 2.05.78-2.23-4.8-8.33-10.85-10.55-10.49-23.16-17.85-35.79-20.9"
           clip-rule="evenodd"
         />
-        <g
-          id="neck"
-          fill-opacity="1"
-        >
+        <g id="neck">
           <path
             id="neck-fill"
             fill="color(display-p3 1 .7216 .6)"
@@ -348,24 +396,19 @@ onUnmounted(() => {
           <path
             id="Subtract"
             fill="color(display-p3 1 .7216 .6)"
-            fill-opacity="1"
             d="M846.37 503.26c-1.11-3.65-25.68-64.05-37.76-64.05s-28.26-6.13-43.15-19.22c-12.81-11.27-26.11-22.97-210.35 6.2-21.43 3.4-20.9 50.1-20.9 50.1s-7.96 37.61-11.12 55.62c-2.52 14.32-6.57 19.84-6.41 33.04.28 22.87 1.5 50.3 2.48 73.15 10 68.9 7.31 94.8 31.23 134.29 21.24 35.06 69.52 58.06 112.93 58.66 1.55-.37 4.69-1.7 9.78-2.03 49.36-3.25 99.14-23.78 139.9-70.79 2.07-2.39 8.58-12.31 13.82-20.9 6.16-10.1 14.1-19.34 16.71-26.13 2.13-5.55 1.5-8.72 3.07-8.38 16 3.44 29.4.14 43.6-14.16 24.35-24.54 47.8-81.16 7.4-100.12-5.02-2.36-11.8 3.71-11.8 3.71l-35.72-18.88s-1.29-62.16-3.71-70.11"
           />
           <path
             id="beard"
             fill="color(display-p3 .6941 .4706 .3961)"
-            fill-opacity="1"
             stroke="color(display-p3 .5412 .3412 .2941)"
-            stroke-opacity="1"
             stroke-width="2.7"
             d="M644.78 737.42c3.91-.05 9.46.23 12.28.6 2.83.38 7 1.3 9.21 2.02 2.6.84 4.22 1.8 5.41 3.05l.24.25a11 11 0 0 1 1.63 2.6l.08.24-.1.23q-.15.35-.5.88c-.48.7-1.13 1.5-1.86 2.22a19 19 0 0 1-6.44 4.05c-2.16.8-5.89 1.89-8.23 2.4-2.3.48-6.75.9-9.84.9h-1.21a72 72 0 0 1-8.35-.62 50 50 0 0 1-8.48-2.44 23 23 0 0 1-7.48-4.68 17 17 0 0 1-2.17-2.45 6 6 0 0 1-.52-.88c-.1-.24-.1-.33-.1-.29 0-.54.2-1.41.43-1.97l.1-.21a10 10 0 0 1 2.64-2.02 33 33 0 0 1 5.2-1.97 65 65 0 0 1 6.9-1.3c2.19-.29 7.22-.57 11.16-.61Z"
           />
           <path
             id="Exclude"
             fill="color(display-p3 .3529 .2627 .251)"
-            fill-opacity="1"
             stroke="color(display-p3 .4426 .3327 .3174)"
-            stroke-opacity="1"
             stroke-width="8.09"
             d="M661.59 299.28c21.92-3.18 43.91 7.23 63.34 19.12a24 24 0 0 0 4.1 2.02c.56.22 1.17.4 1.74.52.27.06.69.12 1.16.12q.38.02 1.07-.13a4.2 4.2 0 0 0 2.8-2.3l.23-.56q.14-.43.23-.82.2-.78.34-1.79c.2-1.3.36-3.01.31-4.66-.06-2.54-.2-7.39-.87-10.25l-.02-.07c8.76 1.41 17.48 5.41 25.9 10.72 8.2 5.15 15.9 11.41 22.9 17.4l2.95 2.55a43 43 0 0 0 5.9 4.4c.77.45 1.88 1.05 3.03 1.28.49.1 1.83.32 3.21-.43a4.4 4.4 0 0 0 2.3-3.95c-.02-3.96-1.14-7.62-2.03-10.62q-.61-2-1.04-3.72l.63.27c3 1.33 5.6 2.82 6.88 3.48 7.74 4.52 15 9 20.9 15 5.86 5.94 9.41 14.06 12.3 22.54.46 1.34.96 2.75 1.4 4.12q.6 1.87.75 2.71l.03.21c.12.89.2 1.85.33 2.95l.2 1.45c.05.2.12.56.25.93.05.16.2.58.5 1.03.15.22 1.25 1.85 3.47 1.82h.02c3.2-.07 6.17-1.46 8.18-2.34 2.34-1.02 3.83-1.58 5.21-1.58 4.2.01 7.08 1.84 9.25 4.78 2.3 3.11 3.78 7.45 4.65 12.03.62 3.23 1.35 6.73 1.31 10.47-.3 3.27.22 6.04 1.6 8.4a15 15 0 0 0 5.04 4.92c3.5 2.26 5.92 3.24 7.72 5.8q-.23 0-.5.04c-.22.03-1.68.2-2.78 1.49a4.2 4.2 0 0 0-.53 4.63c.35.7.83 1.2 1.06 1.42a43 43 0 0 0 5.18 4.39c1.35 1 2.52 1.82 4 3.14a85 85 0 0 1 5.4 9.21c1.42 3 2.2 6.29 2.82 9.93.6 3.44 1.1 7.68 1.95 11.48 2.75 12.42 2.83 26.2 1.91 39.2v.01c-.19 2.72-.8 6-1.47 9.15-.63 2.95-1.38 6.08-1.67 7.9-2.97 18.34-7.85 36.08-13.16 54.1a8.9 8.9 0 0 0-2.05 7.41q.14.78.33 1.44-.62.42-1.7 1c-1.78.98-4.56 2.34-7.22 4-4.57 1.71-8.32 4.62-11.52 7.66-2.8 2.66-5.52 5.8-7.87 8.35l-.98 1.05c-.28.3-.54.68-.65.83l-.61.87-1.73 2.56a350 350 0 0 1-4.81 7.03c-1.06 1.5-2.1 2.92-3.05 4.13v-.01c-.16-2.3.09-5.12.57-8.18s1.16-6.13 1.77-9.01a65 65 0 0 0 1.33-7.6c1.62-21.26 3.24-44.07 1.24-65.74-.91-9.94-3.49-20.2-6.27-29.53l-.55-1.85c-.7-2.26-2.33-5.46-3.77-8.22-1.56-3-3.01-5.69-3.77-7.47-1.62-3.79-4.55-10.91-6.13-14.05-1.03-2.05-2.5-3.61-3.63-4.93a37 37 0 0 1-4.27-6.04c-.66-1.15-2.78-5.35-5.24-8.83a24 24 0 0 0-4.47-4.98c-1.5-1.2-3.9-2.57-6.71-2.06h-8c-5.55 0-11.75-2.3-17.49-5-3.14-1.48-6.82-5.14-9.41-8.66l.77-.79c.7-.68 1.45-1.33 2.06-1.86l.8-.73a6 6 0 0 0 .86-1.02 4.06 4.06 0 0 0-3.45-6.2 5 5 0 0 0-1.42.24l-.54.19-1.43.53-4.15 1.59c-3.2 1.23-6.33 2.4-7.4 2.7-10.19 2.8-21.6 3.12-31.48.05-5.91-1.84-11.55-4.71-15.98-8.67l-.43-.38c-.66-.61-1.2-1.3-1.78-2.1-.47-.66-1.29-1.86-2.19-2.72a6.5 6.5 0 0 0-5.03-1.94c-1.7.11-3.25.87-4.6 1.79l-.56.4q-.94.69-3.25 1.72c-1.02.46-2.36 1.02-3.63 1.6l-1.22.56c-8.86 4.2-17.25 7.63-26.5 8.85l-.89.11a71 71 0 0 1-22.82-.96c-1-.21-4.06-1.16-7.42-2.24-3-.97-5.95-1.95-7.15-2.37-7.08-3.58-12.31-10.27-15.55-16.95a40 40 0 0 1-3.33-9.81 70 70 0 0 0 7.93 1.36c3.48.38 7.42.49 11.07-.2 3.62-.68 7.45-2.26 9.98-5.67l.8-1.07v-1.34c0-1.1-.4-2.64-1.82-3.72a5 5 0 0 0-3.09-.96c-1.22.01-2.54.42-3.4.7-2.22.72-4.4 1.6-7.19 2.32-5.47 1.41-10.49 1.38-14.1-2.95a8.7 8.7 0 0 0-3.67-2.79 5.3 5.3 0 0 0-5.54 1.31 8 8 0 0 0-1.84 3.51 19 19 0 0 0-.52 3.42c-.16 2.3-.06 4.9.16 7.15a27 27 0 0 0 1.14 5.88c3.6 9.8 6.47 15.5 8.02 18.78l.37.79c-2.43 1.35-6.32 3.58-10.03 5.66a341 341 0 0 1-7.36 4.04 74 74 0 0 1-2.69 1.36c-.8.38-1.11.49-1.09.48-7.09 1.93-12.14 1.67-16.14.97-2.11-.36-3.87-.84-5.82-1.29-1.8-.42-3.8-.83-5.86-.83a5 5 0 0 1-.71-.27q-.98-.42-2.48-1.33c-2-1.21-4.32-2.86-6.6-4.56q-1.72-1.27-3.28-2.46l-2.82-2.12c-.8-.6-1.6-1.15-2.22-1.54a7 7 0 0 0-1.31-.66 4.13 4.13 0 0 0-5.46 2.66l-.08.3a5.4 5.4 0 0 0 .17 2.81c.21.65.51 1.24.8 1.74a23 23 0 0 0 2.15 3.01 90 90 0 0 0 6 6.43 222 222 0 0 0 5.94 5.65l.35.31q-.52 1.11-1 2.27c-.84 2.06-1.7 4.4-2.5 6.65-.83 2.29-1.57 4.43-2.25 6.25a30 30 0 0 1-1.45 3.5c-1.48 2.56-4.29 7.11-6.32 11.19a9 9 0 0 0-1.5-.86c-.47-.22-1.35-.56-1.49-.61l-.22-.1c-5.14-4.4-8.92-9.52-14.14-15.13-4.2-4.93-8.16-9.7-10.82-14.97l-.3-.6a43 43 0 0 1-3.76-12.76c-.58-5.29.59-8.24 2.83-9.44a4.3 4.3 0 0 0 2.2-4.6 6 6 0 0 0-.86-2.05 17 17 0 0 0-1.73-2.1c-1.18-1.27-2.13-2.2-2.72-2.94l-.23-.3c-2.7-3.78-3.85-9.34-3.82-14.47.02-2.4-.27-4.16-.37-5.12-.09-.86-.08-1.3.17-2.08a10 10 0 0 0 .41-4q.21-.12.42-.2l.12-.06.42.36c.42.36 1.05.93 1.69 1.42a9.8 9.8 0 0 0 6.1 2.23 36 36 0 0 0 5.7-.63c1.8-.33 4.12-.84 5.53-1.53.96-.48 1.91-1.32 2.51-1.88.74-.67 1.56-1.49 2.35-2.3 1.72-1.76 3.1-3.27 4.1-4.28h.01c3.7-3.7 6.72-7.94 9.52-11.83 2.87-3.98 5.52-7.62 8.7-10.72a67 67 0 0 1 16.76-11.74c1.76-.86 3.49-1.87 4.77-2.55a18 18 0 0 1 3.53-1.57c1.86-.54 3.72-.7 6.69-.7 1.5 0 3.2.04 5.32.09 2.1.04 4.54.1 7.43.1 3.06 0 5.44.17 7.38.3 1.72.11 3.69.26 5.26 0a6.3 6.3 0 0 0 5-4.03c.66-1.7.7-3.8.71-5.72 0-2.6-.15-5.89-.22-8.46a67 67 0 0 1-.02-3.38c.03-1.1.1-1.26.02-1.01a10 10 0 0 0 .44-2.1c.06-.5.11-1.2.14-1.52.06-.7.13-.95.14-.99q.72-1.14 1.15-1.7.34.25.84.7l.34.3c5.45 5.1 13.46 7.5 20.63 6.87a45 45 0 0 0 6.33-1.29c2.54-.65 5.45-1.5 8.13-2.4a104 104 0 0 1 16.16-4.06Z"
           />
@@ -373,14 +416,12 @@ onUnmounted(() => {
             id="shadow"
             stroke="color(display-p3 .8078 .5608 .4627)"
             stroke-linecap="round"
-            stroke-opacity="1"
             stroke-width="4.72"
             d="M845.5 630.74c-3.68-5.62-4.67-15.22-3.3-31.17.17-1.95 2.35-20.93 2.36-21.01 0 0 .53-43.72-.72-51.3-3.25-19.66-9.34-34.83-24.79-61.76-8.92-15.55-8.92-15.55-11.9-15.1-15.67 2.34-30.9-3.61-38.78-15.16l-2.24-3.26c-.1-.12-3.46.62-7.47 1.63-14.2 3.6-28.64 2.32-40.64-3.6-3.65-1.79-6.59-3.97-10.34-7.65-2.88-2.84-5.4-4.89-5.6-4.56-1.58 2.54-14.96 9.2-23.43 11.65-22.89 6.63-46.29 4.13-62.03-6.64-2.6-1.77-2.6-1.77-6.9 2.25-12.73 11.92-33.95 17.8-50.18 13.9-4.07-.98-19.15 32.82-23.99 53.74"
           />
           <g
             id="brows"
             fill="#000"
-            fill-opacity="1"
           >
             <g id="default-brows">
               <path
@@ -404,10 +445,7 @@ onUnmounted(() => {
             </g>
           </g>
 
-          <g
-            id="eyes"
-            fill-opacity="1"
-          >
+          <g id="eyes">
             <g id="grouchy-eyes">
               <path
                 id="grouchy-eyes-fill-l"
@@ -433,7 +471,6 @@ onUnmounted(() => {
                   id="default-socket-right"
                   fill="#fff"
                   stroke="#000"
-                  stroke-opacity="1"
                   stroke-width="4.05"
                   d="M732.11 559.57c22.4 0 40.1 15.93 40.1 35.06s-17.7 35.06-40.1 35.06-40.1-15.93-40.1-35.06 17.7-35.06 40.1-35.06Z"
                 />
@@ -442,13 +479,24 @@ onUnmounted(() => {
                   fill="#000"
                   d="M744.72 594.27c0 6.76-5.48 10.91-12.24 10.91s-12.25-4.15-12.25-10.91 5.49-11 12.25-11 12.24 4.24 12.24 11"
                 />
+
                 <path
                   id="lid-r"
                   fill="color(display-p3 1 .7216 .6)"
                   stroke="#000"
-                  stroke-opacity="1"
                   stroke-width="1.44"
                   d="M735.91 558.07c8.69.96 13.85 3.61 19.77 6.96 4.75 2.7 6.9 4.94 9.4 7.92-10.63-4-19.39-6.27-28.45-7.17-9.12-.9-18.52-.42-30.42 1.05.72-.57 1.18-.94 1.72-1.32.9-.63 2-1.25 4.95-2.82a40 40 0 0 1 23.03-4.62Z"
+                />
+                <rect
+                  id="blink-cover-r"
+                  x="688"
+                  y="465"
+                  width="92"
+                  height="90"
+                  fill="color(display-p3 1 .7216 .6)"
+                  stroke="#000"
+                  stroke-width="2"
+                  clip-path="url(#clip-default-eye-right)"
                 />
               </g>
               <g id="default-eye-left">
@@ -456,22 +504,33 @@ onUnmounted(() => {
                   id="default-socket-left"
                   fill="#fff"
                   stroke="#000"
-                  stroke-opacity="1"
                   stroke-width="4.05"
                   d="M574.72 555.44c21.45 0 38.45 15.52 38.45 34.22s-17 34.23-38.45 34.23-38.45-15.53-38.45-34.23 17-34.22 38.45-34.22Z"
                 />
+
                 <path
                   id="default-pupil-l"
                   fill="#000"
                   d="M585.63 589.3c0 6.6-5.36 10.17-11.97 10.17-6.6 0-11.96-3.56-11.96-10.17s5.35-10.73 11.96-10.73c6.6 0 11.97 4.12 11.97 10.73"
                 />
+
                 <path
                   id="lid-l"
                   fill="color(display-p3 1 .7216 .6)"
                   stroke="#000"
-                  stroke-opacity="1"
-                  stroke-width="1.41"
+                  stroke-width="2"
                   d="M570.14 554.16c7.93-.76 13.16.06 19 2.04 2.87.97 5.9 2.76 8.22 4.32q1.07.72 1.9 1.33c-11.87-1.34-20.77-1.69-29.13-.87-8.2.8-15.84 2.73-25.22 5.92 2.24-2.38 3.77-3.79 5.2-4.71 5.48-3.12 12.19-7.28 20.03-8.03Z"
+                />
+                <rect
+                  id="blink-cover-l"
+                  x="532"
+                  y="460"
+                  width="88"
+                  height="90"
+                  fill="color(display-p3 1 .7216 .6)"
+                  stroke="#000"
+                  stroke-width="2"
+                  clip-path="url(#clip-default-eye-left)"
                 />
               </g>
             </g>
@@ -480,7 +539,6 @@ onUnmounted(() => {
                 id="dizzy-socket-right"
                 fill="#fff"
                 stroke="#000"
-                stroke-opacity="1"
                 stroke-width="2.7"
                 d="M735.46 561.37c21.2 0 38.1 15.1 38.1 33.38 0 18.27-16.9 33.37-38.1 33.37s-38.09-15.1-38.09-33.37c0-18.28 16.89-33.38 38.1-33.38Z"
               />
@@ -488,7 +546,6 @@ onUnmounted(() => {
                 id="dizzy-socket-left"
                 fill="#fff"
                 stroke="#000"
-                stroke-opacity="1"
                 stroke-width="2.7"
                 d="M578.38 556.65c20.81 0 37.42 15.07 37.42 33.37s-16.6 33.37-37.42 33.37c-20.8 0-37.41-15.08-37.41-33.37 0-18.3 16.6-33.37 37.41-33.37Z"
               />
@@ -546,25 +603,21 @@ onUnmounted(() => {
           <path
             id="shadow-glasses-top"
             fill="color(display-p3 .8078 .5608 .4627)"
-            fill-opacity="1"
             d="m516.34 539.12 66.41-6.4 70.12 20.55h15.84l45.85-13.14 83.6 10.45 27.3 17.53 20.9 16.85 2.03 41.46s-7.08-7.07-8.43-13.82c-2.7-9.1-1.01-17.19-3.7-21.57-9.1-7.08-9.5-7.23-18.55-5.06-8.43 2.03-14.83 34.39-14.83 34.39l-7.75-3.71s6.45-48.8-13.15-56.63c-10.11-4.05-40.12-13.15-76.52-9.44-14.64 1.49-29.67 14.84-33.04 22.92 0 0-1.93-4.81-3.7-2.02-11.8-4.03-15.52-4.73-23.27-3.37 0 0-13.1 19.24-15.5 23.26-2.03-35.06 6.06-36.58-38.43-46.52-23.32-3.83-57.31-.34-61.7 1.68-4.37 2.02-7.4 53.26-7.4 53.26z"
           />
           <path
             id="shadow-glasses-ear"
             fill="color(display-p3 .8078 .5608 .4627)"
-            fill-opacity="1"
             d="m896.94 609.9 5.39 1.36c-1.35 25.28-37.08 51.23-40.12 55.95-2.76-.65-5.29.62-5.73-2.36l1.35-5.05c12.65-27.6 21.44-36.7 39.1-49.9"
           />
           <path
             id="shadow-glasses-bottom-left"
             fill="color(display-p3 .8078 .5608 .4627)"
-            fill-opacity="1"
             d="M519.71 629.45c44.36 17.72 67.02 18.56 94.05 4.38l-3.7 7.08c-9.44 17.2-67.09 17.2-86.64-6.4z"
           />
           <path
             id="shadow-glasses-bottom-right"
             fill="color(display-p3 .8078 .5608 .4627)"
-            fill-opacity="1"
             d="M671.41 618.34c44.16 40.11 104.5 36.07 122.7 9.43l3.38 7.42c-8.09 37.42-90.64 30.8-113.91 7.94-7.32-8.17-11.73-19.7-12.17-24.8"
           />
           <g
@@ -580,10 +633,7 @@ onUnmounted(() => {
               clip-rule="evenodd"
             />
           </g>
-          <g
-            id="mouths"
-            fill-opacity="1"
-          >
+          <g id="mouths">
             <path
               id="grouchy-mouth"
               fill="#000"
@@ -632,10 +682,7 @@ onUnmounted(() => {
             </g>
           </g>
         </g>
-        <g
-          id="shadows-shirt"
-          fill-opacity="1"
-        >
+        <g id="shadows-shirt">
           <path
             id="shadow-shirt-5"
             fill="color(display-p3 .6863 .8471 .2941)"
@@ -667,7 +714,6 @@ onUnmounted(() => {
       <g
         id="dizzy-stars"
         fill="color(display-p3 1 .9216 .3451)"
-        fill-opacity="1"
       >
         <path
           id="star-motion-path"
@@ -709,57 +755,13 @@ onUnmounted(() => {
         />
       </g>
     </g>
+
     <defs>
       <path
         id="simple-star"
         d="M0,-24 L7,-7 L25,-7 L10,4 L15,22 L0,11 L-15,22 L-10,4 L-25,-7 L-7,-7 Z"
       />
-      <filter
-        id="filter0_f_1455_5673"
-        width="827.08"
-        height="553.12"
-        x="358.27"
-        y="756.07"
-        color-interpolation-filters="sRGB"
-        filterUnits="userSpaceOnUse"
-      >
-        <feFlood
-          flood-opacity="0"
-          result="BackgroundImageFix"
-        />
-        <feBlend
-          in="SourceGraphic"
-          in2="BackgroundImageFix"
-          result="shape"
-        />
-        <feGaussianBlur
-          result="effect1_foregroundBlur_1455_5673"
-          stdDeviation="19.63"
-        />
-      </filter>
-      <filter
-        id="filter1_f_1455_5673"
-        width="493.18"
-        height="451.04"
-        x="817.01"
-        y="597.55"
-        color-interpolation-filters="sRGB"
-        filterUnits="userSpaceOnUse"
-      >
-        <feFlood
-          flood-opacity="0"
-          result="BackgroundImageFix"
-        />
-        <feBlend
-          in="SourceGraphic"
-          in2="BackgroundImageFix"
-          result="shape"
-        />
-        <feGaussianBlur
-          result="effect1_foregroundBlur_1455_5673"
-          stdDeviation="19.63"
-        />
-      </filter>
+
       <filter
         id="filter2_f_1455_5673"
         width="1663.33"
@@ -769,20 +771,19 @@ onUnmounted(() => {
         color-interpolation-filters="sRGB"
         filterUnits="userSpaceOnUse"
       >
-        <feFlood
-          flood-opacity="0"
-          result="BackgroundImageFix"
-        />
-        <feBlend
-          in="SourceGraphic"
-          in2="BackgroundImageFix"
-          result="shape"
-        />
-        <feGaussianBlur
-          result="effect1_foregroundBlur_1455_5673"
-          stdDeviation="76.01"
-        />
+        <feGaussianBlur stdDeviation="76.01" />
       </filter>
+      <clipPath id="clip-default-eye-right">
+        <path
+          d="M732.11 559.57c22.4 0 40.1 15.93 40.1 35.06s-17.7 35.06-40.1 35.06-40.1-15.93-40.1-35.06 17.7-35.06 40.1-35.06Z"
+        />
+      </clipPath>
+
+      <clipPath id="clip-default-eye-left">
+        <path
+          d="M574.72 555.44c21.45 0 38.45 15.52 38.45 34.22s-17 34.23-38.45 34.23-38.45-15.53-38.45-34.23 17-34.22 38.45-34.22Z"
+        />
+      </clipPath>
     </defs>
   </svg>
 </template>

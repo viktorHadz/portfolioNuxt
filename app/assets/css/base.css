@@ -24,18 +24,45 @@
     --border: hsl(228, 10%, 28%);
     --border-strong: hsl(228, 10%, 36%);
 
-    --red: hsl(358, 65%, 65%);
-    --green: hsl(160, 40%, 55%);
+    --red: #ce3a32;
+    --green: #3db54e;
     --blue: #4aa3ff;
     --yellow: #ffeb58;
     --purple: hsl(270, 40%, 65%);
     --offwhite: hsl(210, 15%, 95%);
-    --gray: hsl(210, 8%, 65%);
+    --gray: hsl(0, 0%, 35%);
 
     --grad-stop-1: hsl(79, 80%, 50%);
     --grad-stop-2: hsl(77, 64%, 57%);
     --grad-stop-3: hsl(77, 44%, 37%);
     --grad-stop-4: hsl(77, 44%, 27%);
+
+    /* TV Tokens */
+    --tv-outline: var(--bg-primary);
+    --tv-shadow: hsl(228, 9%, 8%);
+
+    --tv-lime: var(--acc-primary);
+    --tv-lime-dark: hsl(77, 44%, 37%);
+    --tv-lime-dim: hsl(77, 37%, 28%);
+    --tv-lime-glow: hsl(77, 64%, 57%);
+
+    --tv-body: var(--bg-tertiary);
+    --tv-body-dark: var(--bg-secondary);
+    --tv-body-mid: hsl(228, 9%, 18%);
+    --tv-body-soft: hsl(228, 9%, 24%);
+
+    --tv-screen: hsl(228, 18%, 8%);
+    --tv-screen-raised: hsl(228, 6%, 16%);
+    --tv-screen-front: hsl(228, 8%, 15%);
+    --tv-screen-highlight: hsl(0, 0%, 85%);
+
+    --tv-grill-dark: hsl(240, 20%, 2%);
+    --tv-grill-mid: hsl(228, 14%, 7%);
+    --tv-grill-light: hsl(230, 8%, 34%);
+
+    --tv-knob-face: hsl(240, 2%, 25%);
+    --tv-knob-face-dark: hsl(240, 3%, 20%);
+    --tv-button-face: hsl(0, 0%, 22%);
 }
 
 /* ---------- TAILWIND THEME TOKENS ---------- */
@@ -80,7 +107,33 @@
     --color-grad-2: var(--grad-stop-2);
     --color-grad-3: var(--grad-stop-3);
     --color-grad-4: var(--grad-stop-4);
-    --color-grad-5: var(--grad-stop-5);
+
+    /* TV tokens  */
+    --color-tv-outline: var(--tv-outline);
+    --color-tv-shadow: var(--tv-shadow);
+
+    --color-tv-lime: var(--tv-lime);
+    --color-tv-lime-dark: var(--tv-lime-dark);
+    --color-tv-lime-dim: var(--tv-lime-dim);
+    --color-tv-lime-glow: var(--tv-lime-glow);
+
+    --color-tv-body: var(--tv-body);
+    --color-tv-body-dark: var(--tv-body-dark);
+    --color-tv-body-mid: var(--tv-body-mid);
+    --color-tv-body-soft: var(--tv-body-soft);
+
+    --color-tv-screen: var(--tv-screen);
+    --color-tv-screen-raised: var(--tv-screen-raised);
+    --color-tv-screen-front: var(--tv-screen-front);
+    --color-tv-screen-highlight: var(--tv-screen-highlight);
+
+    --color-tv-grill-dark: var(--tv-grill-dark);
+    --color-tv-grill-mid: var(--tv-grill-mid);
+    --color-tv-grill-light: var(--tv-grill-light);
+
+    --color-tv-knob-face: var(--tv-knob-face);
+    --color-tv-knob-face-dark: var(--tv-knob-face-dark);
+    --color-tv-button-face: var(--tv-button-face);
 }
 
 /* ---------- BASE ---------- */
@@ -142,14 +195,14 @@
         }
     }
 }
-@utility text-grad {
-    background-image: linear-gradient(
-        to bottom,
-        var(--grad-stop-1),
-        var(--grad-stop-2),
-        var(--grad-stop-3),
-        var(--grad-stop-4)
-    );
+@utility text-grad-top {
+    @apply bg-linear-to-t from-grad-1 via-grad-2 to-grad-4;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+@utility text-grad-bottom {
+    @apply bg-linear-to-b from-grad-1 via-grad-2 to-grad-4;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

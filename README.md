@@ -1,75 +1,51 @@
-# Nuxt Minimal Starter
+# Bits By Vik
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Nuxt 4 portfolio site for Viktor Hadzhiyski.
 
-## Setup
+## Structure
 
-Make sure to install dependencies:
+```text
+app/
+  components/
+    Button.vue
+    BrandMark.vue
+    DividerMarks.vue
+    PageTransition.vue
+    SiteHeader.vue
+    TechBadge.vue
+    home/
+      HeroSection.vue
+      FeaturedSection.vue
+      SkillsSection.vue
+      ProcessSection.vue
+      ArchiveSection.vue
+      ContactSection.vue
+      hero/
+      featured/
+      skills/
+      process/
+    projects/
+      FieldArt.vue
+      ProjectPage.vue
+  data/portfolio/
+    home.ts
+    projects.ts
+    tech.ts
+```
+
+## Naming Rules
+
+- Top-level shared UI stays short: `Button`, `SiteHeader`, `TechBadge`.
+- Page sections use `Section` suffix.
+- Feature-local pieces live inside the feature folder and keep short names because the folder gives the context.
+- Non-component files stay lowercase.
+- Prefer `~/...` imports over deep relative paths.
+
+## Commands
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
+npm run lint
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

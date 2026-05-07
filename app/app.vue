@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PageTransitionMorph from './components/Decor/PageTransitionMorph.vue'
+import PageTransition from './components/PageTransition.vue'
 
 const siteName = 'Bits By Vik'
 const siteUrl = 'https://bitsbyvik.com'
@@ -39,7 +39,7 @@ useHead({
 </script>
 
 <template>
-  <PageTransitionMorph />
+  <PageTransition />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>

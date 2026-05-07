@@ -13,6 +13,10 @@ let antenaTw
 const lineClosed = { x1: 277, x2: 277, y1: 282, y2: 282 }
 const lineOpen = { x1: 95, x2: 410, y1: 282, y2: 282 }
 
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
 function resetFx() {
   gsap.set(line, {
     autoAlpha: 0,
@@ -25,15 +29,19 @@ function resetFx() {
   gsap.set(orb, { autoAlpha: 0, scale: 0, transformOrigin: '50% 50%' })
 }
 
+function setScreenIdle() {
+  gsap.set(screen, { autoAlpha: 0, scaleY: 1, transformOrigin: '50% 50%' })
+}
+
 function playOn(contentEl) {
   tvTl?.kill()
   resetFx()
 
   if (contentEl) {
-    gsap.set(contentEl, { autoAlpha: 0 })
+    gsap.set(contentEl, { x: 0, autoAlpha: 0, clearProps: 'willChange' })
   }
 
-  gsap.set(screen, { autoAlpha: 0, scaleY: 1, transformOrigin: '50% 50%' })
+  setScreenIdle()
 
   tvTl = gsap.timeline({ defaults: { ease: 'power2.out' } })
 
@@ -64,10 +72,45 @@ function playOff(contentEl) {
   tvTl.set([line, orb], { autoAlpha: 0 }, 0)
 
   if (contentEl) {
+    gsap.set(contentEl, { x: 0, clearProps: 'willChange' })
     tvTl.to(contentEl, { autoAlpha: 0, duration: 0.15, ease: 'sine.out' }, 0)
   }
 
   tvTl.to(screen, { scaleY: 1, autoAlpha: 1, duration: 0.5, ease: 'expo.out' }, 0.08)
+
+  return tvTl
+}
+
+function changeChannel(contentEl, onSwap) {
+  if (typeof onSwap !== 'function') return
+
+  if (!contentEl || !tvIsOn.value || prefersReducedMotion()) {
+    onSwap()
+    return
+  }
+
+  tvTl?.kill()
+  resetFx()
+  setScreenIdle()
+  gsap.set(contentEl, { x: 0, clearProps: 'willChange' })
+
+  tvTl = gsap.timeline({
+    defaults: { ease: 'power2.out', overwrite: 'auto' },
+    onStart: () => gsap.set(contentEl, { willChange: 'transform, opacity' }),
+    onComplete: () => gsap.set(contentEl, { x: 0, autoAlpha: 1, clearProps: 'willChange' }),
+  })
+
+  tvTl
+    .to(contentEl, { x: -10, autoAlpha: 0.55, duration: 0.04 }, 0)
+    .to(contentEl, { x: 9, autoAlpha: 0.16, duration: 0.04 }, 0.04)
+    .to(screen, { autoAlpha: 1, duration: 0.03, ease: 'none' }, 0.08)
+    .to(line, { autoAlpha: 1, attr: lineOpen, duration: 0.08, ease: 'power3.out' }, 0.08)
+    .to(orb, { autoAlpha: 1, scale: 16, duration: 0.08, ease: 'expo.out' }, 0.09)
+    .call(onSwap, undefined, 0.15)
+    .set(contentEl, { x: 0, autoAlpha: 0 }, 0.15)
+    .to(line, { scaleY: 36, duration: 0.12, ease: 'expo.inOut' }, 0.12)
+    .to([screen, line, orb], { autoAlpha: 0, duration: 0.06, ease: 'sine.out' }, 0.2)
+    .to(contentEl, { autoAlpha: 1, duration: 0.09, ease: 'sine.out' }, 0.21)
 
   return tvTl
 }
@@ -81,7 +124,7 @@ function flipTvPower(payload = !tvIsOn.value, contentEl) {
   else playOff(contentEl)
 }
 
-defineExpose({ flipTvPower })
+defineExpose({ changeChannel, flipTvPower })
 
 onMounted(() => {
   gsap.set(screen, {
@@ -94,7 +137,6 @@ onMounted(() => {
 
   antenaTw = gsap.to('.antena-glow', {
     fill: 'var(--acc-secondary)',
-    duration: 1,
     repeat: -1,
     yoyo: true,
     ease: 'sine.inOut',
@@ -131,7 +173,7 @@ onUnmounted(() => {
         class="antena-glow"
         fill="var(--tv-lime)"
         stroke="var(--tv-outline)"
-        stroke-width="2.13266"
+        stroke-width="2"
         d="M201.243 32.5858c3.509-.227 6.537 2.4333 6.764 5.9419s-2.433 6.5369-5.942 6.764c-3.508.227-6.537-2.4333-6.764-5.9419s2.434-6.5369 5.942-6.764Z"
       />
 
@@ -153,7 +195,7 @@ onUnmounted(() => {
         class="antena-glow"
         fill="var(--tv-lime)"
         stroke="var(--tv-outline)"
-        stroke-width="2.13266"
+        stroke-width="2"
         d="M355.796 32.578c-3.509-.227-6.537 2.4333-6.764 5.9419s2.433 6.5369 5.942 6.764c3.508.2269 6.537-2.4333 6.764-5.9419s-2.434-6.537-5.942-6.764Z"
       />
       <path

@@ -1,5 +1,5 @@
 <template>
-  <div aria-hidden="true" class="pointer-events-none absolute inset-0 isolate z-0 overflow-hidden">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
     <!-- scan lines -->
     <div class="absolute inset-0 opacity-[0.04]">
       <div
@@ -53,7 +53,7 @@
     >
       +
     </div>
-    <!-- signal labels -->
+    <!-- words -->
     <div
       class="absolute top-[4%] left-[5%] font-mono text-xs tracking-widest text-fg-ter/40 lg:top-[13%]"
     >
@@ -79,7 +79,5 @@
     <div class="absolute bottom-[18%] left-[6%] grid grid-cols-4 gap-2 opacity-20">
       <span v-for="i in 16" :key="`dot-b-${i}`" class="size-1 rounded-full bg-fg-ter" />
     </div>
-    <!-- ambient vignette -->
-    <div class="absolute inset-0 bg-radial from-transparent via-transparent to-black/30" />
   </div>
 </template>

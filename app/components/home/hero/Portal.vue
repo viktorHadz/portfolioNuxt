@@ -6,21 +6,30 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  pulse: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const portalRoot = useTemplateRef('portalRoot')
 
 let ctx
 let portalTl
-let portalDelay
+
+function resetPortalPulse() {
+  portalTl?.kill()
+  portalTl = null
+  gsap.set('.portal-rotator', { scaleX: 0.9, scaleY: 1, opacity: 1, transformOrigin: '50% 50%' })
+  gsap.set('.portal-swirl-main', { scale: 1, opacity: 1, transformOrigin: '50% 50%' })
+}
 
 function setPortalState(active = props.active) {
-  portalDelay?.[active ? 'resume' : 'pause']()
   portalTl?.[active ? 'resume' : 'pause']()
 }
 
-function portalTw() {
-  portalTl?.kill()
+function startPortalPulse() {
+  if (portalTl || !props.pulse) return setPortalState()
 
   portalTl = gsap.timeline({
     defaults: {
@@ -35,39 +44,34 @@ function portalTw() {
 
   portalTl.to('.portal-rotator', { scale: 1.05 }, 0).to('.portal-swirl-main', { scale: 0.95 }, 0.5)
   setPortalState()
+}
 
-  return portalTl
+function syncPortalState() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return resetPortalPulse()
+  if (!props.pulse) return resetPortalPulse()
+  startPortalPulse()
 }
 
 onMounted(() => {
   ctx = gsap.context(() => {
-    gsap.set('.portal-rotator', { scaleX: 0.9 })
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    portalDelay = gsap.delayedCall(2.5, portalTw)
-    setPortalState()
+    resetPortalPulse()
+    syncPortalState()
   }, portalRoot.value)
 })
 
-watch(() => props.active, setPortalState)
+watch(() => [props.active, props.pulse], syncPortalState)
 
 onUnmounted(() => {
-  portalDelay?.kill()
   portalTl?.kill()
   ctx?.revert()
 
-  portalDelay = null
   portalTl = null
   ctx = null
 })
 </script>
 
 <template>
-  <g
-    class="hero-portal-placement"
-    transform="translate(300 500) scale(0.6)"
-  >
+  <g class="hero-portal-placement" transform="translate(300 500) scale(0.6)">
     <defs>
       <filter
         id="portal-blur-front"
@@ -94,16 +98,7 @@ onUnmounted(() => {
       </filter>
     </defs>
 
-    <g
-      id="portal"
-      ref="portalRoot"
-      class="hero-portal-svg"
-    >
-      <g
-        id="portal"
-        ref="portalRoot"
-        class="hero-portal-svg"
-      >
+    <g id="portal" ref="portalRoot" class="hero-portal-svg">
         <path
           id="back"
           fill="#72B83A"
@@ -122,10 +117,7 @@ onUnmounted(() => {
             stroke-width="5.8"
             d="M203 619q8-8 18-4 2 0 2 5l-2 14q-5 18-11 31v2l1 1 3 2 4-1 4-5 4-5v1l1 3v12q0 14-5 33c-4 25-11 50-12 54-7 27-17 55-12 83 4 28 23 56 69 80q29 16 58 37l62 41c43 26 93 46 154 44 11 0 65-2 116-7a677 677 0 0 0 91-14l7-4 2-7v-1l4-2q5-3 13-3l20-2 1 1 6 4q8 5 18 7c58 3 119-20 183-53q47-24 98-53 51-28 104-54 17-8 45-28l60-43 73-48 6-2h2l-2 5-14 19a999 999 0 0 1-104 114l-35 32q-29 19-54 27-25 9-46 19c-145 71-319 138-475 131h-1l-2-1-6-1-38-2-6 1-3 3v3q2 13-1 19-3 7-11 10-16 7-48 0a740 740 0 0 1-317-196q-30-34-44-64t-6-56q4-10 4-24-1-15-15-22-16-8-15-17t10-20 18-18l6-6 2-3 1-2-1-1q-3-7-2-21t6-27q5-14 12-21Z"
           />
-          <g
-            id="glow-front-fill_2"
-            filter="url(#portal-blur-front)"
-          >
+          <g id="glow-front-fill_2" filter="url(#portal-blur-front)">
             <path
               fill="#AFD84B"
               d="M227 657c-5-3-11 14-14 9 7-16 19-50 9-54-33-11-45 57-38 77 5 3-67 47-20 68 19 9 15 31 10 43-48 140 459 424 432 288-1-9 52 0 54 0 157 7 331-60 476-131 28-14 61-21 101-46 22-14 168-168 155-175-16-8-148 101-190 121-142 66-268 166-383 159-11-1-24-12-24-12s-43 1-41 12c4 21-192 27-213 28-121 5-195-80-272-121-92-49-71-107-56-160 3-9 26-100 14-106"
@@ -138,10 +130,7 @@ onUnmounted(() => {
             stroke-width="5.8"
             d="M875 187q14-17 45-18 31 0 68 6 36 7 66 10 15 0 26-2t17-10q1-3 7-4l11-1 21 3 5 2-5 2-12 3-8 3-2 2-3 4h5a292 292 0 0 1 108 25l6 3 4 2h1c152 59 259 179 248 329l-1 2q-2 29-21 66-18 38-47 78l-9 4-10 7-8 8-7 4h-1v-1l2-10q7-16 21-39l27-43 16-26 1-1c19-36 22-79-2-111l-1-1-5-5-5-2q-3 0-4 2l-3 3-1 4-2 4-4 4h-1l-2-2-3-12q-3-17-2-41l1-44v-26c-4-23-20-43-38-56s-39-20-54-17h-1q-8 2-18-3l-23-14-22-18-18-14c-34-20-98-35-155-40q-43-5-77-2-17 2-27 6-11 3-17 11-4 4-13 9-10 4-21 5-11 0-17-3l-2-3v-6l7-7 12-6q15-6 32-9l28-5 8-2h1l1-1v-3l-1-1h-1l-1-1h-1l-11 1-17 1-83 4-6-2-3-1v-1z"
           />
-          <g
-            id="glow-fill_2"
-            filter="url(#glow-blur-back)"
-          >
+          <g id="glow-fill_2" filter="url(#glow-blur-back)">
             <path
               fill="#AFD84B"
               d="M873 186c39-54 195 23 222-15 7-9 33-5 42-3 24 8-17 12-20 16 82 4 110 27 119 31 153 59 262 181 249 333-3 39-31 92-69 147-12 0-26 20-35 23-25 5 54-110 62-124 20-35 22-78-2-109-14-19-11 8-22 11-18 4-7-116-10-127-8-45-60-77-89-71-25 6-64-37-84-49-67-40-251-59-271-27-11 17-69 24-58 0s101-30 86-31c-14-1-138 19-120-5"
@@ -154,10 +143,7 @@ onUnmounted(() => {
           d="M1383 543c47-144-125-229-230-275-198-85-574 9-719 164-20 21-27 27-58 53-46 38-60 89-94 137-52 75-33 225 40 275 11 8 4 22 20 22 12 1 12 1 35 16 104 70 261 88 380 58 202-51 580-144 616-404 3-26 3-27 10-46m-97-171c28 38 73 68 60 120-19 77-11 162-104 233-89 68-160 158-272 195q-39 15-7-6c116-83-284 56-426 41-122-12-268-106-239-202 13-43-13-84 22-127 42-53 70-117 119-162 91-82 217-163 339-177 137-17 275-45 406 21 38 19 75 29 102 64m-35 48c0-33-34-43-54-64-43-49-126-79-216-78-36 0-12 24-49 21-44-4-93 7-139 12-64 7-66 16-4 12 49-3 116 2 106 7q-6 4-42 6c-34 2-390 96-361 153 3 5 70-45 88-45 8 0-38 35-43 42-29 34-73 49-98 88-26 41-129 182-59 201 4 1-7-62 12-58 6 1 29 67 37 77 45 57-19 15-23 35-5 26 61 28 64 53 4 32 12 40 47 50 96 27-23-33-8-44 5-3 12-2 59 11 77 20 174 33 251 12 54-15-156-10-162-27-3-9 135-11 150-8 134 30 243-83 302-143 48-48 23 8 68-43 43-50 48-111 76-169 17-36-2-66-2-101M508 800c48 51-49 12-50-29-1-20 10-14 50 29m445-35c3 4-14 6-16 8 4-1 5 21-8 27-121 61-297 73-402-26-35-33-24 8-47-13-35-31-33-102 4-138 31-30 10 141 123 166 32 7 167 28 164 26-10-6 0-8 40-7 49 0 69-5 112-30 5-7 24-23 30-13m-395 83c18 13-23 19-34 6-12-13 18-18 34-6m395-447c58 6 117 53 116 92-1 50-73-51-119-50-47 0-78-21-131-8-38 10-167 50-166 50q23-2-28 22c-43 19-56 30-71 65 4 20-32 29-36 15-3 3 6-18 11-27 72-122 241-163 373-148 55 7 17-14 51-11m197 50c20 34-2 106-45 140-42 28 46-68 6-110-91-97-190-143-312-82-7 7-53-13-53-13s206-47 246-37c55 13 101 49 121 86 23 40 22-8 37 16m-147 293q28-7 16 7c-31 35-69 9-16-7m170-300c12-5 44 39 46 64 5 87-95 209-173 233-21 7 58-69 73-83 36-36 45-51 60-98 6-19-11-114-6-116m-45 341c23-14 50-45 39-44-17 1-99 51-99 60 0 4 46-8 60-16M990 308c14-13 72 1 60 15-13 15-73-2-60-15m96 10c16-3 37 9 26 16-16 10-48-12-26-16m159 423c13 3-19 29-22 17-1-4 16-18 22-17m-103-374c49 14 99 69 91 100q-7 26-26-16c-10-20-82-89-65-84m127 234c16-19 45-74 21-85-2-1-94 167-21 85"
         />
         <g class="portal-rotator">
-          <g
-            id="rotator-fill"
-            fill="#fff"
-          >
+          <g id="rotator-fill" fill="#fff">
             <path
               d="M1214 509c16-2 66 92 53 126-11 31-38 57-57 85-32 46-63 71-112 90-47 18-90 63-144 63q-34 1 23-23c36-15 66-27 100-46-13-39 110-75 152-132 27-35-17-149-43-170 20-18 23 8 28 7M787 853c35-2 134-24 144-52 2-5-19-1-72 15-50 14-54 15-74 17-62 5-61 23 2 20"
             />
@@ -170,6 +156,5 @@ onUnmounted(() => {
           </g>
         </g>
       </g>
-    </g>
   </g>
 </template>

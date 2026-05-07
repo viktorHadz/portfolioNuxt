@@ -118,18 +118,17 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <SiteHeader />
-  <main
-    ref="portfolioRoot"
-    class="portfolio-view min-h-screen bg-bg-prim"
-  >
-    <HeroSection />
-    <FeaturedSection />
-    <SkillsSection />
-    <ProcessSection />
-    <ArchiveSection />
-    <ContactSection />
-  </main>
+  <div>
+    <SiteHeader />
+    <main ref="portfolioRoot" class="portfolio-view min-h-screen bg-bg-prim">
+      <HeroSection />
+      <FeaturedSection />
+      <SkillsSection />
+      <ProcessSection />
+      <ArchiveSection />
+      <ContactSection />
+    </main>
+  </div>
 </template>
 
 <style scoped>

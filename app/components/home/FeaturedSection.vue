@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import gsap from 'gsap'
 import { CheckCircleIcon } from '@heroicons/vue/24/outline'
 import BackgroundArt from './featured/BackgroundArt.vue'
 import HeaderBlock from './featured/HeaderBlock.vue'
@@ -8,35 +9,100 @@ import RemoteControl from './featured/RemoteControl.vue'
 import TvSet from './featured/TvSet.vue'
 import { tvProjects } from './featured/projects'
 
+const featuredRoot = ref(null)
+const headerWrap = ref(null)
+const tvWrap = ref(null)
+const remoteWrap = ref(null)
 const refTV = ref(null)
 const screenContent = ref(null)
 const activeProject = ref('invoice-and-go')
+let featureCtx
 
-const currentProject = computed(() => {
-  return tvProjects.find((project) => project.id === activeProject.value)
-})
+const currentProject = computed(() => tvProjects.find((project) => project.id === activeProject.value))
+
+function isDesktop() {
+  return window.matchMedia('(min-width: 1024px)').matches
+}
 
 function handleTvOnOff(payload) {
   refTV.value?.flipTvPower(payload, screenContent.value)
 }
 
 function handleProjectChange(payload) {
-  activeProject.value = payload
+  if (payload === activeProject.value) return
+
+  if (!isDesktop() || !refTV.value?.changeChannel || !screenContent.value) {
+    activeProject.value = payload
+    return
+  }
+
+  refTV.value.changeChannel(screenContent.value, () => {
+    activeProject.value = payload
+  })
 }
+
+onMounted(async () => {
+  if (
+    !featuredRoot.value ||
+    !headerWrap.value ||
+    !tvWrap.value ||
+    !remoteWrap.value ||
+    !isDesktop() ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    return
+  }
+
+  const { ScrollTrigger } = await import('gsap/ScrollTrigger')
+  gsap.registerPlugin(ScrollTrigger)
+
+  featureCtx = gsap.context(() => {
+    const entryTargets = [headerWrap.value, tvWrap.value, remoteWrap.value]
+    const sectionWidth = () => featuredRoot.value?.getBoundingClientRect().width || 0
+
+    gsap.set(headerWrap.value, { autoAlpha: 0 })
+    gsap.set(tvWrap.value, { x: () => -sectionWidth(), autoAlpha: 0 })
+    gsap.set(remoteWrap.value, { x: sectionWidth, autoAlpha: 0 })
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: featuredRoot.value,
+          start: 'top 75%',
+          once: true,
+          invalidateOnRefresh: true,
+        },
+        onStart: () => gsap.set(entryTargets, { willChange: 'transform, opacity' }),
+        onComplete: () => gsap.set(entryTargets, { clearProps: 'willChange' }),
+      })
+      .to(headerWrap.value, { autoAlpha: 1, duration: 0.3, ease: 'none' })
+      .to(tvWrap.value, { x: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out' }, 0.08)
+      .to(remoteWrap.value, { x: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out' }, 0.16)
+  }, featuredRoot.value)
+})
+
+onUnmounted(() => {
+  featureCtx?.revert()
+  featureCtx = null
+})
 </script>
 
 <template>
   <section
     id="featured-work"
-    class="relative overflow-hidden bg-bg-sec px-6 py-20 sm:px-8 md:py-16 lg:py-28"
+    ref="featuredRoot"
+    class="relative overflow-hidden bg-bg-sec px-6 py-20 sm:px-8 md:py-16 lg:py-36"
     aria-labelledby="featured-work-title"
   >
     <BackgroundArt />
 
     <div class="relative z-10 mx-auto max-w-7xl">
-      <HeaderBlock
+      <div
+        ref="headerWrap"
         class="mx-auto max-w-xl text-center lg:absolute lg:-top-3 lg:right-0 lg:text-left"
-      />
+      >
+        <HeaderBlock />
+      </div>
 
       <MobilePanel
         class="mt-10 lg:hidden"
@@ -46,7 +112,7 @@ function handleProjectChange(payload) {
       />
 
       <div class="hidden justify-between gap-24 pt-28 lg:flex">
-        <div class="relative mt-40 flex">
+        <div ref="tvWrap" class="relative flex">
           <TvSet ref="refTV" class="min-w-2xl xl:w-3xl 2xl:w-4xl" />
 
           <div
@@ -111,7 +177,7 @@ function handleProjectChange(payload) {
           </div>
         </div>
 
-        <div class="z-10 mr-20 flex flex-col items-center justify-end">
+        <div ref="remoteWrap" class="z-10 mr-20 flex flex-col items-center justify-end">
           <RemoteControl
             class="flex max-w-full place-self-center lg:min-w-56 xl:min-w-64"
             @switch-tv="handleTvOnOff"

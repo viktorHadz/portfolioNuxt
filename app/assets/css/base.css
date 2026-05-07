@@ -39,7 +39,7 @@
 
     /* TV Tokens */
     --tv-outline: var(--bg-primary);
-    --tv-shadow: hsl(228, 9%, 8%);
+    --tv-shadow: hsl(100, 7%, 8%);
 
     --tv-lime: var(--acc-primary);
     --tv-lime-dark: hsl(77, 44%, 37%);
@@ -210,13 +210,13 @@
 /* ---------- CUSTOM UTILITIES ---------- */
 @utility bg-stars {
     background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>\
-<circle cx='20' cy='15' r='0.4' fill='%23493879' opacity='0.2'/>\
-<circle cx='35' cy='30' r='0.6' fill='%23493879' opacity='0.3'/>\
-<circle cx='2' cy='2' r='0.8' fill='%23ffffff' opacity='0.3'/>\
-</svg>");
-    background-size: 560px 560px;
+        <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>\
+            <circle cx='20' cy='15' r='0.5' fill='%23493879' opacity='0.2'/>\
+            <circle cx='35' cy='30' r='0.6' fill='%23493879' opacity='0.3'/>\
+            <circle cx='10' cy='10' r='0.7' fill='%23ffffff' opacity='0.3'/>\
+            <circle cx='5' cy='5' r='0.4' fill='%23FFEB58' opacity='0.3'/>\
+        </svg>");
+    background-size: clamp(160px, 40vw, 560px) clamp(160px, 40vw, 560px);
     background-repeat: repeat;
     background-position: center center;
-    background-attachment: fixed;
 }

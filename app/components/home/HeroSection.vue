@@ -6,7 +6,9 @@ import IconCloud from './hero/IconCloud.vue'
 import SpeedLines from './hero/SpeedLines.vue'
 
 const heroRoot = useTemplateRef('heroRoot')
+const iconCloud = useTemplateRef('iconCloud')
 const heroActive = ref(true)
+const portalPulse = ref(false)
 
 let ctx
 let entryTl
@@ -28,19 +30,24 @@ function scrollTo(e) {
 }
 
 function playEntry() {
-  const entryTargets = [
-    '.hero-portal-svg',
-    '.hero-character-svg',
-    '.portal-swirl-main',
-    '.portal-rotator',
-  ]
+  const entryTargets = ['.hero-portal-svg', '.hero-character-body']
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    gsap.set(entryTargets, { autoAlpha: 1 })
+    portalPulse.value = false
+    gsap.set(entryTargets, { opacity: 1 })
+    iconCloud.value?.playEntry()
     return
   }
 
   entryTl?.kill()
+  portalPulse.value = false
+  gsap.set('.hero-portal-svg', {
+    opacity: 0,
+    scale: 0.2,
+    rotate: -45,
+    transformOrigin: '50% 50%',
+  })
+  gsap.set('.hero-character-body', { opacity: 0, y: 90, transformOrigin: '58% 72%' })
 
   entryTl = gsap.timeline({
     delay: 0.5,
@@ -54,24 +61,10 @@ function playEntry() {
   })
 
   entryTl
-    .fromTo(
-      '.hero-portal-svg',
-      { autoAlpha: 0, scale: 0.25, y: 34, rotate: -8, transformOrigin: '50% 50%' },
-      { autoAlpha: 1, scale: 1, y: 0, rotate: 0, duration: 0.75, ease: 'back.out(1.8)' },
-      0,
-    )
-    .fromTo(
-      ['.portal-swirl-main', '.portal-rotator'],
-      { autoAlpha: 0, scale: 0.45, transformOrigin: '50% 50%' },
-      { autoAlpha: 1, scale: 1, duration: 0.62, ease: 'power3.out', stagger: 0.08 },
-      0.12,
-    )
-    .fromTo(
-      '.hero-character-svg',
-      { autoAlpha: 0, y: 90, scale: 0.9, transformOrigin: '58% 72%' },
-      { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(1.5)' },
-      1,
-    )
+    .to('.hero-portal-svg', { opacity: 1, scale: 1, rotation: 0, duration: 0.75, ease: 'back' }, 0)
+    .to('.hero-character-body', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.72)
+    .call(() => (portalPulse.value = true))
+    .call(() => iconCloud.value?.playEntry(), undefined, '>-0.05')
 }
 
 function setHeroActive(active) {
@@ -119,13 +112,10 @@ onUnmounted(() => {
   >
     <SpeedLines :active="heroActive" />
 
-    <div
-      class="absolute inset-0 bg-stars opacity-50"
-      aria-hidden="true"
-    />
+    <div class="absolute inset-0 bg-stars opacity-50" aria-hidden="true" />
 
     <div
-      class="relative z-10 mx-auto flex min-h-dvh max-w-screen-2xl flex-col items-center justify-center px-6 pt-28 pb-12 sm:px-8 sm:pt-32 sm:pb-16 lg:px-20 lg:py-24"
+      class="relative z-10 mx-auto flex min-h-dvh max-w-screen-2xl flex-col items-center justify-center px-6 pt-28 pb-20 sm:px-8 sm:pt-32 sm:pb-24 lg:px-20 lg:pt-24 lg:pb-32"
     >
       <div class="relative z-20 max-w-4xl text-center">
         <p
@@ -135,7 +125,7 @@ onUnmounted(() => {
           <span>{{ heroData.eyebrow[0] }}</span>
           <DividerMarks />
           <span>{{ yrsCoded }}+ {{ heroData.eyebrow[1] }}</span>
-          <DividerMarks />
+          <DividerMarks class="hidden md:block" />
         </p>
 
         <h1
@@ -176,13 +166,15 @@ onUnmounted(() => {
       </div>
 
       <div class="relative mt-10 flex w-full max-w-7xl justify-center overflow-visible">
-        <IconCloud :active="heroActive" />
+        <IconCloud ref="iconCloud" :active="heroActive" />
 
         <Character
           :active="heroActive"
+          :portal-pulse="portalPulse"
           class="relative z-30 w-sm max-w-full -translate-x-12 overflow-visible sm:w-3/5 lg:w-xl xl:w-2xl"
         />
       </div>
     </div>
+    <SectionDivider position="bottom" colour="text-bg-sec" />
   </section>
 </template>

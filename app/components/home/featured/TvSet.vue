@@ -18,6 +18,7 @@ function prefersReducedMotion() {
 }
 
 function resetFx() {
+  gsap.set(screen, { autoAlpha: 0, scaleY: 1, transformOrigin: '50% 50%' })
   gsap.set(line, {
     autoAlpha: 0,
     scaleY: 1,
@@ -29,19 +30,13 @@ function resetFx() {
   gsap.set(orb, { autoAlpha: 0, scale: 0, transformOrigin: '50% 50%' })
 }
 
-function setScreenIdle() {
-  gsap.set(screen, { autoAlpha: 0, scaleY: 1, transformOrigin: '50% 50%' })
-}
-
 function playOn(contentEl) {
   tvTl?.kill()
   resetFx()
 
   if (contentEl) {
-    gsap.set(contentEl, { x: 0, autoAlpha: 0, clearProps: 'willChange' })
+    gsap.set(contentEl, { autoAlpha: 0 })
   }
-
-  setScreenIdle()
 
   tvTl = gsap.timeline({ defaults: { ease: 'power2.out' } })
 
@@ -72,7 +67,6 @@ function playOff(contentEl) {
   tvTl.set([line, orb], { autoAlpha: 0 }, 0)
 
   if (contentEl) {
-    gsap.set(contentEl, { x: 0, clearProps: 'willChange' })
     tvTl.to(contentEl, { autoAlpha: 0, duration: 0.15, ease: 'sine.out' }, 0)
   }
 
@@ -91,26 +85,18 @@ function changeChannel(contentEl, onSwap) {
 
   tvTl?.kill()
   resetFx()
-  setScreenIdle()
-  gsap.set(contentEl, { x: 0, clearProps: 'willChange' })
+  gsap.set(screen, { autoAlpha: 1, scaleY: 0, transformOrigin: '50% 50%' })
 
-  tvTl = gsap.timeline({
-    defaults: { ease: 'power2.out', overwrite: 'auto' },
-    onStart: () => gsap.set(contentEl, { willChange: 'transform, opacity' }),
-    onComplete: () => gsap.set(contentEl, { x: 0, autoAlpha: 1, clearProps: 'willChange' }),
-  })
+  tvTl = gsap.timeline({ defaults: { ease: 'power2.out' } })
 
   tvTl
-    .to(contentEl, { x: -10, autoAlpha: 0.55, duration: 0.04 }, 0)
-    .to(contentEl, { x: 9, autoAlpha: 0.16, duration: 0.04 }, 0.04)
-    .to(screen, { autoAlpha: 1, duration: 0.03, ease: 'none' }, 0.08)
-    .to(line, { autoAlpha: 1, attr: lineOpen, duration: 0.08, ease: 'power3.out' }, 0.08)
-    .to(orb, { autoAlpha: 1, scale: 16, duration: 0.08, ease: 'expo.out' }, 0.09)
-    .call(onSwap, undefined, 0.15)
-    .set(contentEl, { x: 0, autoAlpha: 0 }, 0.15)
-    .to(line, { scaleY: 36, duration: 0.12, ease: 'expo.inOut' }, 0.12)
-    .to([screen, line, orb], { autoAlpha: 0, duration: 0.06, ease: 'sine.out' }, 0.2)
-    .to(contentEl, { autoAlpha: 1, duration: 0.09, ease: 'sine.out' }, 0.21)
+    .to(contentEl, { autoAlpha: 0, duration: 0.08, ease: 'sine.out' }, 0)
+    .to(screen, { scaleY: 1, duration: 0.12, ease: 'expo.out' }, 0)
+    .to(line, { autoAlpha: 1, attr: lineOpen, duration: 0.1, ease: 'power3.out' }, 0.02)
+    .call(onSwap, undefined, 0.12)
+    .to(screen, { scaleY: 0, duration: 0.16, ease: 'expo.in' }, 0.12)
+    .to(line, { autoAlpha: 0, duration: 0.08, ease: 'sine.out' }, 0.16)
+    .to(contentEl, { autoAlpha: 1, duration: 0.12, ease: 'sine.out' }, 0.18)
 
   return tvTl
 }
@@ -127,12 +113,6 @@ function flipTvPower(payload = !tvIsOn.value, contentEl) {
 defineExpose({ changeChannel, flipTvPower })
 
 onMounted(() => {
-  gsap.set(screen, {
-    autoAlpha: 0,
-    scaleY: 0,
-    transformOrigin: '50% 50%',
-  })
-
   resetFx()
 
   antenaTw = gsap.to('.antena-glow', {

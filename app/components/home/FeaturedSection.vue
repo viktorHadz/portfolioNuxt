@@ -10,19 +10,14 @@ import TvSet from './featured/TvSet.vue'
 import { tvProjects } from './featured/projects'
 
 const featuredRoot = ref(null)
-const headerWrap = ref(null)
-const tvWrap = ref(null)
-const remoteWrap = ref(null)
 const refTV = ref(null)
 const screenContent = ref(null)
 const activeProject = ref('invoice-and-go')
 let featureCtx
 
-const currentProject = computed(() => tvProjects.find((project) => project.id === activeProject.value))
-
-function isDesktop() {
-  return window.matchMedia('(min-width: 1024px)').matches
-}
+const currentProject = computed(() =>
+  tvProjects.find((project) => project.id === activeProject.value),
+)
 
 function handleTvOnOff(payload) {
   refTV.value?.flipTvPower(payload, screenContent.value)
@@ -31,23 +26,24 @@ function handleTvOnOff(payload) {
 function handleProjectChange(payload) {
   if (payload === activeProject.value) return
 
-  if (!isDesktop() || !refTV.value?.changeChannel || !screenContent.value) {
-    activeProject.value = payload
+  const changeProject = () => (activeProject.value = payload)
+
+  if (
+    !window.matchMedia('(min-width: 1024px)').matches ||
+    !screenContent.value ||
+    !refTV.value?.changeChannel
+  ) {
+    changeProject()
     return
   }
 
-  refTV.value.changeChannel(screenContent.value, () => {
-    activeProject.value = payload
-  })
+  refTV.value.changeChannel(screenContent.value, changeProject)
 }
 
 onMounted(async () => {
   if (
     !featuredRoot.value ||
-    !headerWrap.value ||
-    !tvWrap.value ||
-    !remoteWrap.value ||
-    !isDesktop() ||
+    !window.matchMedia('(min-width: 1024px)').matches ||
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   ) {
     return
@@ -57,12 +53,11 @@ onMounted(async () => {
   gsap.registerPlugin(ScrollTrigger)
 
   featureCtx = gsap.context(() => {
-    const entryTargets = [headerWrap.value, tvWrap.value, remoteWrap.value]
-    const sectionWidth = () => featuredRoot.value?.getBoundingClientRect().width || 0
+    const entryTargets = ['.featured-head', '.featured-tv', '.featured-remote']
 
-    gsap.set(headerWrap.value, { autoAlpha: 0 })
-    gsap.set(tvWrap.value, { x: () => -sectionWidth(), autoAlpha: 0 })
-    gsap.set(remoteWrap.value, { x: sectionWidth, autoAlpha: 0 })
+    gsap.set('.featured-head', { autoAlpha: 0 })
+    gsap.set('.featured-tv', { xPercent: -140, autoAlpha: 0 })
+    gsap.set('.featured-remote', { xPercent: 140, autoAlpha: 0 })
 
     gsap
       .timeline({
@@ -75,9 +70,13 @@ onMounted(async () => {
         onStart: () => gsap.set(entryTargets, { willChange: 'transform, opacity' }),
         onComplete: () => gsap.set(entryTargets, { clearProps: 'willChange' }),
       })
-      .to(headerWrap.value, { autoAlpha: 1, duration: 0.3, ease: 'none' })
-      .to(tvWrap.value, { x: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out' }, 0.08)
-      .to(remoteWrap.value, { x: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out' }, 0.16)
+      .to('.featured-head', { autoAlpha: 1, duration: 0.3, ease: 'none' })
+      .to('.featured-tv', { xPercent: 0, autoAlpha: 1, duration: 0.55, ease: 'power3.out' }, 0.08)
+      .to(
+        '.featured-remote',
+        { xPercent: 0, autoAlpha: 1, duration: 0.55, ease: 'power3.out' },
+        0.16,
+      )
   }, featuredRoot.value)
 })
 
@@ -97,12 +96,9 @@ onUnmounted(() => {
     <BackgroundArt />
 
     <div class="relative z-10 mx-auto max-w-7xl">
-      <div
-        ref="headerWrap"
-        class="mx-auto max-w-xl text-center lg:absolute lg:-top-3 lg:right-0 lg:text-left"
-      >
-        <HeaderBlock />
-      </div>
+      <HeaderBlock
+        class="featured-head mx-auto max-w-xl text-center lg:absolute lg:-top-3 lg:right-0 lg:text-left"
+      />
 
       <MobilePanel
         class="mt-10 lg:hidden"
@@ -112,7 +108,7 @@ onUnmounted(() => {
       />
 
       <div class="hidden justify-between gap-24 pt-28 lg:flex">
-        <div ref="tvWrap" class="relative flex">
+        <div class="featured-tv relative flex">
           <TvSet ref="refTV" class="min-w-2xl xl:w-3xl 2xl:w-4xl" />
 
           <div
@@ -128,28 +124,28 @@ onUnmounted(() => {
                 </p>
 
                 <h2
-                  class="mt-2 text-2xl leading-none font-black text-acc-prim xl:text-3xl 2xl:text-4xl"
+                  class="mt-2 text-2xl leading-none font-bold text-acc-prim xl:text-3xl 2xl:text-4xl"
                 >
                   {{ currentProject.title }}
                 </h2>
 
-                <p class="text-sm font-bold text-fg-prim uppercase xl:text-base 2xl:text-lg">
+                <p class="text-sm font-bold text-fg-prim uppercase xl:text-base">
                   {{ currentProject.eyebrow }}
                 </p>
 
                 <hr class="mt-px mr-24 text-acc-prim/60" />
 
-                <p class="mt-4 text-base leading-snug text-fg-sec xl:text-lg 2xl:text-xl">
+                <p class="mt-4 text-base leading-snug text-fg-sec xl:text-lg">
                   {{ currentProject.blurb }}
                 </p>
 
-                <div class="mt-4 flex flex-col gap-2">
+                <div class="mt-4 flex flex-col gap-4">
                   <span
                     v-for="highlight in currentProject.highlights"
                     :key="highlight"
-                    class="flex items-center gap-2 text-xs font-bold text-fg-sec xl:text-base 2xl:text-lg"
+                    class="flex gap-2 text-xs font-bold text-fg-sec xl:text-base"
                   >
-                    <CheckCircleIcon class="size-6 shrink-0 text-acc-prim xl:size-7 2xl:size-8" />
+                    <CheckCircleIcon class="size-6 shrink-0 text-acc-prim xl:size-7" />
                     {{ highlight }}
                   </span>
                 </div>
@@ -158,7 +154,7 @@ onUnmounted(() => {
                   <span
                     v-for="stack in currentProject.stack"
                     :key="stack"
-                    class="rounded-lg border border-acc-prim/40 bg-bg-sec/80 px-3 py-1 text-sm font-bold text-fg-sec xl:px-4 xl:py-2 xl:text-base 2xl:text-lg"
+                    class="rounded-lg border border-acc-prim/40 bg-bg-sec/80 px-3 py-1 text-sm font-bold text-fg-sec xl:px-4 xl:py-2 xl:text-base"
                   >
                     {{ stack }}
                   </span>
@@ -170,14 +166,14 @@ onUnmounted(() => {
 
                 <component
                   :is="currentProject.preview"
-                  class="absolute size-32 text-acc-prim drop-shadow-lg xl:size-36"
+                  class="absolute size-32 text-acc-prim drop-shadow-lg"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div ref="remoteWrap" class="z-10 mr-20 flex flex-col items-center justify-end">
+        <div class="featured-remote z-10 mr-20 flex flex-col items-center justify-end">
           <RemoteControl
             class="flex max-w-full place-self-center lg:min-w-56 xl:min-w-64"
             @switch-tv="handleTvOnOff"

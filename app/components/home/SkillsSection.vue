@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeUnmount, onMounted } from 'vue'
 import { homeContent } from '~/data/portfolio/home'
-import FormFigure from './skills/FormFigure.vue'
+import FormCharacter from './skills/FormCharacter.vue'
 
 let gsapContext
 
@@ -29,21 +29,28 @@ onBeforeUnmount(() => {
     class="portfolio-capability-map relative isolate bg-bg-prim py-20 text-fg-prim sm:py-28"
     aria-labelledby="capability-map-title"
   >
+    <SectionDivider position="top" colour="text-bg-sec" :flip="true" />
+
     <div class="relative mx-auto max-w-7xl px-6 sm:px-8">
       <div class="portfolio-reveal sm:flex">
         <header class="max-w-2xl sm:mt-16">
-          <p class="text-sm font-bold text-acc-prim uppercase">Capability map</p>
+          <div class="flex items-center gap-2">
+            <DividerMarks />
+            <p class="text-sm font-bold text-acc-prim uppercase">Capability map</p>
+          </div>
           <h2
             id="capability-map-title"
             class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl lg:text-5xl"
           >
-            A holistic aproach to development
+            A holistic aproach to
+            <span class="text-grad-top">development</span>
           </h2>
           <p class="mt-4 text-base leading-7 text-fg-sec sm:text-lg">
-            Interfaces, data, trust, and deployment tuned into one navigable system.
+            Explore some of my stats that give you an idea of my capability.
           </p>
         </header>
-        <FormFigure class="mt-6 max-w-md" />
+        <FormCharacter class="max-w-xl" />
+        <!-- <FormFigure class="mt-6 max-w-md" /> -->
       </div>
 
       <div class="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
@@ -75,12 +82,7 @@ onBeforeUnmount(() => {
           </p>
 
           <div class="mt-5 flex flex-wrap gap-2">
-            <TechBadge
-              v-for="skill in capability.skills"
-              :key="skill"
-              :name="skill"
-              compact
-            />
+            <TechBadge v-for="skill in capability.skills" :key="skill" :name="skill" compact />
           </div>
         </article>
       </div>

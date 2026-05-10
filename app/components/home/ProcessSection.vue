@@ -8,22 +8,19 @@ import Orbit from './process/Orbit.vue'
     class="relative overflow-hidden bg-bg-prim py-20 text-fg-prim sm:py-28"
     aria-labelledby="process-title"
   >
-    <div
-      class="absolute inset-0 bg-stars opacity-40"
-      aria-hidden="true"
-    />
+    <div class="absolute inset-0 bg-stars opacity-40" aria-hidden="true" />
 
     <div class="pointer-events-none absolute inset-x-0 top-24 h-130 w-full sm:bottom-0">
-      <Orbit
-        stroke-color="white"
-        :stroke-opacity="0.02"
-        :spin-speed="[20, 20, 20, 16, 16, 12]"
-      />
+      <Orbit stroke-color="white" :stroke-opacity="0.02" :spin-speed="[20, 20, 20, 16, 16, 12]" />
     </div>
 
     <div class="mx-auto max-w-7xl px-6 sm:px-12">
       <header class="portfolio-reveal max-w-3xl">
-        <p class="text-sm font-bold text-acc-prim uppercase">Build process</p>
+        <div class="flex items-center gap-2">
+          <LineStart class="size-5" />
+          <p class="text-sm font-bold text-acc-prim uppercase">Build process</p>
+        </div>
+
         <h2
           id="process-title"
           class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl lg:text-5xl"

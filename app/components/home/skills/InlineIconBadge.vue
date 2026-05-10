@@ -26,7 +26,7 @@ defineProps({
 <template>
   <g :transform="`translate(${x} ${y}) scale(${scale})`">
     <circle r="42" fill="var(--bg-primary)" stroke="var(--acc-primary)" stroke-opacity=".5" />
-    <circle r="36" fill="var(--bg-secondary)" stroke="var(--bg-primary)" stroke-width="2" />
+    <circle r="36" fill="var(--bg-tertiary)" stroke="var(--bg-primary)" stroke-width="2" />
   </g>
   <g :transform="`translate(${slotX} ${slotY})`">
     <slot />

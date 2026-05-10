@@ -1,12 +1,12 @@
 <template>
   <div class="max-w-lg max-sm:text-left">
     <div class="flex items-center gap-4 font-mono text-sm font-bold text-acc-prim uppercase">
-      <DividerMarks />
+      <LineStart class="size-5" />
       <span>Featured work</span>
     </div>
     <h2
       id="featured-work-title"
-      class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl lg:text-5xl"
+      class="mt-3 text-3xl leading-tight font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
     >
       Production
       <span class="text-grad-bottom">work</span>

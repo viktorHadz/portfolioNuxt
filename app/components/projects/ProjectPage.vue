@@ -128,14 +128,14 @@ useHead({
             </p>
 
             <div class="mt-7 flex flex-wrap gap-3">
-              <Button
+              <TheButton
                 v-if="project.liveUrl"
                 variant="primary"
                 @click="openExternal(project.liveUrl)"
               >
                 Visit Site
               </Button>
-              <Button
+              <TheButton
                 variant="secondary"
                 @click="openExternal(project.gitHub)"
               >

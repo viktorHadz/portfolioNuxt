@@ -145,23 +145,23 @@ onUnmounted(() => {
         </p>
 
         <div class="mt-8 flex flex-wrap justify-center gap-3">
-          <Button
+          <TheButton
             variant="primary"
             href="#featured-work"
             class="border-acc-prim text-acc-prim"
             @click="scrollTo"
           >
             View featured work →
-          </Button>
+          </TheButton>
 
-          <Button
+          <TheButton
             variant="secondary"
             href="#contact"
             class="border-acc-sec text-acc-sec"
             @click="scrollTo"
           >
             Get in touch
-          </Button>
+          </TheButton>
         </div>
       </div>
 

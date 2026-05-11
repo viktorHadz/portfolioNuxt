@@ -224,3 +224,36 @@
     background-repeat: repeat;
     background-position: center center;
 }
+@utility scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+@utility scrollbar-heatmap {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+@utility z-modal {
+    z-index: 60;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-heatmap::-webkit-scrollbar {
+    height: 0.45rem;
+}
+
+.scrollbar-heatmap::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-heatmap::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border: 1px solid var(--bg-primary);
+    border-radius: 999px;
+}
+
+.scrollbar-heatmap::-webkit-scrollbar-thumb:hover {
+    background: var(--acc-primary);
+}

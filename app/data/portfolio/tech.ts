@@ -11,7 +11,6 @@ import goIcon from '~/assets/icons/tech/go.svg'
 import gsapIcon from '~/assets/icons/tech/gsap.svg'
 import htmlIcon from '~/assets/icons/tech/html5.svg'
 import javascriptIcon from '~/assets/icons/tech/javascript.svg'
-import matplotlibIcon from '~/assets/icons/tech/matplotlib.svg'
 import nextIcon from '~/assets/icons/tech/next-js.svg'
 import nginxIcon from '~/assets/icons/tech/nginx.svg'
 import nodeIcon from '~/assets/icons/tech/node-js.svg'
@@ -28,47 +27,44 @@ import viteIcon from '~/assets/icons/tech/vite-js.svg'
 import vueIcon from '~/assets/icons/tech/vue-js.svg'
 
 const techIcons = {
-  'Alpine.js': alpineIcon,
-  'Canvas API': canvasApiIcon,
-  Cloudflare: cloudflareIcon,
-  'Cloudflare Pages': cloudflarePagesIcon,
-  'Cloudflare Pages Functions': cloudflarePagesIcon,
-  CSS3: cssIcon,
-  Express: expressIcon,
-  Firebase: firebaseIcon,
-  'GitHub Actions': githubIcon,
-  Go: goIcon,
-  GSAP: gsapIcon,
-  HTML5: htmlIcon,
-  JavaScript: javascriptIcon,
-  Linux: debianIcon,
-  Matplotlib: matplotlibIcon,
-  Next: nextIcon,
-  'Next.js': nextIcon,
-  Nginx: nginxIcon,
-  Node: nodeIcon,
-  'Node.js': nodeIcon,
-  OAuth: oauthIcon,
-  OAuth2: oauthIcon,
-  Python: pythonIcon,
-  'python-docx': pythonDocxIcon,
-  React: reactIcon,
-  Resend: resendIcon,
-  SQL: sqliteIcon,
-  SQLite: sqliteIcon,
-  Supabase: supabaseIcon,
-  SVG: svgIcon,
-  Tailwind: tailwindIcon,
-  TailwindCSS: tailwindIcon,
-  'Tailwind CSS': tailwindIcon,
-  Vite: viteIcon,
-  'Vite.js': viteIcon,
-  ViteSSG: viteIcon,
-  Vue: vueIcon,
-  'Vue.js': vueIcon,
-  VueJS: vueIcon,
+    'Alpine.js': alpineIcon,
+    Canvas: canvasApiIcon,
+    Cloudflare: cloudflareIcon,
+    'Cloudflare Pages': cloudflarePagesIcon,
+    'Cloudflare Pages Functions': cloudflarePagesIcon,
+    CSS3: cssIcon,
+    Express: expressIcon,
+    Firebase: firebaseIcon,
+    'GitHub Actions': githubIcon,
+    Go: goIcon,
+    GSAP: gsapIcon,
+    HTML5: htmlIcon,
+    JavaScript: javascriptIcon,
+    Linux: debianIcon,
+    Next: nextIcon,
+    'Next.js': nextIcon,
+    Nginx: nginxIcon,
+    Node: nodeIcon,
+    'Node.js': nodeIcon,
+    OAuth: oauthIcon,
+    OAuth2: oauthIcon,
+    Python: pythonIcon,
+    'python-docx': pythonDocxIcon,
+    React: reactIcon,
+    Resend: resendIcon,
+    SQL: sqliteIcon,
+    SQLite: sqliteIcon,
+    Supabase: supabaseIcon,
+    SVG: svgIcon,
+    Tailwind: tailwindIcon,
+    Vite: viteIcon,
+    'Vite.js': viteIcon,
+    ViteSSG: viteIcon,
+    Vue: vueIcon,
+    'Vue.js': vueIcon,
+    VueJS: vueIcon,
 } as const
 
 export function getTechIcon(name: string) {
-  return techIcons[name as keyof typeof techIcons] ?? null
+    return techIcons[name as keyof typeof techIcons] ?? null
 }

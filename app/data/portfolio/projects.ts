@@ -171,7 +171,7 @@ export const featuredProjects = [
             ],
         },
         pageVariant: 'marketing',
-        stack: ['Vue.js', 'ViteSSG', 'TailwindCSS', 'Cloudflare Pages', 'Resend'],
+        stack: ['Vue.js', 'ViteSSG', 'Tailwind', 'Cloudflare Pages', 'Resend'],
         responsibilities: ['Frontend', 'SEO', 'Contact flow', 'Deployment'],
     },
     {
@@ -216,14 +216,14 @@ export const featuredProjects = [
         ],
         featuredTeaser: {
             channel: '03',
-            blurb: 'A watch repair site with real content management, not just a static public front end.',
+            blurb: 'A watch repair site with a light custom built CMS. Not just a static public front end.',
             highlights: [
-                'The same app supports public enquiries and protected content publishing.',
-                'Custom blog, gallery, uploads, and auth create a fuller production workflow.',
+                'Supports public enquiries and protected content publishing.',
+                'Custom blog, gallery, uploads, and authentication.',
             ],
         },
         pageVariant: 'product',
-        stack: ['Vue.js', 'Express', 'SQLite', 'Resend', 'TailwindCSS'],
+        stack: ['Vue.js', 'Express', 'SQLite', 'Resend', 'Tailwind'],
         responsibilities: ['Frontend', 'Backend', 'Authentication', 'Content system', 'Deployment'],
     },
     {
@@ -271,12 +271,12 @@ export const featuredProjects = [
             channel: '04',
             blurb: 'A content-led studio website built to feel editorial while staying easy to maintain.',
             highlights: [
-                'Studio story, process, work, gallery, and contact all follow clear visitor journeys.',
+                "A clear visitor journey through the studio's story, process, gallery, and contact.",
                 'MDX and reusable UI keep the content system practical behind the scenes.',
             ],
         },
         pageVariant: 'marketing',
-        stack: ['Next.js', 'React', 'TailwindCSS', 'MDX', 'Resend'],
+        stack: ['Next.js', 'React', 'Tailwind', 'MDX', 'Resend'],
         responsibilities: ['Frontend', 'Content system', 'Enquiry flow', 'Deployment'],
     },
 ] satisfies FeaturedProject[]
@@ -296,7 +296,7 @@ export const archiveProjects = [
             'A browser-based Canvas API image-to-ASCII utility with live controls for density, contrast, and brightness.',
         summary:
             'Canvas API image-to-ASCII utility with live controls for density, contrast, and brightness.',
-        stack: ['JavaScript', 'Canvas API', 'HTML5', 'CSS3'],
+        stack: ['JavaScript', 'Canvas', 'HTML5', 'CSS3'],
     },
     {
         id: 'survey-generator',
@@ -328,7 +328,7 @@ export const archiveProjects = [
             'A React and Firebase salon website with gallery management, caching, Cloudflare Pages deployment, and Tailwind styling.',
         summary:
             'React and Firebase salon site with gallery management, caching, and Cloudflare Pages deployment.',
-        stack: ['React', 'Firebase', 'Cloudflare Pages', 'TailwindCSS'],
+        stack: ['React', 'Firebase', 'Cloudflare Pages', 'Tailwind'],
     },
 ] satisfies ArchiveProject[]
 

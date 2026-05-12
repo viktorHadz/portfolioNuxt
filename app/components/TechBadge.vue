@@ -7,10 +7,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  compact: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const iconSrc = computed(() => getTechIcon(props.name))
@@ -27,15 +23,14 @@ const initials = computed(() =>
 
 <template>
   <span
-    class="inline-flex min-h-8 items-center gap-2 rounded-lg border border-brdr bg-bg-ter px-3 py-1.5 text-xs font-semibold text-fg-prim shadow-sm"
-    :class="compact ? 'px-2 py-1 text-tiny' : ''"
+    class="inline-flex min-h-8 items-center gap-2 rounded-lg border border-brdr bg-bg-sec px-3 py-1.5 text-xs font-semibold text-fg-prim shadow-sm"
   >
     <img
       v-if="iconSrc"
       :src="iconSrc"
       alt=""
       aria-hidden="true"
-      class="size-4 shrink-0"
+      class="size-5 shrink-0"
       loading="lazy"
     />
     <span

@@ -8,7 +8,7 @@ import MobilePanel from './featured/MobilePanel.vue'
 import RemoteControl from './featured/RemoteControl.vue'
 import TvSet from './featured/TvSet.vue'
 import { tvProjects } from './featured/projects'
-import PreviewVariant from './skills/PreviewVariant.vue'
+import PreviewVariant from './skills/GraphicVariant.vue'
 
 const featuredRoot = ref(null)
 const refTV = ref(null)
@@ -117,12 +117,7 @@ onUnmounted(() => {
             class="absolute top-[24%] left-[8%] h-[57%] w-[75%] overflow-hidden"
           >
             <div v-if="currentProject" class="relative grid h-full grid-cols-5 items-start gap-4">
-              <p
-                class="absolute right-10 mt-2 font-mono font-bold tracking-widest text-acc-prim-light uppercase"
-              >
-                CH:{{ currentProject.channel }}
-              </p>
-              <div class="col-span-3 min-w-0 px-2">
+              <div class="z-20 col-span-3 min-w-0 px-2">
                 <h2 class="text-2xl leading-none font-bold text-acc-prim xl:text-3xl 2xl:text-4xl">
                   {{ currentProject.title }}
                 </h2>

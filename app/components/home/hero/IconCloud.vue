@@ -26,13 +26,13 @@ const icons = [
     'hidden sm:block left-[20%] md:left-[25%] top-[10%] sm:top-[20%] lg:top-[15%] sm:w-24 lg:w-32 -rotate-12',
   ],
   [BubbleSoftware, 'hidden sm:block left-[20%]  top-[55%] lg:top-[50%] sm:w-26 lg:w-34 -rotate-8'],
-  [Tailwind, 'left-10 sm:left-[15%] lg:left-[10%] top-0 w-10 sm:w-14 md:w-20'],
-  [React, '-left-[5%] sm:left-[0%] top-[35%] w-10 sm:w-14 md:w-20'],
-  [Vue, 'left-[0%]  md:left-[10%] bottom-0 lg:bottom-[25%] w-10 sm:w-14 md:w-20'],
-  [Go, 'left-[45%] sm:left-[60%] top-[0%] lg:top-[5%] w-10 sm:w-14 md:w-20'],
-  [Node, 'left-[80%] top-[15%] lg:top-0 w-10 sm:w-14 md:w-20'],
-  [Express, 'left-[90%] top-[45%] lg:top-[30%] w-10 sm:w-14 md:w-20'],
-  [Database, 'left-[90%] md:left-[80%] top-[80%] lg:top-[65%] w-10 sm:w-14 md:w-20'],
+  [Tailwind, 'left-10 sm:left-[15%] lg:left-[10%] top-0 w-12 sm:w-14 md:w-20'],
+  [React, '-left-[5%] sm:left-[0%] top-[35%] w-12 sm:w-14 md:w-20'],
+  [Vue, 'left-[0%]  md:left-[10%] bottom-0 lg:bottom-[25%] w-12 sm:w-14 md:w-20'],
+  [Go, 'left-[45%] sm:left-[60%] top-[0%] lg:top-[5%] w-12 sm:w-14 md:w-20'],
+  [Node, 'left-[80%] top-[15%] lg:top-0 w-12 sm:w-14 md:w-20'],
+  [Express, 'left-[90%] top-[45%] lg:top-[30%] w-12 sm:w-14 md:w-20'],
+  [Database, 'left-[90%] md:left-[80%] top-[80%] lg:top-[65%] w-12 sm:w-14 md:w-20'],
 ]
 
 function playEntry() {

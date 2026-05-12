@@ -1,5 +1,14 @@
 <script setup>
+import { computed } from 'vue'
 import gsap from 'gsap'
+import { tvProjects } from './projects'
+
+const props = defineProps({
+  activeProject: {
+    type: String,
+    required: true,
+  },
+})
 
 const projects = {
   invoice: 'invoice-and-go',
@@ -7,6 +16,10 @@ const projects = {
   watch: 'watch-maker',
   ppf: 'ido-group-bg',
 }
+
+const currentProject = computed(
+  () => tvProjects.find((project) => project.id === props.activeProject) || tvProjects[0],
+)
 
 function pressAnim(elId) {
   const el = `#${elId}`
@@ -31,6 +44,21 @@ function tvOnOff(elId) {
 function selectProject(project, elId) {
   pressAnim(elId)
   emit('changeProject', project)
+}
+
+function openExternal(url, elId) {
+  if (!url) return
+
+  pressAnim(elId)
+
+  const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+
+  if (newWindow) newWindow.opener = null
+}
+
+function openProjectPage(elId) {
+  pressAnim(elId)
+  window.setTimeout(() => navigateTo(currentProject.value.path), 150)
 }
 </script>
 
@@ -527,7 +555,11 @@ function selectProject(project, elId) {
 
       <!-- Bottom Action Button Group -->
       <!-- Site Link -->
-      <g id="remote-open-btn" class="remote-btn">
+      <g
+        id="remote-open-btn"
+        class="remote-btn"
+        @click="openExternal(currentProject.liveUrl, 'remote-open-btn')"
+      >
         <path
           id="Vector_78"
           fill="var(--tv-shadow)"
@@ -556,7 +588,11 @@ function selectProject(project, elId) {
         </g>
       </g>
       <!-- GitHub Link -->
-      <g id="remote-code-btn" class="remote-btn">
+      <g
+        id="remote-code-btn"
+        class="remote-btn"
+        @click="openExternal(currentProject.gitHub, 'remote-code-btn')"
+      >
         <path
           id="Vector_67"
           fill="var(--tv-shadow)"
@@ -580,7 +616,11 @@ function selectProject(project, elId) {
         </g>
       </g>
       <!-- Expand Link -->
-      <g id="remote-see-more-btn" class="remote-btn">
+      <g
+        id="remote-see-more-btn"
+        class="remote-btn"
+        @click="openProjectPage('remote-see-more-btn')"
+      >
         <path
           id="Vector_71"
           fill="var(--tv-shadow)"

@@ -28,7 +28,18 @@ import Orbit from './process/Orbit.vue'
           How an idea becomes something usable
         </h2>
       </header>
-
+      <figure>
+        <embed
+          src="https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/c2c88920-fe8b-4a97-86a3-0800822f13f0.svg"
+        />
+        <figure>
+          <embed
+            src="https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/a5a498f5-6c7b-4b56-bd1e-4b7190c4a0f7.svg"
+          />
+          <!-- Or get via json with 
+           https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/ece4549c-cac4-41c2-820b-2e90f5712a45.json -->
+        </figure>
+      </figure>
       <ol class="mt-14 grid gap-5 sm:gap-12 md:grid-cols-2">
         <li
           v-for="step in homeContent.processSteps"

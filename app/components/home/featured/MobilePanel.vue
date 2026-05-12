@@ -77,6 +77,13 @@ function changeProject(projectId) {
               {{ stack }}
             </span>
           </div>
+
+          <NuxtLink
+            :to="currentProject.path"
+            class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-acc-prim uppercase"
+          >
+            Open case study
+          </NuxtLink>
         </div>
 
         <div

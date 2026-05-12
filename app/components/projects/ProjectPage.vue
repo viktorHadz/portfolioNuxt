@@ -3,11 +3,12 @@ import { computed } from 'vue'
 import {
   ArrowLeftIcon,
   ArrowTopRightOnSquareIcon,
+  CheckCircleIcon,
   CodeBracketIcon,
   RectangleStackIcon,
 } from '@heroicons/vue/24/outline'
 import { useHead, useSeoMeta, withSiteUrl } from '#imports'
-import { allProjects } from '~/data/portfolio/projects'
+import { allProjects, isFeaturedProject } from '~/data/portfolio/projects'
 import FieldArt from '~/components/projects/FieldArt.vue'
 
 const props = defineProps({
@@ -17,64 +18,62 @@ const props = defineProps({
   },
 })
 
+const featuredProject = computed(() => (isFeaturedProject(props.project) ? props.project : null))
 const imagePath = computed(() => props.project.image || '')
 const canonical = withSiteUrl(props.project.path)
-const title = computed(() => props.project.seoTitle || `${props.project.name}`)
+const title = computed(() => props.project.seoTitle || props.project.name)
 const description = computed(
-  () =>
-    props.project.seoDescription ||
-    props.project.result ||
-    props.project.summary ||
-    props.project.problem,
+  () => featuredProject.value?.intro || props.project.seoDescription || props.project.summary,
 )
 const imageUrl = withSiteUrl(imagePath)
 const primaryStack = computed(() => props.project.stack.slice(0, 3).join(' / '))
 const sections = computed(() => {
-  if (props.project.problem || props.project.built || props.project.result) {
-    return [
-      { label: 'Problem', body: props.project.problem },
-      { label: 'What I built', body: props.project.built },
-      { label: 'Result', body: props.project.result },
-      { label: 'Access', body: props.project.access },
-    ].filter((section) => section.body)
-  }
+  if (featuredProject.value) return featuredProject.value.storySections
 
   return [
-    { label: 'Overview', body: props.project.summary },
+    { title: 'Overview', body: props.project.summary },
     {
-      label: 'Build shape',
+      title: 'Build shape',
       body: `A focused ${props.project.eyebrow.toLowerCase()} built with ${props.project.stack.slice(0, 3).join(', ')} around a clear user workflow and production-minded delivery.`,
     },
     {
-      label: 'What it shows',
+      title: 'What it shows',
       body: `This project shows ${props.project.responsibilities.slice(0, 3).join(', ').toLowerCase()} work in a compact, reviewable build.`,
     },
   ]
 })
-const projectFacts = computed(() => [
-  { label: 'Type', value: props.project.eyebrow },
-  { label: 'Main stack', value: primaryStack.value },
-  { label: 'Scope', value: props.project.responsibilities.slice(0, 3).join(', ') },
-  { label: 'Status', value: props.project.liveUrl ? 'Live project' : 'Source available' },
+const projectFacts = computed(() => {
+  if (featuredProject.value) return featuredProject.value.facts
+
+  return [
+    { label: 'Type', value: props.project.eyebrow },
+    { label: 'Main stack', value: primaryStack.value },
+    { label: 'Scope', value: props.project.responsibilities.slice(0, 3).join(', ') },
+    { label: 'Status', value: props.project.liveUrl ? 'Live project' : 'Source available' },
+  ]
+})
+const projectSignals = computed(() => [
+  {
+    label: 'Core work',
+    body: `${props.project.responsibilities.slice(0, 3).join(', ')} across ${primaryStack.value}.`,
+  },
+  {
+    label: 'Review path',
+    body: props.project.liveUrl
+      ? 'Live project and source code are available for review.'
+      : 'Source code is available for review on GitHub.',
+  },
+  {
+    label: 'Project signal',
+    body: props.project.seoDescription || props.project.summary,
+  },
 ])
-const projectSignals = computed(() =>
-  [
-    {
-      label: 'Core work',
-      body: `${props.project.responsibilities.slice(0, 3).join(', ')} across ${primaryStack.value}.`,
-    },
-    {
-      label: 'Review path',
-      body: props.project.liveUrl
-        ? 'Live project and source code are available for review.'
-        : 'Source code is available for review on GitHub.',
-    },
-    {
-      label: 'Project signal',
-      body: props.project.access || props.project.seoDescription || props.project.summary,
-    },
-  ].filter((item) => item.body),
+const detailHeading = computed(() =>
+  featuredProject.value?.pageVariant === 'marketing'
+    ? 'How the site guides people and stays reliable'
+    : 'How the work is shaped and why it matters',
 )
+const proofPoints = computed(() => featuredProject.value?.proofPoints || [])
 const relatedProjects = computed(() =>
   allProjects.filter((project) => project.id !== props.project.id).slice(0, 3),
 )
@@ -134,13 +133,10 @@ useHead({
                 @click="openExternal(project.liveUrl)"
               >
                 Visit Site
-              </Button>
-              <TheButton
-                variant="secondary"
-                @click="openExternal(project.gitHub)"
-              >
+              </TheButton>
+              <TheButton variant="secondary" @click="openExternal(project.gitHub)">
                 View Code
-              </Button>
+              </TheButton>
             </div>
 
             <dl class="mt-8 grid gap-3 sm:grid-cols-2">
@@ -160,10 +156,7 @@ useHead({
               class="overflow-hidden rounded-lg border border-brdr bg-bg-sec shadow-2xl shadow-black/25"
             >
               <div class="flex min-h-10 items-center justify-between border-b border-brdr px-3">
-                <div
-                  class="flex gap-1.5"
-                  aria-hidden="true"
-                >
+                <div class="flex gap-1.5" aria-hidden="true">
                   <span class="size-2 rounded-sm bg-red" />
                   <span class="size-2 rounded-sm bg-acc-sec" />
                   <span class="size-2 rounded-sm bg-acc-ter" />
@@ -179,10 +172,7 @@ useHead({
                 :alt="project.imageAlt"
                 class="aspect-video w-full object-cover"
               />
-              <div
-                v-else
-                class="grid min-h-72 place-items-center p-6"
-              >
+              <div v-else class="grid min-h-72 place-items-center p-6">
                 <p class="text-center text-lg font-bold text-acc-prim">
                   {{ project.eyebrow }}
                 </p>
@@ -226,17 +216,17 @@ useHead({
             <header>
               <p class="text-sm font-bold text-acc-prim uppercase">Project brief</p>
               <h2 class="mt-3 text-3xl font-bold">
-                What changed, what shipped, and why it matters
+                {{ detailHeading }}
               </h2>
             </header>
 
             <section
               v-for="section in sections"
-              :key="section.label"
+              :key="section.title"
               class="rounded-lg border border-brdr bg-bg-prim p-5 sm:p-6"
             >
               <h2 class="text-sm font-bold text-acc-prim uppercase">
-                {{ section.label }}
+                {{ section.title }}
               </h2>
               <p class="mt-3 text-base leading-8 text-fg-sec">
                 {{ section.body }}
@@ -250,12 +240,7 @@ useHead({
               <h2 class="text-lg font-bold">Project stack</h2>
             </div>
             <div class="mt-4 flex flex-wrap gap-2">
-              <TechBadge
-                v-for="tech in project.stack"
-                :key="tech"
-                :name="tech"
-                compact
-              />
+              <TechBadge v-for="tech in project.stack" :key="tech" :name="tech" compact />
             </div>
 
             <h2 class="mt-8 text-lg font-bold">Responsibilities</h2>
@@ -269,17 +254,33 @@ useHead({
               </li>
             </ul>
 
-            <h2 class="mt-8 text-lg font-bold">Signals</h2>
-            <div class="mt-4 grid gap-3">
-              <section
-                v-for="signal in projectSignals"
-                :key="signal.label"
-                class="border-b border-brdr pb-3 last:border-b-0 last:pb-0"
-              >
-                <h3 class="text-tiny font-bold text-acc-sec uppercase">{{ signal.label }}</h3>
-                <p class="mt-1 text-sm leading-6 text-fg-sec">{{ signal.body }}</p>
-              </section>
-            </div>
+            <template v-if="proofPoints.length">
+              <h2 class="mt-8 text-lg font-bold">Proof points</h2>
+              <ul class="mt-4 grid gap-3">
+                <li
+                  v-for="point in proofPoints"
+                  :key="point"
+                  class="flex items-start gap-3 border-b border-brdr pb-3 text-sm leading-6 text-fg-sec last:border-b-0 last:pb-0"
+                >
+                  <CheckCircleIcon class="mt-0.5 size-5 shrink-0 text-acc-prim" />
+                  <span>{{ point }}</span>
+                </li>
+              </ul>
+            </template>
+
+            <template v-else>
+              <h2 class="mt-8 text-lg font-bold">Signals</h2>
+              <div class="mt-4 grid gap-3">
+                <section
+                  v-for="signal in projectSignals"
+                  :key="signal.label"
+                  class="border-b border-brdr pb-3 last:border-b-0 last:pb-0"
+                >
+                  <h3 class="text-tiny font-bold text-acc-sec uppercase">{{ signal.label }}</h3>
+                  <p class="mt-1 text-sm leading-6 text-fg-sec">{{ signal.body }}</p>
+                </section>
+              </div>
+            </template>
           </aside>
         </div>
       </section>

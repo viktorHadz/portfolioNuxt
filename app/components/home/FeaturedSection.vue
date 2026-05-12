@@ -97,7 +97,7 @@ onUnmounted(() => {
 
     <div class="relative z-10 mx-auto max-w-7xl">
       <HeaderBlock
-        class="featured-head mx-auto max-w-xl text-center lg:absolute lg:-top-3 lg:right-0 lg:text-left"
+        class="featured-head max-w-xl text-left lg:absolute lg:-top-24 lg:right-0 lg:text-left"
       />
 
       <MobilePanel
@@ -109,16 +109,16 @@ onUnmounted(() => {
 
       <div class="hidden justify-between gap-24 pt-28 lg:flex">
         <div class="featured-tv relative flex">
-          <TvSet ref="refTV" class="min-w-2xl xl:w-3xl 2xl:w-4xl" />
+          <TvSet ref="refTV" class="w-3xl" />
 
           <div
             ref="screenContent"
-            class="absolute top-[30%] left-[17%] h-[50%] w-[59%] overflow-hidden 2xl:top-[32%]"
+            class="absolute top-[24%] left-[8%] h-[57%] w-[75%] overflow-hidden"
           >
             <div v-if="currentProject" class="grid h-full grid-cols-5 items-start gap-4">
-              <div class="col-span-4 min-w-0 px-2">
+              <div class="relative col-span-3 min-w-0 px-2">
                 <p
-                  class="mt-2 font-mono text-xs font-bold tracking-widest text-acc-sec uppercase xl:text-sm 2xl:text-base"
+                  class="absolute right-0 mt-2 font-mono text-xs font-bold tracking-widest text-acc-prim-light uppercase xl:text-sm 2xl:text-base"
                 >
                   CH:{{ currentProject.channel }}
                 </p>
@@ -143,14 +143,14 @@ onUnmounted(() => {
                   <span
                     v-for="highlight in currentProject.highlights"
                     :key="highlight"
-                    class="flex gap-2 text-xs font-bold text-fg-sec xl:text-base"
+                    class="flex gap-2 text-xs font-medium text-fg-sec xl:text-base"
                   >
                     <CheckCircleIcon class="size-6 shrink-0 text-acc-prim xl:size-7" />
                     {{ highlight }}
                   </span>
                 </div>
 
-                <div class="mt-6 flex w-full justify-around gap-4">
+                <div class="mt-6 flex w-full gap-4">
                   <span
                     v-for="stack in currentProject.stack"
                     :key="stack"
@@ -159,6 +159,13 @@ onUnmounted(() => {
                     {{ stack }}
                   </span>
                 </div>
+
+                <NuxtLink
+                  :to="currentProject.path"
+                  class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-acc-prim uppercase"
+                >
+                  Open case study
+                </NuxtLink>
               </div>
 
               <div class="relative col-span-1 flex h-full items-center justify-center">
@@ -175,6 +182,7 @@ onUnmounted(() => {
 
         <div class="featured-remote z-10 mr-20 flex flex-col items-center justify-end">
           <RemoteControl
+            :active-project="activeProject"
             class="flex max-w-full place-self-center lg:min-w-56 xl:min-w-64"
             @switch-tv="handleTvOnOff"
             @change-project="handleProjectChange"

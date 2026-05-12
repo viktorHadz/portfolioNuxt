@@ -8,6 +8,7 @@ import MobilePanel from './featured/MobilePanel.vue'
 import RemoteControl from './featured/RemoteControl.vue'
 import TvSet from './featured/TvSet.vue'
 import { tvProjects } from './featured/projects'
+import PreviewVariant from './skills/PreviewVariant.vue'
 
 const featuredRoot = ref(null)
 const refTV = ref(null)
@@ -109,31 +110,28 @@ onUnmounted(() => {
 
       <div class="hidden justify-between gap-24 pt-28 lg:flex">
         <div class="featured-tv relative flex">
-          <TvSet ref="refTV" class="w-3xl" />
+          <TvSet ref="refTV" class="lg:w-150 xl:w-3xl" />
 
           <div
             ref="screenContent"
             class="absolute top-[24%] left-[8%] h-[57%] w-[75%] overflow-hidden"
           >
-            <div v-if="currentProject" class="grid h-full grid-cols-5 items-start gap-4">
-              <div class="relative col-span-3 min-w-0 px-2">
-                <p
-                  class="absolute right-0 mt-2 font-mono text-xs font-bold tracking-widest text-acc-prim-light uppercase xl:text-sm 2xl:text-base"
-                >
-                  CH:{{ currentProject.channel }}
-                </p>
-
-                <h2
-                  class="mt-2 text-2xl leading-none font-bold text-acc-prim xl:text-3xl 2xl:text-4xl"
-                >
+            <div v-if="currentProject" class="relative grid h-full grid-cols-5 items-start gap-4">
+              <p
+                class="absolute right-10 mt-2 font-mono font-bold tracking-widest text-acc-prim-light uppercase"
+              >
+                CH:{{ currentProject.channel }}
+              </p>
+              <div class="col-span-3 min-w-0 px-2">
+                <h2 class="text-2xl leading-none font-bold text-acc-prim xl:text-3xl 2xl:text-4xl">
                   {{ currentProject.title }}
                 </h2>
 
-                <p class="text-sm font-bold text-fg-prim uppercase xl:text-base">
+                <p class="mt-1 text-sm font-bold text-fg-prim uppercase xl:text-base">
                   {{ currentProject.eyebrow }}
                 </p>
 
-                <hr class="mt-px mr-24 text-acc-prim/60" />
+                <hr class="mt-1 mr-24 text-fg-ter" />
 
                 <p class="mt-4 text-base leading-snug text-fg-sec xl:text-lg">
                   {{ currentProject.blurb }}
@@ -143,9 +141,9 @@ onUnmounted(() => {
                   <span
                     v-for="highlight in currentProject.highlights"
                     :key="highlight"
-                    class="flex gap-2 text-xs font-medium text-fg-sec xl:text-base"
+                    class="flex items-center gap-2 text-xs font-medium text-fg-sec xl:text-base"
                   >
-                    <CheckCircleIcon class="size-6 shrink-0 text-acc-prim xl:size-7" />
+                    <CheckCircleIcon class="size-6 shrink-0 text-fg-prim xl:size-7" />
                     {{ highlight }}
                   </span>
                 </div>
@@ -154,7 +152,7 @@ onUnmounted(() => {
                   <span
                     v-for="stack in currentProject.stack"
                     :key="stack"
-                    class="rounded-lg border border-acc-prim/40 bg-bg-sec/80 px-3 py-1 text-sm font-bold text-fg-sec xl:px-4 xl:py-2 xl:text-base"
+                    class="rounded-lg border border-brdr-subtle bg-bg-sec/80 px-3 py-1 text-sm font-bold text-fg-sec xl:px-4 xl:py-2 xl:text-base"
                   >
                     {{ stack }}
                   </span>
@@ -162,19 +160,13 @@ onUnmounted(() => {
 
                 <NuxtLink
                   :to="currentProject.path"
-                  class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-acc-prim uppercase"
+                  class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-fg-prim uppercase transition hover:text-acc-prim-light"
                 >
-                  Open case study
+                  Open project
                 </NuxtLink>
               </div>
-
               <div class="relative col-span-1 flex h-full items-center justify-center">
-                <div class="absolute size-40 rounded-full bg-acc-prim/20 blur-2xl" />
-
-                <component
-                  :is="currentProject.preview"
-                  class="absolute size-32 text-acc-prim drop-shadow-lg"
-                />
+                <PreviewVariant :project="currentProject" />
               </div>
             </div>
           </div>

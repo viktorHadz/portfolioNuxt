@@ -218,7 +218,7 @@ onUnmounted(() => {
       d="M490.6 125.5s-3.1-9.3-13.7-20.2a114 114 0 0 0-81-34.3 112 112 0 0 0-80.9 34.3c-10.6 10.9-12.4 20.2-12.4 20.2S331 73.8 396 73.8c62 0 94.7 51.7 94.7 51.7"
     />
 
-    <!-- TV body: removed covered duplicate rects -->
+    <!-- TV body -->
     <rect width="798" height="596" y="122.5" fill="#afd84b" rx="82" />
     <rect width="792" height="590" x="3" y="125.5" fill="#232427" rx="82" />
     <rect width="786" height="583.9" x="6" y="128.5" fill="#08070a" rx="82" />

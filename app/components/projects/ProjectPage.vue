@@ -29,6 +29,7 @@ const imageUrl = withSiteUrl(imagePath)
 const primaryStack = computed(() => props.project.stack.slice(0, 3).join(' / '))
 const sections = computed(() => {
   if (featuredProject.value) return featuredProject.value.storySections
+  if (props.project.storySections?.length) return props.project.storySections
 
   return [
     { title: 'Overview', body: props.project.summary },
@@ -44,6 +45,7 @@ const sections = computed(() => {
 })
 const projectFacts = computed(() => {
   if (featuredProject.value) return featuredProject.value.facts
+  if (props.project.facts?.length) return props.project.facts
 
   return [
     { label: 'Type', value: props.project.eyebrow },
@@ -73,7 +75,7 @@ const detailHeading = computed(() =>
     ? 'How the site guides people and stays reliable'
     : 'How the work is shaped and why it matters',
 )
-const proofPoints = computed(() => featuredProject.value?.proofPoints || [])
+const proofPoints = computed(() => featuredProject.value?.proofPoints || props.project.proofPoints || [])
 const relatedProjects = computed(() =>
   allProjects.filter((project) => project.id !== props.project.id).slice(0, 3),
 )

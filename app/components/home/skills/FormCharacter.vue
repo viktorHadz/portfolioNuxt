@@ -595,7 +595,7 @@ import InlineIconBadge from './InlineIconBadge.vue'
         />
       </InlineIconBadge>
     </g>
-    <g class="skills-cloud">
+    <g class="">
       <InlineIconBadge :x="430" :y="380" :slot-x="-8" :slot-y="15">
         <path
           stroke="#0a0b10"

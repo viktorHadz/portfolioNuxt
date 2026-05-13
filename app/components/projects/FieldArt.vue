@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="pattern pointer-events-none absolute inset-0"
-    aria-hidden="true"
-  />
+  <div class="pattern pointer-events-none absolute inset-0" aria-hidden="true" />
 </template>
 <style scoped>
 .pattern {

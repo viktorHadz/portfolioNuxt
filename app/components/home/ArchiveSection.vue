@@ -1,118 +1,226 @@
 <script setup>
+import { archiveProjects } from '~/data/portfolio/projects'
+import ArchiveOrbitCard from './archive/ArchiveOrbitCard.vue'
+import ManFloppy from './archive/ManFloppy.vue'
+import TheRip from './archive/art/TheRip.vue'
+import TheSad from './archive/art/TheSad.vue'
 import {
   ArrowRightStartOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
   CodeBracketIcon,
 } from '@heroicons/vue/24/outline'
-import { archiveProjects } from '~/data/portfolio/projects'
-import FieldArt from '~/components/projects/FieldArt.vue'
 
-const archiveStats = [
-  { value: `${archiveProjects.length}`, label: 'archive builds' },
-  { value: '3', label: 'problem spaces' },
-  { value: 'Live + code', label: 'review paths' },
+const actionClass =
+  'inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-3 text-xs font-bold text-fg-prim transition hover:border-acc-prim hover:text-acc-prim'
+
+const orbitIcons = ['{ }', '▣', '>_', '≋']
+
+function getOrbitMeta(project) {
+  return project.year || project.date?.slice(0, 4) || '2023'
+}
+
+function getCoreStack(project) {
+  return project.stack[1] ? `${project.stack[0]} + ${project.stack[1]}` : project.stack[0]
+}
+
+function findArchiveProject(id) {
+  const project = archiveProjects.find((entry) => entry.id === id)
+  if (!project) throw new Error(`Missing archive project: ${id}`)
+  return project
+}
+
+function createOrbitProject(id, icon, position, left = false) {
+  const project = findArchiveProject(id)
+
+  return {
+    id: project.id,
+    title: project.name,
+    copy: project.eyebrow,
+    meta: getOrbitMeta(project),
+    icon,
+    position,
+    left,
+  }
+}
+
+const orbitItems = [
+  createOrbitProject('ascii-generator', orbitIcons[0], 'lg:-left-8 lg:top-2', true),
+  createOrbitProject('survey-generator', orbitIcons[1], 'lg:-right-12 lg:top-6'),
+  createOrbitProject('fukla', orbitIcons[2], 'lg:-left-28 lg:top-54', true),
+  createOrbitProject('cprint', orbitIcons[3], 'lg:-right-24 lg:top-52'),
+  {
+    id: 'project-graveyard',
+    title: 'Project Graveyard',
+    copy: "I'll get to it at some point",
+    meta: '2022-2026',
+    art: TheSad,
+    position: 'lg:-left-10 lg:bottom-16',
+    left: true,
+  },
+  {
+    id: 'broken-projects',
+    title: 'Broken Projects',
+    copy: 'Abandoned',
+    meta: 'lol',
+    art: TheRip,
+    position: 'lg:-right-6 lg:bottom-16',
+  },
 ]
 </script>
 
 <template>
   <section
     id="archive"
-    class="relative isolate overflow-hidden bg-bg-sec py-20 text-fg-prim sm:py-28"
+    class="relative isolate overflow-hidden bg-bg-prim py-20 text-fg-prim sm:py-44"
     aria-labelledby="archive-title"
   >
-    <FieldArt />
+    <div class="absolute inset-0 bg-stars opacity-50" />
+    <SectionDivider colour="text-bg-sec" position="top" flip />
 
-    <div class="relative z-10 mx-auto max-w-7xl px-6 sm:px-8">
-      <header class="portfolio-reveal flex flex-col justify-between gap-5 md:flex-row md:items-end">
-        <div class="max-w-3xl">
-          <p class="text-sm font-bold text-acc-prim uppercase">Project archive</p>
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-8">
+      <div class="grid gap-12 lg:grid-cols-12 lg:items-center">
+        <header class="portfolio-reveal lg:col-span-4">
+          <div class="flex items-center gap-2">
+            <LineStart class="size-5" />
+            <p class="text-sm font-bold text-acc-prim uppercase">Project archive</p>
+          </div>
+
           <h2
             id="archive-title"
-            class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl lg:text-5xl"
+            class="mt-3 text-5xl leading-none font-bold tracking-tighter text-balance sm:text-6xl lg:text-7xl"
           >
-            More shipped pieces in orbit
+            Archive
+            <br />
+            <span class="text-grad-top">projects</span>
           </h2>
-          <p class="mt-4 max-w-2xl text-base leading-7 text-fg-sec">
-            Smaller builds, experiments, and client pieces that show the same production habits from
-            different angles.
-          </p>
-        </div>
-      </header>
 
-      <div class="portfolio-reveal mt-8 grid gap-3 sm:grid-cols-3">
-        <div
-          v-for="stat in archiveStats"
-          :key="stat.label"
-          class="rounded-lg border border-brdr bg-bg-prim/80 p-4"
-        >
-          <p class="text-2xl font-bold text-acc-sec">{{ stat.value }}</p>
-          <p class="mt-1 text-xs font-bold text-fg-sec uppercase">{{ stat.label }}</p>
+          <p class="mt-5 max-w-sm text-base leading-7 text-fg-sec">
+            Ideas I couldn't let go of. Smaller builds, experiments, and client pieces that shaped
+            the work that matters.
+          </p>
+          <TheButton class="mt-8">
+            Browse projects
+            <ArrowRightStartOnRectangleIcon class="size-4" />
+          </TheButton>
+        </header>
+
+        <div class="portfolio-reveal lg:col-span-8">
+          <div
+            class="relative mx-auto aspect-square w-full max-w-md overflow-hidden sm:max-w-lg lg:aspect-auto lg:min-h-135 lg:max-w-none lg:overflow-visible"
+          >
+            <div class="pointer-events-none absolute inset-0 grid place-items-center">
+              <div class="size-72 rounded-full border border-acc-prim/10 sm:size-96 lg:size-120" />
+              <div
+                class="absolute size-56 rounded-full border border-dashed border-acc-prim/15 sm:size-80 lg:size-96"
+              />
+              <div
+                class="absolute h-px w-11/12 rotate-12 bg-linear-to-r from-transparent via-acc-prim/20 to-transparent lg:w-160"
+              />
+              <div
+                class="absolute h-px w-10/12 -rotate-24 bg-linear-to-r from-transparent via-acc-prim/10 to-transparent lg:w-150"
+              />
+            </div>
+
+            <ManFloppy
+              class="pointer-events-none absolute top-1/2 left-1/2 z-20 w-11/12 max-w-sm -translate-x-1/2 -translate-y-1/2 sm:max-w-md xl:max-w-lg"
+            />
+
+            <div class="relative z-30 hidden min-h-135 lg:block">
+              <ArchiveOrbitCard
+                v-for="item in orbitItems"
+                :key="item.id"
+                :title="item.title"
+                :copy="item.copy"
+                :meta="item.meta"
+                :icon="item.icon"
+                :art="item.art"
+                :left="item.left"
+                class="absolute"
+                :class="item.position"
+                :aria-hidden="Boolean(item.art)"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="mt-12 grid gap-5 lg:grid-cols-3">
+      <div class="mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         <article
-          v-for="project in archiveProjects"
+          v-for="(project, index) in archiveProjects"
           :key="project.id"
-          class="portfolio-archive-item group flex overflow-hidden rounded-lg border border-brdr bg-bg-prim shadow-lg shadow-black/10"
+          class="portfolio-archive-item group relative overflow-hidden rounded-xl border border-brdr bg-bg-prim/90 p-5 shadow-lg shadow-black/10 transition hover:-translate-y-1 hover:border-acc-prim/50"
         >
-          <div class="flex w-full flex-col">
-            <div class="flex flex-1 flex-col p-5">
-              <h3 class="text-2xl font-bold">{{ project.name }}</h3>
-              <p class="mt-3 text-sm leading-6 text-pretty text-fg-sec">
-                {{ project.seoDescription || project.summary }}
-              </p>
+          <div
+            class="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full border border-acc-prim/10"
+          />
+          <div
+            class="pointer-events-none absolute top-8 -right-8 size-20 rounded-full border border-dashed border-acc-prim/10"
+          />
 
-              <dl class="mt-5 grid gap-2 border-y border-brdr py-4 text-xs">
-                <div class="flex justify-between gap-4">
-                  <dt class="font-bold text-fg-ter uppercase">Focus</dt>
-                  <dd class="text-right text-fg-sec">{{ project.eyebrow }}</dd>
-                </div>
-                <div class="flex justify-between gap-4">
-                  <dt class="font-bold text-fg-ter uppercase">Core</dt>
-                  <dd class="text-right text-fg-sec">
-                    {{ project.stack.slice(0, 2).join(' + ') }}
-                  </dd>
-                </div>
-              </dl>
-
-              <div class="mt-5 flex flex-wrap gap-2">
-                <TechBadge
-                  v-for="tech in project.stack"
-                  :key="tech"
-                  :name="tech"
-                  compact
-                />
+          <div class="relative flex h-full flex-col">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="mt-3 text-2xl leading-tight font-bold tracking-tight">
+                  {{ project.name }}
+                </h3>
               </div>
 
-              <div class="mt-auto flex flex-wrap gap-2 pt-6">
-                <NuxtLink
-                  v-if="project.liveUrl"
-                  :to="project.liveUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-4 py-2 text-xs font-bold text-fg-prim hover:border-acc-prim"
-                >
-                  <ArrowTopRightOnSquareIcon class="size-4" />
-                  Live
-                </NuxtLink>
-                <NuxtLink
-                  :to="project.gitHub"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-4 py-2 text-xs font-bold text-fg-prim hover:border-acc-prim"
-                >
-                  <CodeBracketIcon class="size-4" />
-                  Code
-                </NuxtLink>
-                <NuxtLink
-                  :to="project.path"
-                  class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-4 py-2 text-xs font-bold text-fg-prim hover:border-acc-prim"
-                >
-                  <ArrowRightStartOnRectangleIcon class="size-4" />
-                  More Info
-                </NuxtLink>
+              <div
+                class="grid size-12 shrink-0 place-items-center rounded-lg border border-brdr bg-bg-sec font-mono text-xs font-bold text-acc-prim"
+              >
+                {{ orbitIcons[index % orbitIcons.length] }}
               </div>
+            </div>
+
+            <p class="mt-4 text-sm leading-6 text-pretty text-fg-sec">
+              {{ project.seoDescription || project.summary }}
+            </p>
+
+            <dl class="mt-5 grid gap-2 border-y border-brdr py-4 text-xs">
+              <div class="flex justify-between gap-4">
+                <dt class="font-bold text-fg-ter uppercase">Focus</dt>
+                <dd class="text-right text-fg-sec">{{ project.eyebrow }}</dd>
+              </div>
+
+              <div class="flex justify-between gap-4">
+                <dt class="font-bold text-fg-ter uppercase">Core</dt>
+                <dd class="text-right text-fg-sec">
+                  {{ getCoreStack(project) }}
+                </dd>
+              </div>
+            </dl>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <TechBadge v-for="tech in project.stack" :key="tech" :name="tech" compact />
+            </div>
+
+            <div class="mt-auto flex flex-wrap gap-2 pt-6">
+              <NuxtLink
+                v-if="project.liveUrl"
+                :to="project.liveUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                :class="actionClass"
+              >
+                <ArrowTopRightOnSquareIcon class="size-4" />
+                Live
+              </NuxtLink>
+
+              <NuxtLink
+                v-if="project.gitHub"
+                :to="project.gitHub"
+                target="_blank"
+                rel="noopener noreferrer"
+                :class="actionClass"
+              >
+                <CodeBracketIcon class="size-4" />
+                Code
+              </NuxtLink>
+
+              <NuxtLink :to="project.path" :class="actionClass">
+                <ArrowRightStartOnRectangleIcon class="size-4" />
+                More Info
+              </NuxtLink>
             </div>
           </div>
         </article>

@@ -56,7 +56,7 @@ onBeforeUnmount(() => {
         <header class="max-w-2xl sm:mt-16">
           <div class="flex items-center gap-2">
             <LineStart class="size-5" />
-            <p class="text-sm font-bold text-acc-prim uppercase">Capability map</p>
+            <p class="text-sm font-bold text-acc-prim uppercase">Skills map</p>
           </div>
           <h2
             id="capability-map-title"

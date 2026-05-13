@@ -13,6 +13,8 @@ type ProjectBase = {
     path: string
     gitHub: string
     liveUrl?: string
+    date?: string
+    year?: string
     eyebrow: string
     image: string | null
     imageAlt: string
@@ -51,6 +53,9 @@ export type FeaturedProject = ProjectBase & {
 type ArchiveProject = ProjectBase & {
     summary: string
     responsibilities?: string[]
+    facts?: ProjectFact[]
+    storySections?: ProjectStorySection[]
+    proofPoints?: string[]
 }
 
 export type PortfolioProject = (FeaturedProject | ArchiveProject) & {
@@ -329,6 +334,49 @@ export const archiveProjects = [
         summary:
             'React and Firebase salon site with gallery management, caching, and Cloudflare Pages deployment.',
         stack: ['React', 'Firebase', 'Cloudflare Pages', 'Tailwind'],
+    },
+    {
+        id: 'cprint',
+        name: 'cprint',
+        path: '/projects/cprint',
+        liveUrl: undefined,
+        gitHub: 'https://github.com/viktorHadz/cprint',
+        year: '2025',
+        eyebrow: 'Go CLI utility',
+        image: null,
+        imageAlt: 'cprint command line output.',
+        seoTitle: 'cprint',
+        seoDescription:
+            'A small Go CLI that prints file contents to stdout from relative or absolute paths, with Cobra-powered help output and simple argument validation.',
+        summary:
+            'Go CLI utility that prints file contents from a provided path straight to stdout.',
+        stack: ['Go', 'Cobra', 'CLI'],
+        facts: [
+            { label: 'Type', value: 'Single-purpose CLI tool' },
+            { label: 'Input', value: 'Relative or absolute file path' },
+            { label: 'Core stack', value: 'Go, Cobra' },
+            { label: 'Output', value: 'Plain stdout print' },
+        ],
+        storySections: [
+            {
+                title: 'Command shape',
+                body: 'cprint keeps the interface deliberately small: one command, one file argument, and a direct output path for quick terminal use.',
+            },
+            {
+                title: 'What it does',
+                body: 'The tool reads a provided path with Go file I/O and prints the raw file contents to stdout, which makes it a simple fit for quick checks and shell workflows.',
+            },
+            {
+                title: 'Developer touches',
+                body: 'The command includes custom help text, ANSI-coloured usage output, and examples for relative and absolute paths, so even a tiny utility still feels intentional to use.',
+            },
+        ],
+        proofPoints: [
+            'Accepts both relative and absolute file paths.',
+            'Uses Cobra for command wiring and custom help output.',
+            'Shows a usage message when no file argument is provided.',
+        ],
+        responsibilities: ['CLI', 'File I/O', 'Developer tooling'],
     },
 ] satisfies ArchiveProject[]
 

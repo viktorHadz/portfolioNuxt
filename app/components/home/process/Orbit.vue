@@ -115,17 +115,10 @@ onMounted(() => {
 })
 </script>
 <template>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 314 343"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 314 343">
     <g id="projects">
       <g id="core">
-        <g
-          id="coreGlow"
-          filter="url(#filter2_f_1359_1003)"
-        >
+        <g id="coreGlow" filter="url(#filter2_f_1359_1003)">
           <ellipse
             cx="152.9"
             cy="125.3"
@@ -173,10 +166,7 @@ onMounted(() => {
           transform="rotate(20.4 -252.4 476)scale(.999975 1)skewY(.4)"
         />
       </g>
-      <g
-        id="paths"
-        fill-opacity="1"
-      >
+      <g id="paths" fill-opacity="1">
         <path
           id="small-inner"
           fill="none"

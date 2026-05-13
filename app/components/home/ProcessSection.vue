@@ -1,24 +1,19 @@
 <script setup>
 import { homeContent } from '~/data/portfolio/home'
-import Orbit from './process/Orbit.vue'
 </script>
 
 <template>
   <section
-    class="relative overflow-hidden bg-bg-prim py-20 text-fg-prim sm:py-28"
+    class="relative overflow-hidden bg-bg-sec py-20 text-fg-prim sm:py-28"
     aria-labelledby="process-title"
   >
-    <div class="absolute inset-0 bg-stars opacity-40" aria-hidden="true" />
+    <SectionDivider colour="text-bg-prim" position="top" />
 
-    <div class="pointer-events-none absolute inset-x-0 top-24 h-130 w-full sm:bottom-0">
-      <Orbit stroke-color="white" :stroke-opacity="0.02" :spin-speed="[20, 20, 20, 16, 16, 12]" />
-    </div>
-
-    <div class="mx-auto max-w-7xl px-6 sm:px-12">
+    <div class="mx-auto max-w-7xl px-6 py-20 sm:px-12">
       <header class="portfolio-reveal max-w-3xl">
         <div class="flex items-center gap-2">
           <LineStart class="size-5" />
-          <p class="text-sm font-bold text-acc-prim uppercase">Build process</p>
+          <p class="text-sm font-bold text-acc-prim uppercase">More stats</p>
         </div>
 
         <h2
@@ -28,17 +23,13 @@ import Orbit from './process/Orbit.vue'
           How an idea becomes something usable
         </h2>
       </header>
-      <figure>
+
+      <figure class="max-w-xl">
         <embed
-          src="https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/c2c88920-fe8b-4a97-86a3-0800822f13f0.svg"
+          src="https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/a5a498f5-6c7b-4b56-bd1e-4b7190c4a0f7.svg"
         />
-        <figure>
-          <embed
-            src="https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/a5a498f5-6c7b-4b56-bd1e-4b7190c4a0f7.svg"
-          />
-          <!-- Or get via json with 
-           https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/ece4549c-cac4-41c2-820b-2e90f5712a45.json -->
-        </figure>
+        <!-- Or get via json with 
+         https://wakatime.com/share/@61af5c0f-9f7d-4430-810c-c2186bde6c24/ece4549c-cac4-41c2-820b-2e90f5712a45.json -->
       </figure>
       <ol class="mt-14 grid gap-5 sm:gap-12 md:grid-cols-2">
         <li

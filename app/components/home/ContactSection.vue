@@ -166,13 +166,10 @@ onBeforeUnmount(() => {
   <section
     id="contact"
     ref="sectionRoot"
-    class="relative isolate overflow-hidden bg-bg-prim py-20 text-fg-prim sm:py-28"
+    class="relative isolate overflow-hidden bg-bg-sec py-20 text-fg-prim sm:py-28"
     aria-labelledby="contact-title"
   >
-    <div
-      class="absolute inset-0 bg-stars opacity-50"
-      aria-hidden="true"
-    />
+    <SectionDivider position="top" colour="text-bg-prim" />
     <svg
       class="pointer-events-none absolute top-0 left-0 h-full w-full opacity-45"
       viewBox="0 0 1200 780"
@@ -193,10 +190,7 @@ onBeforeUnmount(() => {
       viewBox="0 0 1200 780"
       aria-hidden="true"
     >
-      <g
-        class="portfolio-contact-signal"
-        fill="none"
-      >
+      <g class="portfolio-contact-signal" fill="none">
         <circle
           class="portfolio-portal-ring"
           cx="940"
@@ -225,10 +219,7 @@ onBeforeUnmount(() => {
           From automation to live client software
         </h2>
 
-        <div
-          data-contact-route
-          class="portfolio-contact-route relative mt-10"
-        >
+        <div data-contact-route class="portfolio-contact-route relative mt-10">
           <svg
             data-contact-route-svg
             class="pointer-events-none absolute inset-0 z-10 h-full w-full overflow-visible"

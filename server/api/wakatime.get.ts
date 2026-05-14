@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 const cacheFile = resolve(process.cwd(), '.data/wakatime.json')
-const cacheVersion = 4
+const cacheVersion = 6
 const refreshMs = 1000 * 60 * 60 * 24
 const retryMs = 1000 * 60 * 30
 const token = process.env.WAKATIME_KEY || ''
@@ -17,6 +17,8 @@ const fullDate = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     timeZone: 'UTC',
 })
+const month = new Intl.DateTimeFormat('en-GB', { month: 'short', timeZone: 'UTC' })
+const weekday = new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'UTC' })
 
 type WakaTimeStat = {
     id: number
@@ -30,6 +32,7 @@ type WakaTimeDay = { label: string; hours: number }
 type WakaTimeData = {
     version: number
     year: number
+    consistencyStats: WakaTimeStat[]
     timeStats: WakaTimeStat[]
     languageStats: WakaTimeLanguage[]
     currentWeek: WakaTimeDay[]
@@ -164,6 +167,7 @@ function formatWakaTimeData(payload: WakaTimeSummariesResponse): WakaTimeData {
     return {
         version: cacheVersion,
         year,
+        consistencyStats: buildConsistencyStats(days),
         timeStats: [
             {
                 id: 1,
@@ -204,11 +208,53 @@ function formatWakaTimeData(payload: WakaTimeSummariesResponse): WakaTimeData {
                 hours: Math.round(seconds / 3600),
                 percent: languageSeconds ? Math.round((seconds / languageSeconds) * 100) : 0,
             })),
-        currentWeek: buildCurrentWeek(days, lastDate),
+        currentWeek: buildCurrentWeek(days),
         topEditor,
         updatedAt,
         updatedLabel: fullDate.format(toDate(updatedAt.slice(0, 10))),
     }
+}
+
+function buildConsistencyStats(days: WakaTimeSummaryDay[]) {
+    let currentStreak = 0
+    let longestStreak = 0
+    let streak = 0
+    let latestActiveIndex = -1
+    const months = new Map<string, number>()
+
+    for (const [index, day] of days.entries()) {
+        const date = day.range?.date
+        const seconds = day.grand_total?.total_seconds || 0
+
+        if (!date) continue
+
+        months.set(date.slice(0, 7), (months.get(date.slice(0, 7)) || 0) + seconds)
+        streak = seconds > 0 ? streak + 1 : 0
+        longestStreak = Math.max(longestStreak, streak)
+
+        if (seconds > 0) latestActiveIndex = index
+    }
+
+    for (let index = latestActiveIndex; index >= 0; index -= 1) {
+        if ((days[index]?.grand_total?.total_seconds || 0) <= 0) break
+        currentStreak += 1
+    }
+
+    const peakMonth = Array.from(months.entries()).sort(
+        (a, b) => b[1] - a[1] || b[0].localeCompare(a[0]),
+    )[0]
+
+    return [
+        { id: 1, name: 'CURRENT STREAK', value: currentStreak, unit: 'days', extra: null },
+        { id: 2, name: 'LONGEST STREAK', value: longestStreak, unit: 'days', extra: null },
+        {
+            id: 3,
+            name: 'PEAK MONTH',
+            value: peakMonth ? month.format(toDate(`${peakMonth[0]}-01`)) : '-',
+            unit: '',
+            extra: peakMonth ? { value: `${Math.round(peakMonth[1] / 3600)} hrs`, unit: '' } : null,
+        },
+    ]
 }
 
 function addTotals(target: Map<string, number>, items: WakaTimeBreakdown[] | undefined) {
@@ -219,9 +265,9 @@ function addTotals(target: Map<string, number>, items: WakaTimeBreakdown[] | und
     }
 }
 
-function buildCurrentWeek(days: WakaTimeSummaryDay[], lastDate: string) {
+function buildCurrentWeek(days: WakaTimeSummaryDay[]) {
     const totals = new Map<string, number>()
-    const start = toDate(getWeekStart(lastDate))
+    const end = new Date()
 
     for (const day of days) {
         const date = day.range?.date
@@ -231,12 +277,15 @@ function buildCurrentWeek(days: WakaTimeSummaryDay[], lastDate: string) {
         totals.set(date, day.grand_total?.total_seconds || 0)
     }
 
-    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label, index) => {
-        const date = new Date(start)
+    return Array.from({ length: 7 }, (_, index) => {
+        const date = new Date(end)
 
-        date.setUTCDate(start.getUTCDate() + index)
+        date.setUTCDate(end.getUTCDate() - 6 + index)
 
-        return { label, hours: Number(((totals.get(toDateString(date)) || 0) / 3600).toFixed(1)) }
+        return {
+            label: weekday.format(date),
+            hours: Number(((totals.get(toDateString(date)) || 0) / 3600).toFixed(1)),
+        }
     })
 }
 
@@ -245,15 +294,6 @@ function getCurrentYearRange() {
     const year = today.getUTCFullYear()
 
     return { start: `${year}-01-01`, end: toDateString(today) }
-}
-
-function getWeekStart(value: string) {
-    const date = toDate(value)
-    const day = date.getUTCDay() || 7
-
-    date.setUTCDate(date.getUTCDate() - day + 1)
-
-    return toDateString(date)
 }
 
 function formatHours(seconds: number) {

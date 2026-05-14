@@ -4,6 +4,7 @@ import { resolve } from 'node:path'
 const cacheFile = resolve(process.cwd(), '.data/github.json')
 const cacheVersion = 2
 const refreshMs = 1000 * 60 * 60 * 24
+const retryMs = 1000 * 60 * 30
 const login = process.env.PORTFOLIO_GITHUB_USER || 'viktorHadz'
 const token = process.env.GITHUB_TOKEN || process.env.GITHUB_STATS_TOKEN || ''
 const levels = {
@@ -12,7 +13,7 @@ const levels = {
     SECOND_QUARTILE: 2,
     THIRD_QUARTILE: 3,
     FOURTH_QUARTILE: 4,
-}
+} as const
 const query = `
   query GitHubActivity($login: String!, $from: DateTime!, $to: DateTime!) {
     user(login: $login) {
@@ -48,6 +49,22 @@ type GitHubData = {
     stats: { id: string; label: string; value: number }[]
     weeks: GitHubWeek[]
     updatedAt: string
+}
+type ContributionLevel = keyof typeof levels
+type GitHubContributionDay = { date: string; contributionCount: number; contributionLevel: ContributionLevel }
+type GitHubUser = {
+    login: string
+    url: string
+    repositories: { totalCount: number }
+    contributionsCollection: {
+        totalCommitContributions: number
+        contributionCalendar: { totalContributions: number; weeks: { contributionDays: GitHubContributionDay[] }[] }
+    }
+}
+type GitHubResponse = { data?: { user?: GitHubUser | null }; errors?: { message: string }[] }
+type RefreshState = {
+    githubRefreshStarted?: boolean
+    githubRefreshTimer?: ReturnType<typeof setTimeout>
 }
 
 let refreshPromise: Promise<GitHubData> | null = null
@@ -97,7 +114,7 @@ async function updateGitHubData(force: boolean) {
     }
 }
 
-async function requestGitHub() {
+async function requestGitHub(): Promise<GitHubUser> {
     const to = new Date()
     const from = new Date(to)
 
@@ -119,7 +136,7 @@ async function requestGitHub() {
             },
         }),
     })
-    const payload = await response.json()
+    const payload = await response.json() as GitHubResponse
 
     if (!response.ok || payload.errors?.length) {
         throw createError({
@@ -128,10 +145,14 @@ async function requestGitHub() {
         })
     }
 
+    if (!payload.data?.user) {
+        throw createError({ statusCode: 502, statusMessage: 'GitHub user payload missing' })
+    }
+
     return payload.data.user
 }
 
-function formatGitHubData(user) {
+function formatGitHubData(user: GitHubUser): GitHubData {
     const days = user.contributionsCollection.contributionCalendar.weeks.flatMap(
         ({ contributionDays }) =>
             contributionDays.map((day) => ({
@@ -140,11 +161,17 @@ function formatGitHubData(user) {
                 level: levels[day.contributionLevel] || 0,
             })),
     )
+    const firstDay = days[0]
+    const lastDay = days.at(-1)
+
+    if (!firstDay || !lastDay) {
+        throw createError({ statusCode: 502, statusMessage: 'GitHub contribution days missing' })
+    }
 
     return {
         version: cacheVersion,
         profile: { login: user.login, url: user.url },
-        range: { start: days[0].date, end: days.at(-1).date },
+        range: { start: firstDay.date, end: lastDay.date },
         totalContributions: user.contributionsCollection.contributionCalendar.totalContributions,
         stats: [
             {
@@ -164,15 +191,18 @@ function formatGitHubData(user) {
     }
 }
 
-function buildWeeks(days) {
+function buildWeeks(days: GitHubDay[]): GitHubWeek[] {
     const weeks: GitHubWeek[] = []
 
     for (let index = 0; index < days.length; index += 7) {
         const weekDays = days.slice(index, index + 7)
+        const firstDay = weekDays[0]
+
+        if (!firstDay) continue
 
         weeks.push({
-            start: weekDays[0].date,
-            end: weekDays.at(-1)?.date || weekDays[0].date,
+            start: firstDay.date,
+            end: weekDays.at(-1)?.date || firstDay.date,
             total: weekDays.reduce((total, day) => total + day.count, 0),
             days: weekDays,
         })
@@ -182,21 +212,40 @@ function buildWeeks(days) {
 }
 
 function startRefreshLoop() {
-    const state = globalThis as { githubRefreshStarted?: boolean }
+    const state = globalThis as RefreshState
 
     if (state.githubRefreshStarted) return
 
     state.githubRefreshStarted = true
-    refreshGitHubData().catch(() => {})
-
-    const timer = setInterval(() => {
-        refreshGitHubData(true).catch(() => {})
-    }, refreshMs)
-
-    timer.unref?.()
+    scheduleNextRefresh().catch(() => {})
 }
 
-async function readCache() {
+async function scheduleNextRefresh(delay?: number) {
+    const state = globalThis as RefreshState
+    const nextDelay = delay ?? await getRefreshDelay()
+
+    clearTimeout(state.githubRefreshTimer)
+
+    state.githubRefreshTimer = setTimeout(async () => {
+        try {
+            await refreshGitHubData()
+            await scheduleNextRefresh()
+        } catch {
+            await scheduleNextRefresh(retryMs)
+        }
+    }, nextDelay)
+
+}
+
+async function getRefreshDelay() {
+    const cached = await readCache()
+
+    if (!isValidCache(cached) || isStale(cached.updatedAt)) return 0
+
+    return Math.max(0, new Date(cached.updatedAt).getTime() + refreshMs - Date.now())
+}
+
+async function readCache(): Promise<GitHubData | null> {
     try {
         return JSON.parse(await readFile(cacheFile, 'utf8'))
     } catch {
@@ -205,7 +254,7 @@ async function readCache() {
 }
 
 function isValidCache(cached: GitHubData | null): cached is GitHubData {
-    return cached?.version === cacheVersion
+    return cached?.version === cacheVersion && Number.isFinite(new Date(cached.updatedAt).getTime())
 }
 
 function isStale(updatedAt: string) {

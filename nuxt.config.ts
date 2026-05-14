@@ -10,20 +10,13 @@ export default defineNuxtConfig({
 
     app: {
         head: {
-            htmlAttrs: {
-                lang: 'en-GB',
-            },
+            htmlAttrs: { lang: 'en-GB' },
             meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
             link: [{ rel: 'icon', type: 'image/png', href: '/favicon.ico' }],
         },
     },
 
-    sitemap: {
-        defaults: {
-            changefreq: 'monthly',
-            priority: 0.7,
-        },
-    },
+    sitemap: { defaults: { changefreq: 'monthly', priority: 0.7 } },
 
     // TODO: Remove vue devtools before launching Prod
     vite: {
@@ -37,6 +30,7 @@ export default defineNuxtConfig({
                 'gsap/ScrollTrigger',
                 'gsap/MotionPathPlugin',
                 '@heroicons/vue/24/outline',
+                'gsap/DrawSVGPlugin',
             ],
         },
     },

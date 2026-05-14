@@ -3,7 +3,6 @@ import gsap from 'gsap'
 import { homeContent } from '~/data/portfolio/home'
 import Character from './hero/Character.vue'
 import IconCloud from './hero/IconCloud.vue'
-import SpeedLines from './hero/SpeedLines.vue'
 
 const heroRoot = useTemplateRef('heroRoot')
 const iconCloud = useTemplateRef('iconCloud')

@@ -2,21 +2,33 @@
 import { archiveProjects } from '~/data/portfolio/projects'
 import ArchiveOrbitCard from './archive/ArchiveOrbitCard.vue'
 import ManFloppy from './archive/ManFloppy.vue'
-import TheRip from './archive/art/TheRip.vue'
-import TheSad from './archive/art/TheSad.vue'
+import sadFaceArt from './archive/art/ArchiveArtSadFace.vue'
 import {
   ArrowRightStartOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
   CodeBracketIcon,
 } from '@heroicons/vue/24/outline'
+import asciiArt from './archive/art/ArchiveArtAscii.vue'
+import fuklaArt from './archive/art/ArchiveArtFukla.vue'
+import surveyArt from './archive/art/ArchiveArtSurvey.vue'
+import cprintArt from './archive/art/ArchiveArtCprint.vue'
 
 const actionClass =
   'inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-3 text-xs font-bold text-fg-prim transition hover:border-acc-prim hover:text-acc-prim'
 
-const orbitIcons = ['{ }', '▣', '>_', '≋']
+const orbitArtById = {
+  'ascii-generator': asciiArt,
+  'survey-generator': surveyArt,
+  fukla: fuklaArt,
+  cprint: cprintArt,
+}
 
 function getOrbitMeta(project) {
   return project.year || project.date?.slice(0, 4) || '2023'
+}
+
+function getOrbitArt(id) {
+  return orbitArtById[id]
 }
 
 function getCoreStack(project) {
@@ -29,7 +41,7 @@ function findArchiveProject(id) {
   return project
 }
 
-function createOrbitProject(id, icon, position, left = false) {
+function createOrbitProject(id, position, left = false) {
   const project = findArchiveProject(id)
 
   return {
@@ -37,32 +49,24 @@ function createOrbitProject(id, icon, position, left = false) {
     title: project.name,
     copy: project.eyebrow,
     meta: getOrbitMeta(project),
-    icon,
+    art: getOrbitArt(id),
     position,
     left,
   }
 }
 
 const orbitItems = [
-  createOrbitProject('ascii-generator', orbitIcons[0], 'lg:-left-8 lg:top-2', true),
-  createOrbitProject('survey-generator', orbitIcons[1], 'lg:-right-12 lg:top-6'),
-  createOrbitProject('fukla', orbitIcons[2], 'lg:-left-28 lg:top-54', true),
-  createOrbitProject('cprint', orbitIcons[3], 'lg:-right-24 lg:top-52'),
+  createOrbitProject('ascii-generator', 'lg:-left-8 lg:top-2', true),
+  createOrbitProject('survey-generator', 'lg:-right-0 lg:top-6'),
+  createOrbitProject('fukla', 'lg:-left-10 lg:bottom-16', true),
+  createOrbitProject('cprint', 'lg:-right-24 lg:top-52'),
+
   {
-    id: 'project-graveyard',
-    title: 'Project Graveyard',
-    copy: "I'll get to it at some point",
-    meta: '2022-2026',
-    art: TheSad,
-    position: 'lg:-left-10 lg:bottom-16',
-    left: true,
-  },
-  {
-    id: 'broken-projects',
-    title: 'Broken Projects',
-    copy: 'Abandoned',
-    meta: 'lol',
-    art: TheRip,
+    id: 'project-purgatory',
+    title: 'Project Purgatory',
+    copy: 'Million dollar start up',
+    meta: 'WIP',
+    art: sadFaceArt,
     position: 'lg:-right-6 lg:bottom-16',
   },
 ]
@@ -91,17 +95,14 @@ const orbitItems = [
           >
             Archive
             <br />
-            <span class="text-grad-top">projects</span>
+            <span class="text-grad-top text-shadow-lg/20 text-shadow-acc-prim/50">projects</span>
           </h2>
 
           <p class="mt-5 max-w-sm text-base leading-7 text-fg-sec">
             Ideas I couldn't let go of. Smaller builds, experiments, and client pieces that shaped
             the work that matters.
           </p>
-          <TheButton class="mt-8">
-            Browse projects
-            <ArrowRightStartOnRectangleIcon class="size-4" />
-          </TheButton>
+          <TheButton href="/projects" class="mt-8">Browse projects</TheButton>
         </header>
 
         <div class="portfolio-reveal lg:col-span-8">
@@ -132,7 +133,6 @@ const orbitItems = [
                 :title="item.title"
                 :copy="item.copy"
                 :meta="item.meta"
-                :icon="item.icon"
                 :art="item.art"
                 :left="item.left"
                 class="absolute"
@@ -146,9 +146,9 @@ const orbitItems = [
 
       <div class="mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         <article
-          v-for="(project, index) in archiveProjects"
+          v-for="project in archiveProjects"
           :key="project.id"
-          class="portfolio-archive-item group relative overflow-hidden rounded-xl border border-brdr bg-bg-prim/90 p-5 shadow-lg shadow-black/10 transition hover:-translate-y-1 hover:border-acc-prim/50"
+          class="portfolio-archive-item group relative overflow-hidden rounded-xl border border-brdr bg-bg-sec/60 p-5 shadow-lg shadow-black/10 hover:border-acc-prim-light/50"
         >
           <div
             class="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full border border-acc-prim/10"
@@ -166,9 +166,9 @@ const orbitItems = [
               </div>
 
               <div
-                class="grid size-12 shrink-0 place-items-center rounded-lg border border-brdr bg-bg-sec font-mono text-xs font-bold text-acc-prim"
+                class="grid size-12 shrink-0 place-items-center rounded-lg border border-brdr bg-bg-sec text-acc-prim"
               >
-                {{ orbitIcons[index % orbitIcons.length] }}
+                <component :is="getOrbitArt(project.id)" class="size-10" />
               </div>
             </div>
 

@@ -9,14 +9,8 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useHead, useSeoMeta, withSiteUrl } from '#imports'
 import { allProjects, isFeaturedProject } from '~/data/portfolio/projects'
-import FieldArt from '~/components/projects/FieldArt.vue'
 
-const props = defineProps({
-  project: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps({ project: { type: Object, required: true } })
 
 const featuredProject = computed(() => (isFeaturedProject(props.project) ? props.project : null))
 const imagePath = computed(() => props.project.image || '')
@@ -65,17 +59,16 @@ const projectSignals = computed(() => [
       ? 'Live project and source code are available for review.'
       : 'Source code is available for review on GitHub.',
   },
-  {
-    label: 'Project signal',
-    body: props.project.seoDescription || props.project.summary,
-  },
+  { label: 'Project signal', body: props.project.seoDescription || props.project.summary },
 ])
 const detailHeading = computed(() =>
   featuredProject.value?.pageVariant === 'marketing'
     ? 'How the site guides people and stays reliable'
     : 'How the work is shaped and why it matters',
 )
-const proofPoints = computed(() => featuredProject.value?.proofPoints || props.project.proofPoints || [])
+const proofPoints = computed(
+  () => featuredProject.value?.proofPoints || props.project.proofPoints || [],
+)
 const relatedProjects = computed(() =>
   allProjects.filter((project) => project.id !== props.project.id).slice(0, 3),
 )
@@ -96,16 +89,14 @@ useSeoMeta({
   twitterCard: computed(() => (props.project.image ? 'summary_large_image' : 'summary')),
 })
 
-useHead({
-  link: [{ rel: 'canonical', href: canonical }],
-})
+useHead({ link: [{ rel: 'canonical', href: canonical }] })
 </script>
 
 <template>
   <main class="min-h-screen bg-bg-prim text-fg-prim">
     <article>
       <section class="relative isolate overflow-hidden px-6 pt-20 pb-14 sm:px-8 sm:pt-28">
-        <FieldArt />
+        <div class="absolute inset-0 bg-stars opacity-50" />
 
         <div class="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_0.82fr]">
           <div>
@@ -287,6 +278,21 @@ useHead({
         </div>
       </section>
 
+      <section v-if="$slots.demo" class="bg-bg-prim px-6 py-16 sm:px-8 sm:py-20">
+        <div class="mx-auto max-w-7xl">
+          <header class="max-w-3xl">
+            <p class="text-3xl font-bold text-acc-prim uppercase">Project demo</p>
+            <p class="mt-3 text-base leading-8 text-fg-sec">
+              An interactive slice of the project, embedded directly for you to try.
+            </p>
+          </header>
+
+          <div class="mt-6 rounded-lg border border-brdr bg-bg-sec/70 p-4 sm:p-6">
+            <slot name="demo" />
+          </div>
+        </div>
+      </section>
+
       <section class="px-6 py-16 sm:px-8 sm:py-20">
         <div class="mx-auto max-w-7xl">
           <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -295,10 +301,10 @@ useHead({
               <h2 class="mt-3 text-2xl font-bold">More project pages</h2>
             </div>
             <NuxtLink
-              to="/#archive-title"
+              to="/projects"
               class="inline-flex min-h-10 items-center gap-2 text-sm font-bold text-acc-prim uppercase"
             >
-              Full archive
+              All projects
               <ArrowTopRightOnSquareIcon class="size-4" />
             </NuxtLink>
           </div>

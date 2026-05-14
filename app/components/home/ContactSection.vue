@@ -1,7 +1,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { homeContent } from '~/data/portfolio/home'
-import FieldArt from '~/components/projects/FieldArt.vue'
 
 const activeJourneyYear = ref(null)
 const sectionRoot = ref(null)
@@ -292,7 +291,7 @@ onBeforeUnmount(() => {
       <aside
         class="portfolio-contact-panel relative isolate self-start rounded-lg border border-brdr bg-bg-sec/90 p-6 shadow-2xl shadow-black/20 backdrop-blur-sm sm:p-8 lg:sticky lg:top-28"
       >
-        <FieldArt />
+        <div class="absolute inset-0 bg-stars opacity-50" />
         <p class="text-sm font-bold text-acc-sec uppercase">Contact</p>
         <h2
           id="contact-title"

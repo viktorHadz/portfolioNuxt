@@ -12,13 +12,7 @@ type GitHubData = {
   updatedAt: string
 }
 
-type ActiveDay = {
-  date: string
-  count: number
-  total: number
-  x: number
-  y: number
-}
+type ActiveDay = { date: string; count: number; total: number; x: number; y: number }
 
 const { data, error } = await useFetch<GitHubData>('/api/github', { key: 'github' })
 

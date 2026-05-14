@@ -63,7 +63,7 @@ onBeforeUnmount(() => {
             class="mt-3 text-3xl leading-tight font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
           >
             A holistic approach to
-            <span class="text-grad-top">development</span>
+            <span class="text-grad-top text-shadow-lg/20 text-shadow-acc-prim/50">development</span>
           </h2>
           <p class="mt-4 text-base leading-7 text-fg-sec sm:text-lg">
             A deeper overview of my capabilities. From building unique interfaces to designing

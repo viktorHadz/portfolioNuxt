@@ -2,50 +2,32 @@
 import ArchiveFrame from '../process/ArchiveFrame.vue'
 
 defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  copy: {
-    type: String,
-    required: true,
-  },
-  meta: {
-    type: String,
-    required: true,
-  },
-  icon: {
-    type: String,
-    default: '',
-  },
-  art: {
-    type: [Object, Function],
-    default: null,
-  },
+  title: { type: String, required: true },
+  copy: { type: String, required: true },
+  meta: { type: String, required: true },
+  icon: { type: String, default: '' },
+  art: { type: [Object, Function], default: null },
   left: Boolean,
 })
 </script>
 
 <template>
   <article
-    class="pointer-events-none flex w-48 items-center gap-3 p-3"
+    class="pointer-events-none flex w-56 items-center gap-3 p-3"
     :class="left && 'flex-row-reverse'"
   >
     <div class="relative shrink-0">
       <span
-        class="absolute top-2 size-2 rounded-full border border-acc-prim/60 bg-bg-prim"
-        :class="left ? '-right-1' : '-left-1'"
+        class="absolute -top-3 size-8 rounded-full border border-acc-prim/60 bg-bg-prim"
+        :class="left ? '-right-3' : '-left-3'"
       />
       <span
-        class="absolute bottom-2 size-2 rounded-full border border-acc-prim/35 bg-bg-prim"
+        class="absolute -bottom-6 size-4 rounded-full border border-acc-prim/35 bg-bg-prim"
         :class="left ? '-left-1' : '-right-1'"
       />
 
       <ArchiveFrame>
-        <component :is="art" v-if="art" class="size-9" />
-        <span v-else class="font-mono text-xs font-bold">
-          {{ icon }}
-        </span>
+        <component :is="art" v-if="art" class="mt-2 size-9" />
       </ArchiveFrame>
     </div>
 

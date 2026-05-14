@@ -5,14 +5,9 @@ import type { SkillCardContent } from '~/data/portfolio/skills'
 
 const graphicRef = ref<{ play?: () => void; reverse?: () => void } | null>(null)
 
-defineProps<{
-  card: SkillCardContent
-  graphic: Component
-}>()
+defineProps<{ card: SkillCardContent; graphic: Component }>()
 
-defineEmits<{
-  open: []
-}>()
+defineEmits<{ open: [] }>()
 
 function playGraphic() {
   graphicRef.value?.play?.()
@@ -35,7 +30,7 @@ function reverseGraphic() {
 
     <div class="relative flex items-start justify-between gap-4">
       <div>
-        <p class="font-mono text-xs font-bold tracking-wide text-sky-300 uppercase">
+        <p class="font-mono text-xs font-bold tracking-wide text-acc-ter uppercase">
           {{ card.eyebrow }}
         </p>
         <h3 class="mt-3 text-xl font-bold tracking-tighter uppercase sm:text-2xl">

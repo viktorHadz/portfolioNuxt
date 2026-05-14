@@ -20,7 +20,10 @@
     --acc-primary-light: hsl(65, 81%, 75%);
     --acc-primary-strong: hsl(79, 80%, 50%);
     --acc-secondary: hsl(53, 100%, 67%);
-    --acc-tertiary: hsl(210, 100%, 75%);
+    /* --acc-tertiary: hsl(210, 100%, 75%); */
+    /* --acc-tertiary: oklch(82.8% 0.111 230.318); */
+    /* --acc-tertiary: #75d3ff; */
+    --acc-tertiary: #74d4ff;
 
     --border-subtle: hsl(228, 10%, 20%);
     --border: hsl(228, 10%, 28%);

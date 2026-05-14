@@ -41,12 +41,7 @@ function playEntry() {
 
   entryTl?.kill()
   portalPulse.value = false
-  gsap.set('.hero-portal-svg', {
-    opacity: 0,
-    scale: 0.2,
-    rotate: -45,
-    transformOrigin: '50% 50%',
-  })
+  gsap.set('.hero-portal-svg', { opacity: 0, scale: 0.2, rotate: -45, transformOrigin: '50% 50%' })
   gsap.set('.hero-character-body', { opacity: 0, y: 90, transformOrigin: '58% 72%' })
 
   entryTl = gsap.timeline({

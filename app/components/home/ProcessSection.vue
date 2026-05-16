@@ -20,7 +20,6 @@ import vueIcon from '~/assets/icons/tech/vue-js.svg'
 import VsCodeIcon from './process/art/VsCodeIcon.vue'
 import InvertedBorder from './process/InvertedBorder.vue'
 import ArchiveArtStats from './archive/art/ArchiveArtStats.vue'
-import ArchiveArtStatsBG from './archive/art/ArchiveArtStatsBG.vue'
 
 type WakaTimeData = {
   year: number

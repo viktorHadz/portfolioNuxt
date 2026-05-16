@@ -33,11 +33,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
     class="fixed inset-x-0 top-0 z-50 flex items-center justify-between bg-bg-prim/95 px-4 py-5 backdrop-blur-sm transition-transform duration-300 sm:px-8 lg:px-20"
     :class="hidden ? '-translate-y-full' : 'translate-y-0'"
   >
-    <NuxtLink
-      to="/"
-      class="relative flex items-center gap-3"
-      aria-label="Bits by Vik home"
-    >
+    <NuxtLink to="/" class="relative flex items-center gap-3" aria-label="Bits by Vik home">
       <span
         aria-hidden="true"
         class="absolute top-1/2 -left-1/6 h-3 w-72 -translate-y-1/2 bg-linear-to-r from-transparent via-acc-sec/20 to-transparent blur-md"
@@ -47,7 +43,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
         aria-hidden="true"
         class="absolute top-1/2 -left-1/6 h-px w-64 -translate-y-1/2 bg-linear-to-r from-transparent via-acc-sec/30 to-transparent"
       />
-      <BrandMark class="relative z-10 size-8 shrink-0 sm:size-11" />
+      <MenchHead class="relative z-10 size-8 shrink-0 sm:size-11" />
       <span class="text-md relative z-10 leading-none font-bold uppercase sm:text-2xl">
         Bits
         <span class="text-acc-prim">by</span>

@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
 
     <div class="relative mx-auto grid max-w-7xl gap-10 px-6 sm:px-8 lg:grid-cols-2">
       <div class="portfolio-reveal">
-        <p class="text-sm font-bold text-acc-prim uppercase">Journey route</p>
+        <HandleBar txt="Jourey route" />
         <h2 class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl">
           From automation to live client software
         </h2>

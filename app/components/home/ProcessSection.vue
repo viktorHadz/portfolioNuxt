@@ -18,7 +18,6 @@ import sqliteIcon from '~/assets/icons/tech/sqlite.svg'
 import typescriptIcon from '~/assets/icons/tech/typescript.svg'
 import vueIcon from '~/assets/icons/tech/vue-js.svg'
 import VsCodeIcon from './process/art/VsCodeIcon.vue'
-import InvertedBorder from './process/InvertedBorder.vue'
 import ArchiveArtStats from './archive/art/ArchiveArtStats.vue'
 
 type WakaTimeData = {
@@ -109,16 +108,13 @@ function formatTick(value: number) {
   >
     <SectionDivider colour="text-bg-prim" position="top" />
     <div class="mx-auto max-w-7xl px-6 py-20 sm:px-12">
-      <div class="relative flex flex-col items-center justify-between sm:flex-row">
+      <div class="relative flex flex-col justify-between gap-12 md:flex-row md:items-center">
         <header class="portfolio-reveal z-10 max-w-xl">
-          <div class="flex items-center gap-2">
-            <LineStart class="size-5" />
-            <p class="text-sm font-bold text-acc-prim uppercase">Build log</p>
-          </div>
+          <HandleBar txt="Build log" />
 
           <h2
             id="process-title"
-            class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl lg:text-5xl"
+            class="mt-3 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl"
           >
             Hours in the
             <span class="text-grad-top text-shadow-lg/20 text-shadow-acc-prim/50">chair</span>
@@ -136,7 +132,7 @@ function formatTick(value: number) {
               />
             </div>
             <p class="text-lg">
-              Updated from
+              Source:
               <span class="text-acc-prim">WakaTime</span>
             </p>
           </div>
@@ -145,208 +141,208 @@ function formatTick(value: number) {
         <SpeedLines />
 
         <div class="flex-1">
-          <div class="relative z-20 size-100 place-self-end opacity-80">
-            <ArchiveArtStats class="absolute size-100" />
+          <div class="relative z-20 place-self-end opacity-80">
+            <ArchiveArtStats class="max-w-2xs min-w-2xs sm:max-w-sm sm:min-w-sm" />
           </div>
         </div>
       </div>
 
       <!-- Stats -->
-      <InvertedBorder css-class="p-4 lg:p-8 bg-bg-ter">
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[40%_60%]">
-          <!-- Stats left -->
-          <div>
-            <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
-              <span class="size-2 bg-acc-prim" />
-              <span>{{ wakatime?.year || currentYear }}</span>
-              <span>Round-up</span>
+      <!-- <InvertedBorder css-class="p-4 lg:p-8 bg-bg-ter mt-20"> -->
+      <div class="mt-20 grid grid-cols-1 gap-6 lg:grid-cols-[40%_60%]">
+        <!-- Stats left -->
+        <div>
+          <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
+            <span class="size-2 bg-acc-sec" />
+            <span>{{ wakatime?.year || currentYear }}</span>
+            <span>Round-up</span>
+          </div>
+          <!-- consistencyStats -->
+          <div class="mt-4 grid grid-cols-2 gap-3 text-fg-prim md:grid-cols-3">
+            <div
+              v-for="stat in wakatime?.consistencyStats || []"
+              :key="stat.id"
+              class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-ter p-4"
+            >
+              <div class="flex items-center gap-2 text-fg-sec">
+                <component :is="statIcons[stat.name]" class="size-5" />
+                <p class="font-mono text-xs tracking-tighter text-fg-sec uppercase">
+                  {{ stat.name }}
+                </p>
+              </div>
+
+              <p class="mt-3 text-lg leading-none font-bold text-acc-prim">
+                {{ stat.value }} {{ stat.unit }}
+              </p>
+
+              <p v-if="stat.extra" class="mt-2 text-sm text-fg-sec">
+                {{ stat.extra.value }}{{ stat.extra.unit }}
+              </p>
             </div>
-            <!-- consistencyStats -->
-            <div class="mt-4 grid grid-cols-2 gap-3 text-fg-prim md:grid-cols-3">
+          </div>
+
+          <hr class="my-4 text-brdr-subtle" />
+
+          <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
+            <span class="size-2 bg-acc-sec" />
+            <span>Current week</span>
+            <span>Daily hours</span>
+          </div>
+          <div v-if="wakatime" class="mt-5 rounded-lg border border-brdr-subtle bg-bg-ter p-4">
+            <div class="mb-3 flex items-center justify-between text-xs text-fg-sec">
+              <p>Current week from WakaTime totals</p>
+              <span class="font-mono uppercase">Hours</span>
+            </div>
+
+            <div class="grid grid-cols-[1rem_1fr] gap-3">
               <div
-                v-for="stat in wakatime?.consistencyStats || []"
-                :key="stat.id"
-                class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-sec p-4"
+                class="flex h-56 flex-col justify-between text-right font-mono text-tiny text-fg-ter"
               >
-                <div class="flex items-center gap-2 text-fg-sec">
-                  <component :is="statIcons[stat.name]" class="size-5" />
-                  <p class="font-mono text-xs tracking-tighter text-fg-sec uppercase">
-                    {{ stat.name }}
-                  </p>
-                </div>
-
-                <p class="mt-3 text-lg leading-none font-bold text-acc-prim">
-                  {{ stat.value }} {{ stat.unit }}
-                </p>
-
-                <p v-if="stat.extra" class="mt-2 text-sm text-fg-sec">
-                  {{ stat.extra.value }}{{ stat.extra.unit }}
-                </p>
-              </div>
-            </div>
-
-            <hr class="my-4 text-brdr-subtle" />
-
-            <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
-              <span class="size-2 bg-acc-prim" />
-              <span>Current week</span>
-              <span>Daily hours</span>
-            </div>
-            <div v-if="wakatime" class="mt-5 rounded-lg border border-brdr-subtle bg-bg-sec p-4">
-              <div class="mb-3 flex items-center justify-between text-xs text-fg-sec">
-                <p>Current week from WakaTime totals</p>
-                <span class="font-mono uppercase">Hours</span>
+                <span v-for="tick in chartTicks" :key="tick" class="leading-none">
+                  {{ formatTick(tick) }}
+                </span>
               </div>
 
-              <div class="grid grid-cols-[1rem_1fr] gap-3">
-                <div
-                  class="flex h-56 flex-col justify-between text-right font-mono text-tiny text-fg-ter"
-                >
-                  <span v-for="tick in chartTicks" :key="tick" class="leading-none">
-                    {{ formatTick(tick) }}
-                  </span>
-                </div>
+              <div>
+                <div class="relative h-56 border-b border-brdr-subtle">
+                  <div class="pointer-events-none absolute inset-0 grid grid-rows-4">
+                    <div v-for="line in 4" :key="line" class="border-t border-brdr-subtle/70" />
+                  </div>
 
-                <div>
-                  <div class="relative h-56 border-b border-brdr-subtle">
-                    <div class="pointer-events-none absolute inset-0 grid grid-rows-4">
-                      <div v-for="line in 4" :key="line" class="border-t border-brdr-subtle/70" />
-                    </div>
-
-                    <div class="absolute inset-x-0 bottom-0 grid h-full grid-cols-7 gap-4 pt-4">
-                      <div
-                        v-for="day in weekDays"
-                        :key="day.label"
-                        class="group flex flex-col items-center justify-end"
+                  <div class="absolute inset-x-0 bottom-0 grid h-full grid-cols-7 gap-4 pt-4">
+                    <div
+                      v-for="day in weekDays"
+                      :key="day.label"
+                      class="group flex flex-col items-center justify-end"
+                    >
+                      <span
+                        class="pointer-events-none mb-2 rounded border border-brdr bg-bg-sec px-2 py-1 font-mono text-tiny text-fg-prim opacity-0 transition-opacity group-hover:opacity-100"
                       >
-                        <span
-                          class="pointer-events-none mb-2 rounded border border-brdr bg-bg-sec px-2 py-1 font-mono text-tiny text-fg-prim opacity-0 transition-opacity group-hover:opacity-100"
-                        >
-                          {{ formatChartHours(day.hours) }}
-                        </span>
+                        {{ formatChartHours(day.hours) }}
+                      </span>
 
-                        <div class="flex h-full w-full items-end justify-center">
-                          <div
-                            class="w-full max-w-7 rounded-t-sm border border-b-0 border-brdr-subtle/70 bg-linear-to-t from-grad-4 via-grad-2 to-acc-prim"
-                            :style="{ height: barHeight(day.hours) }"
-                            :title="formatChartHours(day.hours)"
-                          />
-                        </div>
+                      <div class="flex h-full w-full items-end justify-center">
+                        <div
+                          class="w-full max-w-7 rounded-t-sm border border-b-0 border-brdr-subtle/70 bg-linear-to-t from-grad-4 via-grad-2 to-acc-prim"
+                          :style="{ height: barHeight(day.hours) }"
+                          :title="formatChartHours(day.hours)"
+                        />
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div class="mt-3 grid grid-cols-7 gap-4 font-mono text-xs text-fg-sec">
-                    <span v-for="day in weekDays" :key="day.label">{{ day.label }}</span>
-                  </div>
+                <div class="mt-3 grid grid-cols-7 gap-4 font-mono text-xs text-fg-sec">
+                  <span v-for="day in weekDays" :key="day.label">{{ day.label }}</span>
                 </div>
               </div>
             </div>
-
-            <p v-else class="mt-6 text-sm text-fg-sec">WakaTime data is unavailable right now.</p>
           </div>
 
-          <!-- Stats right -->
-          <div>
-            <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
-              <span class="size-2 bg-acc-prim" />
-              <span>{{ wakatime?.year || currentYear }}</span>
-              <span>Round-up</span>
+          <p v-else class="mt-6 text-sm text-fg-sec">WakaTime data is unavailable right now.</p>
+        </div>
+
+        <!-- Stats right -->
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
+            <span class="size-2 bg-acc-sec" />
+            <span>{{ wakatime?.year || currentYear }}</span>
+            <span>Round-up</span>
+          </div>
+          <!-- Top -->
+          <!-- timeStats -->
+          <div class="mt-4 grid grid-cols-2 gap-3 text-fg-prim sm:grid-cols-4">
+            <div
+              v-for="stat in wakatime?.timeStats || []"
+              :key="stat.id"
+              class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-ter p-4"
+            >
+              <div class="flex items-center gap-2 text-fg-sec">
+                <component :is="statIcons[stat.name]" class="size-5" />
+
+                <span class="line-clamp-1 font-mono text-xs tracking-tighter uppercase">
+                  {{ stat.name }}
+                </span>
+              </div>
+
+              <p class="mt-3 text-lg leading-none font-bold text-acc-prim">
+                {{ stat.value }} {{ stat.unit }}
+              </p>
+
+              <p v-if="stat.extra" class="mt-2 text-sm text-fg-sec">
+                {{ stat.extra.value }}{{ stat.extra.unit }}
+              </p>
             </div>
-            <!-- Top -->
-            <!-- timeStats -->
-            <div class="mt-4 grid grid-cols-2 gap-3 text-fg-prim sm:grid-cols-4">
+          </div>
+
+          <hr class="my-4 text-brdr-subtle" />
+
+          <!-- Bottom - languages stats -->
+          <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
+            <span class="size-2 bg-acc-sec" />
+            <span>Language mix</span>
+          </div>
+          <div class="mt-5 flex flex-1 flex-col rounded-lg border border-brdr-subtle bg-bg-ter p-4">
+            <div class="mt-3 grid grid-cols-[6fr_1fr_1fr] items-center gap-4 text-xs text-fg-sec">
+              <p>What I spent the year reaching for</p>
+              <span class="font-mono uppercase">Hours</span>
+              <span class="font-mono uppercase">Percent</span>
+            </div>
+
+            <div class="mt-5 flex flex-1 flex-col justify-between">
               <div
-                v-for="stat in wakatime?.timeStats || []"
-                :key="stat.id"
-                class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-sec p-4"
+                v-for="lang in languageStats"
+                :key="lang.name"
+                class="grid grid-cols-[6rem_1fr_4.5rem_3rem] items-center gap-4 text-sm"
               >
-                <div class="flex items-center gap-2 text-fg-sec">
-                  <component :is="statIcons[stat.name]" class="size-5" />
-
-                  <span class="line-clamp-1 font-mono text-xs tracking-tighter uppercase">
-                    {{ stat.name }}
-                  </span>
+                <div class="flex items-center gap-2 text-xs text-fg-prim lg:text-base">
+                  <img
+                    v-if="lang.icon"
+                    :src="lang.icon"
+                    :alt="lang.name"
+                    class="size-5"
+                    loading="lazy"
+                  />
+                  <span>{{ lang.name }}</span>
                 </div>
 
-                <p class="mt-3 text-lg leading-none font-bold text-acc-prim">
-                  {{ stat.value }} {{ stat.unit }}
-                </p>
-
-                <p v-if="stat.extra" class="mt-2 text-sm text-fg-sec">
-                  {{ stat.extra.value }}{{ stat.extra.unit }}
-                </p>
-              </div>
-            </div>
-
-            <hr class="my-4 text-brdr-subtle" />
-
-            <!-- Bottom -->
-            <div class="flex items-center gap-2 font-mono text-xs font-bold text-fg-sec uppercase">
-              <span class="size-2 bg-acc-prim" />
-              <span>Language mix</span>
-            </div>
-            <div class="mt-5 rounded-lg border border-brdr-subtle bg-bg-sec p-4">
-              <div class="mt-3 grid grid-cols-[6fr_1fr_1fr] items-center gap-4 text-xs text-fg-sec">
-                <p>What I spent the year reaching for</p>
-                <span class="font-mono uppercase">Hours</span>
-                <span class="font-mono uppercase">Percent</span>
-              </div>
-
-              <div class="mt-5 space-y-4">
-                <div
-                  v-for="lang in languageStats"
-                  :key="lang.name"
-                  class="grid grid-cols-[6rem_1fr_4.5rem_3rem] items-center gap-4 text-sm"
-                >
-                  <div class="flex items-center gap-2 text-xs text-fg-prim lg:text-base">
-                    <img
-                      v-if="lang.icon"
-                      :src="lang.icon"
-                      :alt="lang.name"
-                      class="size-5"
-                      loading="lazy"
-                    />
-                    <span>{{ lang.name }}</span>
-                  </div>
-
-                  <div class="h-3 overflow-hidden rounded-sm bg-bg-ter">
-                    <div
-                      class="h-full rounded-sm"
-                      :class="lang.barClass"
-                      :style="{ width: `${lang.percent}%` }"
-                    />
-                  </div>
-
-                  <span class="font-mono font-bold" :class="lang.textClass">
-                    {{ lang.hours }} hrs
-                  </span>
-
-                  <span class="text-right font-mono text-xs text-fg-sec">{{ lang.percent }}%</span>
+                <div class="h-3 overflow-hidden rounded-sm bg-bg-ter">
+                  <div
+                    class="h-full rounded-sm"
+                    :class="lang.barClass"
+                    :style="{ width: `${lang.percent}%` }"
+                  />
                 </div>
+
+                <span class="font-mono font-bold" :class="lang.textClass">
+                  {{ lang.hours }} hrs
+                </span>
+
+                <span class="text-right font-mono text-xs text-fg-sec">{{ lang.percent }}%</span>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Hoz divider -->
-        <hr class="my-4 text-brdr-subtle" />
+      <!-- Hoz divider -->
+      <hr class="my-4 text-brdr-subtle" />
 
-        <!-- Bottom -->
-        <div
-          class="mb-4 flex flex-col items-center justify-between gap-8 text-sm text-fg-sec lg:flex-row lg:items-start"
-        >
-          <div>
-            Source: WakaTime API
-            <span v-if="wakatime?.updatedLabel">• Updated {{ wakatime.updatedLabel }}</span>
-          </div>
-          <div class="flex gap-2">
-            <p>Top Editor:</p>
-            <span class="text-acc-ter">{{ wakatime?.topEditor || 'Unavailable' }}</span>
-            <VsCodeIcon v-if="wakatime?.topEditor === 'VS Code'" class="size-5" />
-          </div>
+      <!-- Bottom -->
+      <div
+        class="mb-4 flex flex-col items-center justify-between gap-8 text-sm text-fg-sec lg:flex-row lg:items-start"
+      >
+        <div>
+          Source: WakaTime API
+          <span v-if="wakatime?.updatedLabel">• Updated {{ wakatime.updatedLabel }}</span>
         </div>
-      </InvertedBorder>
+        <div class="flex gap-2">
+          <p>Top Editor:</p>
+          <span class="text-acc-ter">{{ wakatime?.topEditor || 'Unavailable' }}</span>
+          <VsCodeIcon v-if="wakatime?.topEditor === 'VS Code'" class="size-5" />
+        </div>
+      </div>
+      <!-- </InvertedBorder> -->
     </div>
   </section>
 </template>

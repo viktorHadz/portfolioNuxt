@@ -1,15 +1,10 @@
 <script setup>
-const props = defineProps({
-  active: {
-    type: Boolean,
-    default: true,
-  },
-})
+const props = defineProps({ active: { type: Boolean, default: true } })
 
 const root = useTemplateRef('root')
 const canvas = useTemplateRef('canvas')
 
-const colorVars = ['--acc-primary', '--acc-secondary', '--acc-tertiary']
+const colorVars = ['--acc-primary', '--acc-secondary', '--acc-primary-light']
 
 const streaks = Array.from({ length: 24 }, (_, i) => ({
   x: (12 + ((i * 19) % 78)) / 100,
@@ -33,10 +28,7 @@ let resizeObserver
 let motionQuery
 let colors = []
 
-const size = {
-  width: 0,
-  height: 0,
-}
+const size = { width: 0, height: 0 }
 
 function alphaColor(color, alpha) {
   if (!color) return `rgba(0, 0, 0, ${alpha})`
@@ -44,7 +36,13 @@ function alphaColor(color, alpha) {
   if (color.startsWith('rgb(')) return `rgba(${color.slice(4, -1)}, ${alpha})`
   if (color.startsWith('#')) {
     const hex = color.slice(1)
-    const full = hex.length === 3 ? hex.split('').map((char) => char + char).join('') : hex.slice(0, 6)
+    const full =
+      hex.length === 3
+        ? hex
+            .split('')
+            .map((char) => char + char)
+            .join('')
+        : hex.slice(0, 6)
     const int = Number.parseInt(full, 16)
     return `rgba(${(int >> 16) & 255}, ${(int >> 8) & 255}, ${int & 255}, ${alpha})`
   }
@@ -68,7 +66,9 @@ function getOpacity(progress, max) {
 
 function drawStreak(streak, ms, staticDraw = false) {
   const color = colors[streak.color]
-  const opacity = staticDraw ? streak.opacity * 0.7 : getOpacity(((ms + streak.delay) % streak.duration) / streak.duration, streak.opacity)
+  const opacity = staticDraw
+    ? streak.opacity * 0.7
+    : getOpacity(((ms + streak.delay) % streak.duration) / streak.duration, streak.opacity)
 
   if (!color || opacity <= 0.01) return
 
@@ -192,14 +192,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
-    ref="root"
-    class="pointer-events-none absolute inset-0 overflow-hidden"
-    aria-hidden="true"
-  >
-    <canvas
-      ref="canvas"
-      class="block h-full w-full"
-    />
+  <div ref="root" class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <canvas ref="canvas" class="block h-full w-full" />
   </div>
 </template>

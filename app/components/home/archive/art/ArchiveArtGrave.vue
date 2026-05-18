@@ -1,6 +1,6 @@
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 227" transform="scale(0.9)">
-    <g fill="var(--acc-secondary)">
+    <g fill="var(--acc-primary)">
       <path
         fill-rule="evenodd"
         d="M67.6 83.5q3 0 5.5 1 2.3 1 4 2.6a11 11 0 0 1 2.4 4.2 17 17 0 0 1-1 13 9 9 0 0 1-5.4 4.2l8.1 16.6h-9.7l-7-15.4h-4.1V125h-8.8V83.5zm-7.2 19.3h5.1q3.2 0 4.4-1.2t1.2-4V96q0-2.8-1.2-4t-4.4-1.2h-5.1z"

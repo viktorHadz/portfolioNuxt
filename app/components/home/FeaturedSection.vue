@@ -91,14 +91,14 @@ onUnmounted(() => {
   <section
     id="featured-work"
     ref="featuredRoot"
-    class="relative overflow-hidden bg-bg-sec px-6 py-20 sm:px-8 md:py-16 lg:py-36"
+    class="relative overflow-hidden bg-bg-sec px-2 py-20 sm:px-8 md:py-16 lg:py-36"
     aria-labelledby="featured-work-title"
   >
     <BackgroundArt />
 
     <div class="relative z-10 mx-auto max-w-7xl">
       <HeaderBlock
-        class="featured-head max-w-xl text-left lg:absolute lg:-top-24 lg:right-0 lg:text-left"
+        class="featured-head ml-2 max-w-xl text-left sm:ml-0 lg:absolute lg:-top-24 lg:right-0 lg:text-left"
       />
 
       <MobilePanel

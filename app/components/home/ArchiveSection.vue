@@ -82,12 +82,9 @@ const orbitItems = [
     <SectionDivider colour="text-bg-sec" position="top" flip />
 
     <div class="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-8">
-      <div class="grid gap-12 lg:grid-cols-12 lg:items-center">
-        <header class="portfolio-reveal lg:col-span-4">
-          <div class="flex items-center gap-2">
-            <LineStart class="size-5" />
-            <p class="text-sm font-bold text-acc-prim uppercase">Project archive</p>
-          </div>
+      <div class="grid gap-12 md:grid-cols-12 lg:items-center">
+        <header class="portfolio-reveal md:col-span-4">
+          <HandleBar txt="Project archive" />
 
           <h2
             id="archive-title"
@@ -105,7 +102,7 @@ const orbitItems = [
           <TheButton href="/projects" class="mt-8">Browse projects</TheButton>
         </header>
 
-        <div class="portfolio-reveal lg:col-span-8">
+        <div class="portfolio-reveal md:col-span-8">
           <div
             class="relative mx-auto aspect-square w-full max-w-md overflow-hidden sm:max-w-lg lg:aspect-auto lg:min-h-135 lg:max-w-none lg:overflow-visible"
           >
@@ -148,7 +145,7 @@ const orbitItems = [
         <article
           v-for="project in archiveProjects"
           :key="project.id"
-          class="portfolio-archive-item group relative overflow-hidden rounded-xl border border-brdr bg-bg-sec/60 p-5 shadow-lg shadow-black/10 hover:border-acc-prim-light/50"
+          class="portfolio-archive-item group relative overflow-hidden rounded-xl border border-acc-prim/20 bg-bg-sec/60 p-4 shadow-xl shadow-black/15 hover:border-acc-prim/60"
         >
           <div
             class="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full border border-acc-prim/10"

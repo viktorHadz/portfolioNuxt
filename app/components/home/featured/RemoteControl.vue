@@ -3,12 +3,7 @@ import { computed } from 'vue'
 import gsap from 'gsap'
 import { tvProjects } from './projects'
 
-const props = defineProps({
-  activeProject: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps({ activeProject: { type: String, required: true } })
 
 const projects = {
   invoice: 'invoice-and-go',
@@ -665,7 +660,7 @@ function openProjectPage(elId) {
         />
         <path
           id="Vector_85"
-          class="fill-acc-prim group-hover:fill-acc-sec"
+          class="fill-acc-prim group-hover:fill-acc-prim-light"
           fill="var(--tv-lime)"
           d="M245.49 118.13a67.92 67.92 0 0 1 28.99 132.72 67.92 67.92 0 1 1-28.99-132.72"
         />
@@ -676,12 +671,12 @@ function openProjectPage(elId) {
         />
         <path
           id="Vector_87"
-          class="fill-acc-prim group-hover:fill-acc-sec"
+          class="fill-acc-prim group-hover:fill-acc-prim-light"
           d="M272.4 154.16c22.64 1.61 34.78 42.91 8.1 59.12a35.3 35.3 0 0 1-27.32 4.08c-23.84-6.02-31.48-26.12-25.01-48.45 2.9-5.26 7.35-13.27 13.99-11.2 2.44 6.45-4.82 15.13-7.26 24.85l-.4 1.6c4.4 13.36 10.44 22.98 26.17 24.36 7.23.63 14.35-2.89 19.58-7.78 13.7-12.8.12-29.9-8.14-41.2z"
         />
         <path
           id="Vector_88"
-          class="fill-acc-prim group-hover:fill-acc-sec"
+          class="fill-acc-prim group-hover:fill-acc-prim-light"
           d="M251.52 143.74c2.3.09 6.51.34 7.6 2.45 4.5 8.7 5.69 27.81 4.65 37.28-3.47-.22-3.37-.13-6.5-1.53-5.41-7.65-6.04-28.6-5.75-38.2"
         />
       </g>
@@ -716,11 +711,11 @@ function openProjectPage(elId) {
 }
 
 .remote-btn .remote-btn-accent {
-  fill: var(--tv-lime);
+  fill: var(--color-acc-prim);
   transition: fill 150ms ease;
 }
 
 .remote-btn:hover .remote-btn-accent {
-  fill: var(--acc-secondary);
+  fill: var(--color-acc-prim-light);
 }
 </style>

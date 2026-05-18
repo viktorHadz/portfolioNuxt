@@ -54,13 +54,10 @@ onBeforeUnmount(() => {
     <div class="relative mx-auto max-w-7xl px-6 sm:px-8">
       <div class="portfolio-reveal">
         <header class="max-w-2xl sm:mt-16">
-          <div class="flex items-center gap-2">
-            <LineStart class="size-5" />
-            <p class="text-sm font-bold text-acc-prim uppercase">Skills map</p>
-          </div>
+          <HandleBar txt="Skills map" />
           <h2
             id="capability-map-title"
-            class="mt-3 text-3xl leading-tight font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
+            class="mt-3 text-4xl leading-tight font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl"
           >
             A holistic approach to
             <span class="text-grad-top text-shadow-lg/20 text-shadow-acc-prim/50">development</span>
@@ -73,11 +70,11 @@ onBeforeUnmount(() => {
 
         <div class="mt-8 flex w-full flex-col-reverse gap-8 lg:flex-row lg:items-end lg:gap-10">
           <GitHubPanel />
-          <FormCharacter class="mx-auto w-full max-w-xl lg:mx-0 lg:max-w-2xl" />
+          <FormCharacter class="mx-auto w-full max-w-xl lg:mx-0 lg:max-w-lg xl:pt-12 xl:pl-12" />
         </div>
       </div>
 
-      <div class="mt-12 grid grid-flow-row auto-rows-max gap-4 lg:grid-flow-col">
+      <div class="mt-12 grid grid-flow-row auto-rows-max gap-4 lg:mt-20 lg:grid-flow-col">
         <SkillCard
           v-for="card in skillCards"
           :key="card.id"

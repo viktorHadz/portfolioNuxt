@@ -8,7 +8,7 @@ const clipId = `${uid}-a-clip`
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 140 118">
     <defs>
       <pattern :id="gridId" width="6" height="6" patternUnits="userSpaceOnUse">
-        <rect width="3" height="3" fill="var(--acc-secondary)" shape-rendering="crispEdges" />
+        <rect width="3" height="3" fill="var(--acc-primary)" shape-rendering="crispEdges" />
       </pattern>
 
       <clipPath :id="clipId" clipPathUnits="userSpaceOnUse">

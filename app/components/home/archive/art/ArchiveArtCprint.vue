@@ -1,7 +1,7 @@
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 235 152" transform="scale(0.9)">
     <path
-      stroke="var(--acc-secondary)"
+      stroke="var(--acc-primary)"
       stroke-linecap="round"
       stroke-linejoin="round"
       stroke-width="32"

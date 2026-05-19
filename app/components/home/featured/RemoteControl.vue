@@ -555,6 +555,7 @@ function openProjectPage(elId) {
         class="remote-btn"
         @click="openExternal(currentProject.liveUrl, 'remote-open-btn')"
       >
+        <title>live project page</title>
         <path
           id="Vector_78"
           fill="var(--tv-shadow)"
@@ -588,6 +589,7 @@ function openProjectPage(elId) {
         class="remote-btn"
         @click="openExternal(currentProject.gitHub, 'remote-code-btn')"
       >
+        <title>see the code</title>
         <path
           id="Vector_67"
           fill="var(--tv-shadow)"
@@ -616,6 +618,7 @@ function openProjectPage(elId) {
         class="remote-btn"
         @click="openProjectPage('remote-see-more-btn')"
       >
+        <title>read more</title>
         <path
           id="Vector_71"
           fill="var(--tv-shadow)"

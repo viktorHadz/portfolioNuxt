@@ -5,13 +5,9 @@ import { getProjectById } from '~/data/portfolio/projects'
 import type { PortfolioProject } from '~/data/portfolio/projects'
 import type { SkillCardContent } from '~/data/portfolio/skills'
 
-const props = defineProps<{
-  card: SkillCardContent | null
-}>()
+const props = defineProps<{ card: SkillCardContent | null }>()
 
-const emit = defineEmits<{
-  close: []
-}>()
+const emit = defineEmits<{ close: [] }>()
 
 const proofStories = computed(
   () =>

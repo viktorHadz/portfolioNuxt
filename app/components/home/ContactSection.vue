@@ -1,6 +1,10 @@
 <script setup>
+import { ArrowsPointingOutIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import SateliteDish from '../contact/SateliteDish.vue'
+import { ChatBubbleLeftEllipsisIcon, DocumentTextIcon } from '@heroicons/vue/24/solid'
+import GitHubIcon from './skills/art/GitHubIcon.vue'
 
+const contactState = reactive({ open: false, pending: false, message: '' })
 const contactLinks = [
   {
     no: '01',
@@ -8,6 +12,7 @@ const contactLinks = [
     text: 'The fastest way to get in touch.',
     icon: 'message',
     href: 'mailto:your@email.com',
+    modal: true,
   },
   {
     no: '02',
@@ -26,8 +31,42 @@ const contactLinks = [
     download: true,
   },
 ]
-
 const contactMeta = ['Based in London', 'Available for hire', 'Reply within 24hrs']
+
+function handleEscape(event) {
+  if (event.key === 'Escape' && contactState.open) {
+    contactState.open = false
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleEscape)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleEscape)
+})
+
+async function submitContactForm(event) {
+  const form = event.currentTarget
+  if (!(form instanceof HTMLFormElement)) return
+
+  contactState.pending = true
+  contactState.message = ''
+  try {
+    await $fetch('/api/contact', {
+      method: 'POST',
+      body: Object.fromEntries(new FormData(form).entries()),
+    })
+    contactState.message = 'Message sent. I will get back to you soon.'
+    form.reset()
+  } catch (error) {
+    contactState.message =
+      error?.data?.statusMessage || error?.message || 'Message failed. Please try again shortly.'
+  } finally {
+    contactState.pending = false
+  }
+}
 </script>
 
 <template>
@@ -95,62 +134,25 @@ const contactMeta = ['Based in London', 'Available for hire', 'Reply within 24hr
             :rel="link.external ? 'noreferrer' : undefined"
             :download="link.download ? '' : undefined"
             class="group relative flex flex-col items-start gap-4 overflow-hidden rounded-lg border border-brdr bg-bg-prim p-4 text-left transition duration-300 hover:border-acc-prim/60 sm:flex-row sm:items-center sm:gap-5 xl:p-5"
+            @click="
+              link.modal &&
+              ($event.preventDefault(), (contactState.open = true), (contactState.message = ''))
+            "
           >
             <span
               class="relative grid size-12 shrink-0 place-items-center rounded-lg border border-brdr bg-bg-sec text-acc-prim transition duration-300 group-hover:border-acc-prim/60 group-hover:bg-acc-prim/10 sm:size-16 xl:size-18"
             >
               <!-- message -->
-              <svg
+              <ChatBubbleLeftEllipsisIcon
                 v-if="link.icon === 'message'"
-                viewBox="0 0 48 48"
                 class="size-8 sm:size-9 xl:size-10"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M11 12.5h26a4 4 0 0 1 4 4v15a4 4 0 0 1-4 4H23l-8.5 6v-6H11a4 4 0 0 1-4-4v-15a4 4 0 0 1 4-4Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M17 24h2M24 24h2M31 24h2"
-                  stroke="#101114"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                />
-              </svg>
+              />
 
               <!-- github -->
-              <svg
-                v-else-if="link.icon === 'github'"
-                viewBox="0 0 48 48"
-                class="size-9 sm:size-10 xl:size-11"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M24 5.5C13.5 5.5 5 14 5 24.7c0 8.5 5.5 15.7 13 18.3 1 .2 1.3-.4 1.3-1v-3.5c-5.3 1.2-6.4-2.3-6.4-2.3-.9-2.2-2.1-2.8-2.1-2.8-1.7-1.2.1-1.2.1-1.2 1.9.2 3 2 3 2 1.7 3 4.5 2.1 5.5 1.6.2-1.2.7-2.1 1.2-2.5-4.2-.5-8.7-2.1-8.7-9.5 0-2.1.8-3.8 2-5.2-.2-.5-.9-2.5.2-5.1 0 0 1.7-.5 5.3 2a18.6 18.6 0 0 1 9.8 0c3.7-2.5 5.3-2 5.3-2 1.1 2.6.4 4.6.2 5.1a7.4 7.4 0 0 1 2 5.2c0 7.4-4.5 9-8.7 9.5.7.6 1.3 1.8 1.3 3.6V42c0 .6.3 1.2 1.3 1A19.2 19.2 0 0 0 43 24.7C43 14 34.5 5.5 24 5.5Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <GitHubIcon v-else-if="link.icon === 'github'" class="size-9 sm:size-10 xl:size-11" />
 
               <!-- cv -->
-              <svg
-                v-else
-                viewBox="0 0 48 48"
-                class="size-8 sm:size-9 xl:size-10"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path d="M13 6h16l8 8v28H13V6Z" fill="currentColor" />
-                <path d="M29 6v9h8" stroke="#101114" stroke-width="3" stroke-linejoin="round" />
-                <path
-                  d="M18 23h16M18 30h16M18 36h11"
-                  stroke="#101114"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-              </svg>
+              <DocumentTextIcon v-else class="size-8 sm:size-9 xl:size-10" />
             </span>
 
             <span class="min-w-0 flex-1">
@@ -172,18 +174,65 @@ const contactMeta = ['Based in London', 'Available for hire', 'Reply within 24hr
             </span>
 
             <span
-              class="grid size-10 shrink-0 place-items-center self-end rounded-full border border-brdr bg-bg-sec text-acc-prim transition duration-300 group-hover:translate-x-1 group-hover:border-acc-prim/70 group-hover:bg-acc-prim/10 sm:size-12 sm:self-auto xl:size-14"
+              class="flex size-10 shrink-0 items-center justify-center self-end rounded-full border border-brdr bg-bg-sec text-acc-prim transition duration-300 group-hover:border-acc-prim/70 group-hover:bg-acc-prim/10 sm:size-12 sm:self-auto xl:size-14"
             >
+              <!-- message -->
+              <ArrowsPointingOutIcon
+                v-if="link.icon === 'message'"
+                class="block size-5 origin-center transition duration-300 group-hover:scale-125 sm:size-6 xl:size-7"
+              />
+
+              <!-- github / external -->
               <svg
+                v-else-if="link.icon === 'github'"
+                class="block size-6 overflow-visible sm:size-7 xl:size-8"
                 viewBox="0 0 24 24"
-                class="size-5 sm:size-6 xl:size-7"
                 fill="none"
                 aria-hidden="true"
               >
                 <path
-                  d="M5 12h13M13 6l6 6-6 6"
+                  d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5"
                   stroke="currentColor"
-                  stroke-width="2.5"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <g
+                  class="transition duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                >
+                  <path
+                    d="M8.25 15.75 21 3m0 0h-5.25M21 3v5.25"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+              </svg>
+
+              <!-- cv / download -->
+              <svg
+                v-else
+                class="block size-6 overflow-hidden sm:size-7 xl:size-8"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <g class="transition duration-500 group-hover:translate-y-6">
+                  <path
+                    d="M12 3v11m0 0 4-4m-4 4-4-4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+
+                <path
+                  d="M4 15v3.25A2.75 2.75 0 0 0 6.75 21h10.5A2.75 2.75 0 0 0 20 18.25V15"
+                  stroke="currentColor"
+                  stroke-width="1.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
@@ -209,5 +258,78 @@ const contactMeta = ['Based in London', 'Available for hire', 'Reply within 24hr
         </div>
       </aside>
     </div>
+    <Teleport to="body">
+      <div
+        v-if="contactState.open"
+        class="fixed inset-0 z-modal flex items-center justify-center bg-black/70 px-4 pt-4 pb-4 sm:p-4"
+        @click.self="contactState.open = false"
+      >
+        <form
+          class="max-h-full w-full max-w-xl self-auto overflow-y-auto rounded-2xl border border-brdr bg-bg-sec shadow-2xl shadow-black/40"
+          @submit.prevent="submitContactForm"
+        >
+          <div
+            class="flex items-start justify-between gap-4 border-b border-brdr bg-bg-prim/60 px-5 py-5 sm:px-6"
+          >
+            <div class="min-w-0">
+              <p
+                class="font-mono text-tiny font-bold tracking-wide text-acc-ter uppercase sm:text-xs"
+              >
+                Direct message
+              </p>
+              <h3 class="mt-2 text-2xl leading-tight font-bold text-fg-prim">
+                Start the conversation
+              </h3>
+            </div>
+            <button
+              type="button"
+              class="rounded-lg border border-brdr bg-bg-prim p-2 text-fg-sec hover:border-acc-prim/40 hover:text-acc-prim"
+              @click="contactState.open = false"
+            >
+              <span class="sr-only">Close modal</span>
+              <XMarkIcon class="size-5" />
+            </button>
+          </div>
+          <div class="flex flex-col gap-4 px-5 py-5 sm:px-6 sm:py-6">
+            <p class="text-sm leading-6 text-fg-sec">
+              Send the basics here and I will get in touch.
+            </p>
+            <input
+              name="name"
+              type="text"
+              autocomplete="name"
+              placeholder="Your name"
+              required
+              class="rounded-xl border border-brdr bg-bg-prim px-4 py-3 text-sm text-fg-prim outline-none placeholder:text-fg-ter focus:border-acc-prim"
+            />
+            <input
+              autocomplete="email"
+              name="email"
+              type="email"
+              placeholder="Your email"
+              required
+              class="rounded-xl border border-brdr bg-bg-prim px-4 py-3 text-sm text-fg-prim outline-none placeholder:text-fg-ter focus:border-acc-prim"
+            />
+            <textarea
+              name="message"
+              rows="6"
+              placeholder="Tell me a little about it"
+              required
+              class="min-h-40 rounded-xl border border-brdr bg-bg-prim px-4 py-3 text-sm text-fg-prim outline-none placeholder:text-fg-ter focus:border-acc-prim"
+            />
+            <p v-if="contactState.message" class="text-sm text-fg-sec">
+              {{ contactState.message }}
+            </p>
+            <button
+              type="submit"
+              :disabled="contactState.pending"
+              class="inline-flex w-full items-center justify-center rounded-xl border-2 border-brdr px-4 py-3 text-sm font-bold tracking-wide text-fg-prim uppercase transition-all duration-200 ease-out hover:border-acc-prim hover:text-acc-prim disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {{ contactState.pending ? 'Sending...' : 'Send message' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </Teleport>
   </section>
 </template>

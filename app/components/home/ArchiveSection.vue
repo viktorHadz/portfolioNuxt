@@ -102,7 +102,7 @@ const orbitItems = [
           <TheButton href="/projects" class="mt-8">Browse projects</TheButton>
         </header>
 
-        <div class="portfolio-reveal md:col-span-8">
+        <div class="md:col-span-8">
           <div
             class="relative mx-auto aspect-square w-full max-w-md overflow-hidden sm:max-w-lg lg:aspect-auto lg:min-h-135 lg:max-w-none lg:overflow-visible"
           >
@@ -141,7 +141,7 @@ const orbitItems = [
         </div>
       </div>
 
-      <div class="mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div class="mt-16 grid gap-5 md:grid-cols-2">
         <article
           v-for="project in archiveProjects"
           :key="project.id"

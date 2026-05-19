@@ -6,14 +6,8 @@ import Portal from './Portal.vue'
 gsap.registerPlugin(MotionPathPlugin)
 
 const props = defineProps({
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  portalPulse: {
-    type: Boolean,
-    default: true,
-  },
+  active: { type: Boolean, default: true },
+  portalPulse: { type: Boolean, default: true },
 })
 
 const root = useTemplateRef('root')
@@ -39,11 +33,7 @@ let headBobTween
 let blinkTl
 let isTracking = false
 
-const viewport = {
-  w: 1,
-  h: 1,
-  widthScale: 1,
-}
+const viewport = { w: 1, h: 1, widthScale: 1 }
 
 function updateViewport() {
   viewport.w = window.innerWidth
@@ -157,7 +147,7 @@ function bobHead() {
   headBobTween?.kill()
 
   headBobTween = gsap.to('#head', {
-    y: 8,
+    y: 10,
     duration: 2,
     repeat: -1,
     yoyo: true,
@@ -277,11 +267,7 @@ onMounted(() => {
     //   skewX: 0.1,
     //   transformOrigin: '50% 50%',
     // })
-    gsap.set(root.value, {
-      rotation: 0.01,
-      skewX: 0.1,
-      transformOrigin: '50% 50%',
-    })
+    gsap.set(root.value, { rotation: 0.01, skewX: 0.1, transformOrigin: '50% 50%' })
 
     setLeftPupilX = gsap.quickTo('#default-pupil-l', 'x', { duration: 0.2, ease: 'sine' })
     setLeftPupilY = gsap.quickTo('#default-pupil-l', 'y', { duration: 0.2, ease: 'sine' })

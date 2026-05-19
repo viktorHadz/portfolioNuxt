@@ -1,317 +1,211 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { homeContent } from '~/data/portfolio/home'
+import SateliteDish from '../contact/SateliteDish.vue'
 
-const activeJourneyYear = ref(null)
-const sectionRoot = ref(null)
-let gsapContext
+const contactLinks = [
+  {
+    no: '01',
+    title: 'Direct message',
+    text: 'The fastest way to get in touch.',
+    icon: 'message',
+    href: 'mailto:your@email.com',
+  },
+  {
+    no: '02',
+    title: 'View GitHub',
+    text: 'Explore code, tools, and experiments.',
+    icon: 'github',
+    href: 'https://github.com/viktorHadz',
+    external: true,
+  },
+  {
+    no: '03',
+    title: 'Download CV',
+    text: 'My experience, skills, and background.',
+    icon: 'cv',
+    href: '/Viktor-Hadzhiyski-CV.pdf',
+    download: true,
+  },
+]
 
-function toggleJourneyPopover(year) {
-  activeJourneyYear.value = activeJourneyYear.value === year ? null : year
-}
-
-function closeJourneyPopover() {
-  activeJourneyYear.value = null
-}
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max)
-}
-
-function roundedPoint(value) {
-  return Number(value.toFixed(1))
-}
-
-function createContactRoutePath(points, width, height) {
-  if (points.length === 0) return ''
-
-  const firstPoint = points[0]
-  const lastPoint = points[points.length - 1]
-  const arrowSize = clamp(Math.min(width, height) * 0.025, 10, 16)
-  const path = [`M ${roundedPoint(firstPoint.x)} ${roundedPoint(firstPoint.y)}`]
-
-  points.slice(1).forEach((point) => {
-    path.push(`H ${roundedPoint(point.x)}`)
-    path.push(`V ${roundedPoint(point.y)}`)
-  })
-
-  if (points.length > 1) {
-    path.push(`M ${roundedPoint(lastPoint.x - arrowSize)} ${roundedPoint(lastPoint.y - arrowSize)}`)
-    path.push(`L ${roundedPoint(lastPoint.x)} ${roundedPoint(lastPoint.y)}`)
-    path.push(`L ${roundedPoint(lastPoint.x + arrowSize)} ${roundedPoint(lastPoint.y - arrowSize)}`)
-  }
-
-  return path.join(' ')
-}
-
-onMounted(async () => {
-  const { default: gsap } = await import('gsap')
-  const { ScrollTrigger } = await import('gsap/ScrollTrigger')
-
-  gsap.registerPlugin(ScrollTrigger)
-  const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-  gsapContext = gsap.context(() => {
-    function setupContactRoute({ animate = true } = {}) {
-      const contactRoute = sectionRoot.value?.querySelector('[data-contact-route]')
-
-      if (!contactRoute) return
-
-      const routeSvg = contactRoute.querySelector('[data-contact-route-svg]')
-      const routePaths = gsap.utils.toArray(
-        '[data-contact-route-path], [data-contact-route-shadow]',
-        contactRoute,
-      )
-      const routeNodes = gsap.utils.toArray('[data-contact-route-node]', contactRoute)
-      let routeLength = 1
-
-      const getNodeCenter = (node) => {
-        const routeBox = contactRoute.getBoundingClientRect()
-        const nodeBox = node.getBoundingClientRect()
-        return {
-          x: nodeBox.left - routeBox.left + nodeBox.width / 2,
-          y: nodeBox.top - routeBox.top + nodeBox.height / 2,
-        }
-      }
-
-      const measureContactRoute = () => {
-        if (!routeSvg || routeNodes.length === 0) return
-
-        const routeBox = contactRoute.getBoundingClientRect()
-        if (routeBox.width === 0 || routeBox.height === 0) return
-
-        const points = routeNodes.map(getNodeCenter)
-        const pathDefinition = createContactRoutePath(points, routeBox.width, routeBox.height)
-
-        routeSvg.setAttribute('viewBox', `0 0 ${routeBox.width} ${routeBox.height}`)
-        routePaths.forEach((path) => path.setAttribute('d', pathDefinition))
-
-        routeLength = routePaths[0]?.getTotalLength() || 1
-        gsap.set(routePaths, {
-          strokeDasharray: routeLength,
-          strokeDashoffset: animate ? routeLength : 0,
-        })
-      }
-
-      measureContactRoute()
-
-      if (!animate) {
-        gsap.set(routeNodes, { autoAlpha: 1, y: 0, scale: 1 })
-        return
-      }
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: contactRoute,
-          start: 'top 78%',
-          once: true,
-          invalidateOnRefresh: true,
-          onRefreshInit: measureContactRoute,
-        },
-      })
-
-      tl.fromTo(
-        routePaths,
-        { strokeDashoffset: () => routeLength },
-        { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut' },
-        0,
-      )
-
-      routeNodes.forEach((node, i) => {
-        const at = routeNodes.length <= 1 ? 0.3 : 0.3 + (i / (routeNodes.length - 1)) * 0.8
-        tl.fromTo(
-          node,
-          { autoAlpha: 0, y: 12, scale: 0.92 },
-          { autoAlpha: 1, y: 0, scale: 1, duration: 0.35, ease: 'power2.out' },
-          at,
-        )
-      })
-    }
-
-    if (reduceMotionQuery.matches) {
-      setupContactRoute({ animate: false })
-      return
-    }
-
-    gsap.to('.portfolio-portal-ring', {
-      rotation: 360,
-      transformOrigin: '50% 50%',
-      repeat: -1,
-      ease: 'none',
-      duration: 34,
-      stagger: 3,
-    })
-
-    gsap.to('.portfolio-contact-signal', {
-      rotation: 360,
-      transformOrigin: '50% 50%',
-      repeat: -1,
-      ease: 'none',
-      duration: 100,
-    })
-
-    setupContactRoute()
-
-    requestAnimationFrame(() => ScrollTrigger.refresh())
-  }, sectionRoot.value)
-})
-
-onBeforeUnmount(() => {
-  gsapContext?.revert()
-})
+const contactMeta = ['Based in London', 'Available for hire', 'Reply within 24hrs']
 </script>
 
 <template>
   <section
     id="contact"
-    ref="sectionRoot"
     class="relative isolate overflow-hidden bg-bg-sec py-20 text-fg-prim sm:py-28"
     aria-labelledby="contact-title"
   >
     <SectionDivider position="top" colour="text-bg-prim" />
-    <svg
-      class="pointer-events-none absolute top-0 left-0 h-full w-full opacity-45"
-      viewBox="0 0 1200 780"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M0 600 C320 460 480 580 650 380 C775 230 900 240 1200 160"
-        stroke="#4aa3ff"
-        stroke-width="1.5"
-        stroke-dasharray="6 14"
-        fill="none"
-      />
-    </svg>
 
-    <svg
-      class="pointer-events-none absolute inset-0 h-full w-full opacity-45"
-      viewBox="0 0 1200 780"
-      aria-hidden="true"
+    <div
+      class="relative mx-auto grid max-w-7xl items-start gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-12"
     >
-      <g class="portfolio-contact-signal" fill="none">
-        <circle
-          class="portfolio-portal-ring"
-          cx="940"
-          cy="370"
-          r="170"
-          stroke="#a3d920"
-          stroke-width="2"
-          stroke-dasharray="18 16"
-        />
-        <circle
-          class="portfolio-portal-ring"
-          cx="940"
-          cy="370"
-          r="250"
-          stroke="#ffeb58"
-          stroke-width="1.5"
-          stroke-dasharray="8 14"
-        />
-      </g>
-    </svg>
-
-    <div class="relative mx-auto grid max-w-7xl gap-10 px-6 sm:px-8 lg:grid-cols-2">
-      <div class="portfolio-reveal">
+      <div class="portfolio-reveal min-w-0">
         <HandleBar txt="Jourey route" />
-        <h2 class="mt-3 text-3xl leading-tight font-bold text-balance sm:text-4xl">
-          From automation to live client software
+        <h2
+          id="contact-title"
+          class="mt-3 max-w-xl text-3xl leading-none font-bold tracking-tighter text-balance sm:text-5xl lg:text-6xl"
+        >
+          Let's build something
+          <br />
+          that
+          <span class="text-grad-top text-shadow-lg/20 text-shadow-acc-prim/50">ships</span>
         </h2>
-
-        <div data-contact-route class="portfolio-contact-route relative mt-10">
-          <svg
-            data-contact-route-svg
-            class="pointer-events-none absolute inset-0 z-10 h-full w-full overflow-visible"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path
-              data-contact-route-shadow
-              stroke="#020617"
-              stroke-width="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              opacity="0.48"
-              fill="none"
-            />
-            <path
-              data-contact-route-path
-              stroke="#4aa3ff"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              fill="none"
-            />
-          </svg>
-
-          <ol class="relative z-20 grid gap-12 py-8 sm:gap-14">
-            <li
-              v-for="(item, index) in homeContent.journey"
-              :key="item.year"
-              data-contact-route-item
-              class="group relative grid min-h-44 items-center sm:min-h-32"
-              :class="
-                index % 2 === 0
-                  ? 'justify-items-start pr-12 sm:pr-20'
-                  : 'justify-items-end pl-12 sm:pl-20'
-              "
-            >
-              <button
-                type="button"
-                data-contact-route-node
-                class="portfolio-journey-date relative z-30 inline-flex h-16 w-28 items-center justify-center rounded-lg border border-acc-ter/60 bg-bg-sec/70 text-2xl font-bold text-acc-prim shadow-xl shadow-black/15 backdrop-blur-sm transition-colors duration-200 hover:border-acc-prim hover:text-acc-sec focus-visible:border-acc-sec focus-visible:outline-none"
-                :aria-expanded="activeJourneyYear === item.year"
-                :aria-controls="`journey-popover-${item.year}`"
-                :aria-describedby="`journey-popover-${item.year}`"
-                @click="toggleJourneyPopover(item.year)"
-                @keydown.escape="closeJourneyPopover"
-              >
-                {{ item.year }}
-              </button>
-
-              <div
-                :id="`journey-popover-${item.year}`"
-                data-contact-route-popover
-                role="tooltip"
-                class="pointer-events-none invisible absolute top-20 z-50 w-[min(18rem,calc(100vw-3rem))] rounded-lg border border-brdr bg-bg-sec/95 p-4 opacity-0 shadow-2xl shadow-black/25 backdrop-blur-md transition-opacity duration-200 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 sm:top-1/2 sm:w-72 sm:-translate-y-1/2"
-                :class="[
-                  index % 2 === 0 ? 'left-0 sm:left-36' : 'right-0 sm:right-36',
-                  activeJourneyYear === item.year ? 'pointer-events-auto visible opacity-100' : '',
-                ]"
-              >
-                <p class="text-xs font-bold text-acc-ter uppercase">{{ item.year }}</p>
-                <h3 class="mt-2 text-lg font-bold">{{ item.title }}</h3>
-                <p class="mt-2 text-sm leading-6 text-fg-sec">{{ item.body }}</p>
-              </div>
-            </li>
-          </ol>
-        </div>
+        <SateliteDish
+          class="z-10 mx-auto mt-8 w-full max-w-md sm:max-w-xl md:max-w-2xl lg:mx-0 lg:mt-10 xl:max-w-3xl"
+        />
       </div>
 
       <aside
-        class="portfolio-contact-panel relative isolate self-start rounded-lg border border-brdr bg-bg-sec/90 p-6 shadow-2xl shadow-black/20 backdrop-blur-sm sm:p-8 lg:sticky lg:top-28"
+        class="portfolio-contact-panel relative w-full max-w-xl min-w-0 justify-self-center lg:justify-self-end lg:pt-10 xl:pt-16"
       >
-        <div class="absolute inset-0 bg-stars opacity-50" />
-        <p class="text-sm font-bold text-acc-sec uppercase">Contact</p>
-        <h2
-          id="contact-title"
-          class="mt-3 text-2xl leading-tight font-bold text-balance sm:text-3xl"
-        >
-          {{ homeContent.contact.heading }}
-        </h2>
-        <p class="mt-5 text-base leading-7 text-fg-sec">
-          {{ homeContent.contact.body }}
-        </p>
+        <div class="pointer-events-none absolute inset-0 bg-stars opacity-25" />
 
-        <div class="mt-7 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-          <button
-            v-for="action in homeContent.contact.actions"
-            :key="action"
-            type="button"
-            class="inline-flex min-h-11 items-center justify-between rounded-lg border border-brdr bg-bg-prim px-4 py-3 text-sm font-bold text-fg-sec"
+        <!-- top rail -->
+        <div
+          class="relative mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p
+            class="flex items-center gap-3 font-mono text-xs font-bold tracking-widest text-acc-sec uppercase"
           >
-            <span>{{ action }}</span>
-          </button>
+            <span class="size-2 rounded-full bg-acc-sec shadow-lg shadow-acc-sec/40" />
+            <span>Transmission hub</span>
+          </p>
+
+          <div
+            class="relative w-fit px-6 py-2 font-mono text-xs font-bold tracking-wider text-fg-sec uppercase"
+          >
+            <span class="absolute top-0 left-0 size-3 border-t border-l border-brdr" />
+            <span class="absolute top-0 right-0 size-3 border-t border-r border-brdr" />
+            <div class="flex items-center">
+              <div class="mr-2 size-2 bg-acc-prim" />
+              Link: Active
+            </div>
+          </div>
+        </div>
+
+        <!-- action stack -->
+        <div class="relative grid gap-3">
+          <a
+            v-for="link in contactLinks"
+            :key="link.title"
+            :href="link.href"
+            :target="link.external ? '_blank' : undefined"
+            :rel="link.external ? 'noreferrer' : undefined"
+            :download="link.download ? '' : undefined"
+            class="group relative flex flex-col items-start gap-4 overflow-hidden rounded-lg border border-brdr bg-bg-prim p-4 text-left transition duration-300 hover:border-acc-prim/60 sm:flex-row sm:items-center sm:gap-5 xl:p-5"
+          >
+            <span
+              class="relative grid size-12 shrink-0 place-items-center rounded-lg border border-brdr bg-bg-sec text-acc-prim transition duration-300 group-hover:border-acc-prim/60 group-hover:bg-acc-prim/10 sm:size-16 xl:size-18"
+            >
+              <!-- message -->
+              <svg
+                v-if="link.icon === 'message'"
+                viewBox="0 0 48 48"
+                class="size-8 sm:size-9 xl:size-10"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M11 12.5h26a4 4 0 0 1 4 4v15a4 4 0 0 1-4 4H23l-8.5 6v-6H11a4 4 0 0 1-4-4v-15a4 4 0 0 1 4-4Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M17 24h2M24 24h2M31 24h2"
+                  stroke="#101114"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              <!-- github -->
+              <svg
+                v-else-if="link.icon === 'github'"
+                viewBox="0 0 48 48"
+                class="size-9 sm:size-10 xl:size-11"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M24 5.5C13.5 5.5 5 14 5 24.7c0 8.5 5.5 15.7 13 18.3 1 .2 1.3-.4 1.3-1v-3.5c-5.3 1.2-6.4-2.3-6.4-2.3-.9-2.2-2.1-2.8-2.1-2.8-1.7-1.2.1-1.2.1-1.2 1.9.2 3 2 3 2 1.7 3 4.5 2.1 5.5 1.6.2-1.2.7-2.1 1.2-2.5-4.2-.5-8.7-2.1-8.7-9.5 0-2.1.8-3.8 2-5.2-.2-.5-.9-2.5.2-5.1 0 0 1.7-.5 5.3 2a18.6 18.6 0 0 1 9.8 0c3.7-2.5 5.3-2 5.3-2 1.1 2.6.4 4.6.2 5.1a7.4 7.4 0 0 1 2 5.2c0 7.4-4.5 9-8.7 9.5.7.6 1.3 1.8 1.3 3.6V42c0 .6.3 1.2 1.3 1A19.2 19.2 0 0 0 43 24.7C43 14 34.5 5.5 24 5.5Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+
+              <!-- cv -->
+              <svg
+                v-else
+                viewBox="0 0 48 48"
+                class="size-8 sm:size-9 xl:size-10"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M13 6h16l8 8v28H13V6Z" fill="currentColor" />
+                <path d="M29 6v9h8" stroke="#101114" stroke-width="3" stroke-linejoin="round" />
+                <path
+                  d="M18 23h16M18 30h16M18 36h11"
+                  stroke="#101114"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <span class="min-w-0 flex-1">
+              <span class="block font-mono text-xs font-bold text-acc-prim sm:text-sm">
+                {{ link.no }}
+              </span>
+
+              <span
+                class="mt-1 block text-xl leading-tight font-bold tracking-tight text-fg-prim transition duration-300 group-hover:text-acc-prim sm:mt-2 sm:text-2xl xl:text-3xl"
+              >
+                {{ link.title }}
+              </span>
+
+              <span
+                class="mt-2 block text-xs leading-5 text-fg-sec sm:mt-3 sm:text-sm sm:leading-6"
+              >
+                {{ link.text }}
+              </span>
+            </span>
+
+            <span
+              class="grid size-10 shrink-0 place-items-center self-end rounded-full border border-brdr bg-bg-sec text-acc-prim transition duration-300 group-hover:translate-x-1 group-hover:border-acc-prim/70 group-hover:bg-acc-prim/10 sm:size-12 sm:self-auto xl:size-14"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                class="size-5 sm:size-6 xl:size-7"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 12h13M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </a>
+        </div>
+
+        <!-- bottom status rail -->
+        <div
+          class="relative mt-4 flex flex-col items-center justify-center gap-3 rounded-lg border border-brdr bg-bg-prim px-5 py-4 font-mono text-xs font-bold tracking-wider text-fg-sec uppercase sm:flex-row sm:flex-wrap sm:gap-x-5 xl:gap-x-6"
+        >
+          <span class="absolute top-3 left-3 size-3 border-t border-l border-acc-prim" />
+          <span class="absolute right-3 bottom-3 size-3 border-r border-b border-acc-prim" />
+
+          <template v-for="(item, index) in contactMeta" :key="item">
+            <span class="text-center">{{ item }}</span>
+            <span
+              v-if="index < contactMeta.length - 1"
+              class="hidden size-1.5 rounded-full bg-acc-prim sm:block"
+            />
+          </template>
         </div>
       </aside>
     </div>

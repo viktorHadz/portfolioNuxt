@@ -1,7 +1,7 @@
 <script setup>
 const nav = [
   ['01', 'Work', '#featured-work'],
-  ['02', 'Archive', '#archive'],
+  ['02', 'Archive', '/projects'],
   ['03', 'Contact', '#contact'],
 ]
 
@@ -30,7 +30,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 <template>
   <header
-    class="fixed inset-x-0 top-0 z-50 flex items-center justify-between bg-bg-prim/95 px-4 py-5 backdrop-blur-sm transition-transform duration-300 sm:px-8 lg:px-20"
+    class="fixed inset-x-0 top-0 z-50 flex flex-wrap items-center justify-between gap-y-4 bg-bg-prim/95 px-4 py-5 backdrop-blur-sm transition-transform duration-300 sm:px-8 lg:px-20"
     :class="hidden ? '-translate-y-full' : 'translate-y-0'"
   >
     <NuxtLink to="/" class="relative flex items-center gap-3" aria-label="Bits by Vik home">
@@ -51,17 +51,25 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
       </span>
     </NuxtLink>
 
-    <nav class="hidden gap-5 font-mono text-sm uppercase sm:flex sm:gap-10 lg:gap-24 lg:text-base">
-      <a
-        v-for="[num, label, href] in nav"
-        :key="href"
-        :href="href"
-        class="text-fg-prim hover:text-acc-prim"
-        @click="scrollTo"
-      >
-        <span class="text-fg-ter">{{ num }}</span>
-        {{ label }}
-      </a>
+    <nav
+      class="order-3 flex w-full items-center justify-between gap-3 border-t border-brdr pt-4 font-mono text-xs uppercase sm:order-none sm:w-auto sm:justify-start sm:gap-10 sm:border-t-0 sm:pt-0 sm:text-sm lg:gap-24 lg:text-base"
+    >
+      <template v-for="[num, label, href] in nav" :key="href">
+        <a
+          v-if="href.startsWith('#')"
+          :href="href"
+          class="text-fg-prim hover:text-acc-prim"
+          @click="scrollTo"
+        >
+          <span class="text-fg-ter">{{ num }}</span>
+          {{ label }}
+        </a>
+
+        <NuxtLink v-else :to="href" class="text-fg-prim hover:text-acc-prim">
+          <span class="text-fg-ter">{{ num }}</span>
+          {{ label }}
+        </NuxtLink>
+      </template>
     </nav>
 
     <div class="flex items-center gap-3 font-mono text-xs tracking-tighter text-acc-prim uppercase">

@@ -108,148 +108,32 @@ onBeforeUnmount(() => {
       preserveAspectRatio="xMidYMid slice"
     >
       <defs>
-        <radialGradient
-          id="page-transition-glow"
-          cx="58%"
-          cy="48%"
-          r="72%"
-        >
-          <stop
-            offset="0"
-            stop-color="#3fa22a"
-          />
-          <stop
-            offset="0.18"
-            stop-color="#19753a"
-          />
-          <stop
-            offset="0.44"
-            stop-color="#04483f"
-          />
-          <stop
-            offset="0.72"
-            stop-color="#03271a"
-          />
-          <stop
-            offset="1"
-            stop-color="#020807"
-          />
+        <radialGradient id="page-transition-glow" cx="58%" cy="48%" r="72%">
+          <stop offset="0" stop-color="#3fa22a" />
+          <stop offset="0.18" stop-color="#19753a" />
+          <stop offset="0.44" stop-color="#04483f" />
+          <stop offset="0.72" stop-color="#03271a" />
+          <stop offset="1" stop-color="#020807" />
         </radialGradient>
-        <radialGradient
-          id="page-transition-pocket"
-          cx="28%"
-          cy="22%"
-          r="58%"
-        >
-          <stop
-            offset="0"
-            stop-color="#2585a6"
-            stop-opacity="0.34"
-          />
-          <stop
-            offset="0.34"
-            stop-color="#1a7846"
-            stop-opacity="0.2"
-          />
-          <stop
-            offset="1"
-            stop-color="#020807"
-            stop-opacity="0"
-          />
+        <radialGradient id="page-transition-pocket" cx="28%" cy="22%" r="58%">
+          <stop offset="0" stop-color="#2585a6" stop-opacity="0.34" />
+          <stop offset="0.34" stop-color="#1a7846" stop-opacity="0.2" />
+          <stop offset="1" stop-color="#020807" stop-opacity="0" />
         </radialGradient>
-        <pattern
-          id="page-transition-stars"
-          width="477"
-          height="458"
-          patternUnits="userSpaceOnUse"
-        >
-          <rect
-            width="477"
-            height="458"
-            fill="url(#page-transition-glow)"
-          />
-          <rect
-            width="477"
-            height="458"
-            fill="url(#page-transition-pocket)"
-          />
-          <circle
-            cx="28"
-            cy="39"
-            r="0.8"
-            fill="#eaff9c"
-            opacity="0.82"
-          />
-          <circle
-            cx="61"
-            cy="314"
-            r="0.55"
-            fill="#ffffff"
-            opacity="0.68"
-          />
-          <circle
-            cx="92"
-            cy="124"
-            r="0.7"
-            fill="#54d9ff"
-            opacity="0.66"
-          />
-          <circle
-            cx="128"
-            cy="404"
-            r="0.5"
-            fill="#d7ff57"
-            opacity="0.72"
-          />
-          <circle
-            cx="174"
-            cy="74"
-            r="0.65"
-            fill="#ffffff"
-            opacity="0.56"
-          />
-          <circle
-            cx="216"
-            cy="244"
-            r="0.85"
-            fill="#eaff9c"
-            opacity="0.8"
-          />
-          <circle
-            cx="257"
-            cy="36"
-            r="0.45"
-            fill="#54d9ff"
-            opacity="0.7"
-          />
-          <circle
-            cx="304"
-            cy="352"
-            r="0.7"
-            fill="#ffffff"
-            opacity="0.62"
-          />
-          <circle
-            cx="348"
-            cy="169"
-            r="0.55"
-            fill="#d7ff57"
-            opacity="0.68"
-          />
-          <circle
-            cx="404"
-            cy="91"
-            r="0.9"
-            fill="#54d9ff"
-            opacity="0.72"
-          />
-          <circle
-            cx="439"
-            cy="392"
-            r="0.6"
-            fill="#eaff9c"
-            opacity="0.74"
-          />
+        <pattern id="page-transition-stars" width="477" height="458" patternUnits="userSpaceOnUse">
+          <rect width="477" height="458" fill="url(#page-transition-glow)" />
+          <rect width="477" height="458" fill="url(#page-transition-pocket)" />
+          <circle cx="28" cy="39" r="0.8" fill="#eaff9c" opacity="0.82" />
+          <circle cx="61" cy="314" r="0.55" fill="#ffffff" opacity="0.68" />
+          <circle cx="92" cy="124" r="0.7" fill="#54d9ff" opacity="0.66" />
+          <circle cx="128" cy="404" r="0.5" fill="#d7ff57" opacity="0.72" />
+          <circle cx="174" cy="74" r="0.65" fill="#ffffff" opacity="0.56" />
+          <circle cx="216" cy="244" r="0.85" fill="#eaff9c" opacity="0.8" />
+          <circle cx="257" cy="36" r="0.45" fill="#54d9ff" opacity="0.7" />
+          <circle cx="304" cy="352" r="0.7" fill="#ffffff" opacity="0.62" />
+          <circle cx="348" cy="169" r="0.55" fill="#d7ff57" opacity="0.68" />
+          <circle cx="404" cy="91" r="0.9" fill="#54d9ff" opacity="0.72" />
+          <circle cx="439" cy="392" r="0.6" fill="#eaff9c" opacity="0.74" />
           <path
             d="M76 274h4M78 272v4M368 62h5M370.5 59.5v5M424 245h4M426 243v4"
             stroke="#d7ff57"
@@ -277,11 +161,7 @@ onBeforeUnmount(() => {
           />
         </pattern>
       </defs>
-      <path
-        ref="shape"
-        fill="url(#page-transition-stars)"
-        :d="FULL_SCREEN"
-      />
+      <path ref="shape" fill="url(#page-transition-stars)" :d="FULL_SCREEN" />
       <path
         id="centralshape"
         ref="target"

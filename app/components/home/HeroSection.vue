@@ -109,7 +109,7 @@ onUnmounted(() => {
     <div class="absolute inset-0 bg-stars opacity-50" aria-hidden="true" />
 
     <div
-      class="relative z-10 mx-auto flex min-h-dvh max-w-screen-2xl flex-col items-center justify-center px-6 pt-28 pb-20 sm:px-8 sm:pt-32 sm:pb-24 lg:px-20 lg:pt-24 lg:pb-32"
+      class="relative z-10 mx-auto flex min-h-dvh max-w-screen-2xl flex-col items-center justify-center px-6 pt-36 pb-20 sm:px-8 sm:pt-32 sm:pb-24 lg:px-20 lg:pt-24 lg:pb-32"
     >
       <div class="relative z-20 max-w-4xl text-center">
         <p

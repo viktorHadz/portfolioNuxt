@@ -30,19 +30,12 @@ const plusPositions = [
     />
 
     <!-- tiny ui markers -->
-    <div
-      v-for="i in 8"
-      :key="`zero-${i}`"
-      class="absolute text-fg-ter/10"
-      :style="{ top: `${12 + i * 10}%`, left: `${8 + (i % 4) * 22}%` }"
-    >
-      0001 00
-    </div>
+
     <div
       v-for="i in 10"
       :key="`zero-1-${i}`"
       class="absolute text-fg-ter/10"
-      :style="{ top: `${0 + i * 10}%`, left: `${12 + (i % 4) * 22}%` }"
+      :style="{ top: `${0 + i * 10}%`, right: `${12 + (i % 4) * 22}%` }"
     >
       00
     </div>

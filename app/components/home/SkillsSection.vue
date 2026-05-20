@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
     aria-labelledby="capability-map-title"
   >
     <div class="absolute inset-0 bg-stars opacity-50" aria-hidden="true" />
-    <BinaryPattern seed="skills-section" :count="18" />
+    <BinaryPattern seed="skills-section" :count="30" />
     <SectionDivider position="top" colour="text-bg-sec" :flip="true" />
 
     <div class="relative mx-auto max-w-7xl px-6 sm:px-8">

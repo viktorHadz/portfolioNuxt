@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { homeContent } from '~/data/portfolio/home'
 import Character from './hero/Character.vue'
 import IconCloud from './hero/IconCloud.vue'
+import BinaryPattern from '../background/BinaryPattern.vue'
 
 const heroRoot = useTemplateRef('heroRoot')
 const iconCloud = useTemplateRef('iconCloud')
@@ -159,6 +160,7 @@ onUnmounted(() => {
         </div>
       </div>
 
+      <BinaryPattern seed="skills-section" :count="30" />
       <div class="relative mt-10 flex w-full max-w-7xl justify-center overflow-visible">
         <IconCloud ref="iconCloud" :active="heroActive" />
 

@@ -20,7 +20,7 @@ function reverseGraphic() {
 
 <template>
   <article
-    class="group relative flex min-h-96 flex-col overflow-hidden rounded-xl border border-fg-ter/20 bg-bg-sec/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-acc-prim/40 hover:bg-bg-ter/60"
+    class="group relative flex min-h-96 flex-col overflow-hidden rounded-xl border border-brdr-subtle bg-bg-sec/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-acc-prim-light/40 hover:bg-bg-ter/60"
     @mouseenter="playGraphic"
     @mouseleave="reverseGraphic"
   >

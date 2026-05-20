@@ -116,7 +116,7 @@ onUnmounted(() => {
           class="flex flex-wrap items-center justify-center gap-3 font-mono text-xs font-bold text-acc-prim uppercase sm:text-sm"
         >
           <DividerMarks />
-          <span>{{ heroData.eyebrow[0] }}</span>
+          <span>Viktor Hadzhiyski</span>
           <DividerMarks />
           <span>{{ yrsCoded }}+ {{ heroData.eyebrow[1] }}</span>
           <DividerMarks class="hidden md:block" />

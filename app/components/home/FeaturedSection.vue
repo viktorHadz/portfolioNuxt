@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import gsap from 'gsap'
 import { CheckCircleIcon } from '@heroicons/vue/24/outline'
-import BackgroundArt from './featured/BackgroundArt.vue'
+import BackgroundArtTv from './featured/BackgroundArtTv.vue'
 import HeaderBlock from './featured/HeaderBlock.vue'
 import MobilePanel from './featured/MobilePanel.vue'
 import RemoteControl from './featured/RemoteControl.vue'
@@ -94,7 +94,7 @@ onUnmounted(() => {
     class="relative overflow-hidden bg-bg-sec px-2 py-20 sm:px-8 md:py-16 lg:py-36"
     aria-labelledby="featured-work-title"
   >
-    <BackgroundArt />
+    <BackgroundArtTv />
 
     <div class="relative z-10 mx-auto max-w-7xl">
       <HeaderBlock

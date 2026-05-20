@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import BackgroundBracket from '../../background/BackgroundBracket.vue'
+import BackgroundDotMatrix from '../../background/BackgroundDotMatrix.vue'
+</script>
+
 <template>
   <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
     <!-- scan lines -->
@@ -6,11 +11,7 @@
         v-for="i in 12"
         :key="`line-${i}`"
         class="absolute h-px bg-fg-ter"
-        :style="{
-          top: `${i * 8}%`,
-          left: `${(i % 2) * 10}%`,
-          width: `${30 + (i % 3) * 20}%`,
-        }"
+        :style="{ top: `${i * 8}%`, left: `${(i % 2) * 10}%`, width: `${30 + (i % 3) * 20}%` }"
       />
     </div>
     <!-- calibration circles -->
@@ -22,14 +23,10 @@
     <div class="absolute top-[51%] left-[24%] h-px w-20 bg-fg-ter/10" />
     <div class="absolute top-[47%] left-[28%] h-20 w-px bg-fg-ter/10" />
     <!-- ui brackets -->
-    <div
-      class="absolute top-[3%] left-[3%] size-5 border-t border-l border-fg-ter/40 lg:top-[12%]"
-    />
-    <div class="absolute top-[95%] left-[4%] size-5 border-b border-l border-fg-ter/40" />
-    <div class="absolute top-[10%] right-[2%] size-5 border-t border-r border-fg-ter/40" />
-    <div
-      class="absolute right-[6%] bottom-[1%] size-5 border-r border-b border-fg-ter/40 lg:bottom-[4%]"
-    />
+    <BackgroundBracket corner="tl" class="absolute top-[3%] left-[3%] lg:top-[12%]" />
+    <BackgroundBracket corner="bl" class="absolute top-[95%] left-[4%]" />
+    <BackgroundBracket corner="tr" class="absolute top-[10%] right-[2%]" />
+    <BackgroundBracket corner="br" class="absolute right-[6%] bottom-[1%] lg:bottom-[4%]" />
     <!-- waveform snippets -->
     <div class="absolute top-[22%] left-[18%] flex gap-1 opacity-20">
       <span class="h-px w-8 bg-fg-ter" />
@@ -46,10 +43,7 @@
       v-for="i in 8"
       :key="`cross-${i}`"
       class="absolute text-fg-ter/20"
-      :style="{
-        top: `${12 + i * 10}%`,
-        left: `${8 + (i % 4) * 22}%`,
-      }"
+      :style="{ top: `${12 + i * 10}%`, left: `${8 + (i % 4) * 22}%` }"
     >
       +
     </div>
@@ -73,11 +67,13 @@
       LIVE
     </div>
     <!-- dotted matrices -->
-    <div class="absolute top-[3%] right-[20%] grid grid-cols-4 gap-2 opacity-20 lg:top-[5%]">
-      <span v-for="i in 16" :key="`dot-a-${i}`" class="size-1 rounded-full bg-fg-ter" />
-    </div>
-    <div class="absolute bottom-[18%] left-[6%] grid grid-cols-4 gap-2 opacity-20">
-      <span v-for="i in 16" :key="`dot-b-${i}`" class="size-1 rounded-full bg-fg-ter" />
-    </div>
+    <BackgroundDotMatrix
+      class="absolute top-[3%] right-[20%] grid-cols-4 gap-2 opacity-20 lg:top-[5%]"
+      :count="16"
+    />
+    <BackgroundDotMatrix
+      class="absolute bottom-[18%] left-[6%] grid-cols-4 gap-2 opacity-20"
+      :count="16"
+    />
   </div>
 </template>

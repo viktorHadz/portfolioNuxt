@@ -1,4 +1,6 @@
 <script setup>
+const route = useRoute()
+
 const nav = [
   ['01', 'Work', '#featured-work'],
   ['02', 'Archive', '/projects'],
@@ -12,7 +14,9 @@ function scrollTo(e) {
   if (target) {
     e.preventDefault()
     target.scrollIntoView({ behavior: 'smooth' })
+    return
   }
+  if (route.path !== '/') navigateTo(`/${href}`)
 }
 
 const hidden = ref(false)

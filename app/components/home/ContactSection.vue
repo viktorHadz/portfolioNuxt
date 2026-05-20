@@ -3,6 +3,7 @@ import { ArrowsPointingOutIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import SateliteDish from '../contact/SateliteDish.vue'
 import { ChatBubbleLeftEllipsisIcon, DocumentTextIcon } from '@heroicons/vue/24/solid'
 import GitHubIcon from './skills/art/GitHubIcon.vue'
+import BackgroundArtContact from '../contact/BackgroundArtContact.vue'
 
 const contactState = reactive({ open: false, pending: false, message: '' })
 const contactLinks = [
@@ -11,7 +12,7 @@ const contactLinks = [
     title: 'Direct message',
     text: 'The fastest way to get in touch.',
     icon: 'message',
-    href: 'mailto:your@email.com',
+    href: 'mailto:vikecah@gmail.com',
     modal: true,
   },
   {
@@ -76,12 +77,12 @@ async function submitContactForm(event) {
     aria-labelledby="contact-title"
   >
     <SectionDivider position="top" colour="text-bg-prim" />
-
+    <BackgroundArtContact />
     <div
       class="relative mx-auto grid max-w-7xl items-start gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-12"
     >
       <div class="portfolio-reveal min-w-0">
-        <HandleBar txt="Jourey route" />
+        <HandleBar txt="Get in touch" />
         <h2
           id="contact-title"
           class="mt-3 max-w-xl text-3xl leading-none font-bold tracking-tighter text-balance sm:text-5xl lg:text-6xl"
@@ -318,7 +319,7 @@ async function submitContactForm(event) {
               class="min-h-40 rounded-xl border border-brdr bg-bg-prim px-4 py-3 text-sm text-fg-prim outline-none placeholder:text-fg-ter focus:border-acc-prim"
             />
             <p v-if="contactState.message" class="text-sm text-fg-sec">
-              {{ contactState.message }}
+              {{ contactState.pending ? 'Sending...' : contactState.message }}
             </p>
             <button
               type="submit"

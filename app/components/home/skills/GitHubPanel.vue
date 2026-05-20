@@ -110,7 +110,7 @@ function formatShortDate(value: string) {
   <section class="w-full lg:max-w-xl xl:max-w-2xl">
     <div
       v-if="github"
-      class="rounded-xl border border-acc-prim/20 bg-bg-sec/60 p-4 shadow-xl shadow-black/15 sm:p-5"
+      class="rounded-xl bg-bg-sec/60 p-4 shadow-xl ring-4 shadow-black/15 ring-acc-prim/20 sm:p-5"
     >
       <div class="flex items-center justify-between gap-4">
         <div>

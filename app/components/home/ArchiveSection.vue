@@ -1,4 +1,5 @@
 <script setup>
+import BinaryPattern from '../background/BinaryPattern.vue'
 import { archiveProjects } from '~/data/portfolio/projects'
 import ArchiveOrbitCard from './archive/ArchiveOrbitCard.vue'
 import ManFloppy from './archive/ManFloppy.vue'
@@ -14,7 +15,7 @@ import surveyArt from './archive/art/ArchiveArtSurvey.vue'
 import cprintArt from './archive/art/ArchiveArtCprint.vue'
 
 const actionClass =
-  'inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-3 text-xs font-bold text-fg-prim transition hover:border-acc-prim hover:text-acc-prim'
+  'inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-3 text-xs font-bold text-fg-prim transition '
 
 const orbitArtById = {
   'ascii-generator': asciiArt,
@@ -79,6 +80,7 @@ const orbitItems = [
     aria-labelledby="archive-title"
   >
     <div class="absolute inset-0 bg-stars opacity-50" />
+    <BinaryPattern seed="archive-section" :count="22" />
     <SectionDivider colour="text-bg-sec" position="top" flip />
 
     <div class="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-8">
@@ -145,7 +147,7 @@ const orbitItems = [
         <article
           v-for="project in archiveProjects"
           :key="project.id"
-          class="portfolio-archive-item group relative overflow-hidden rounded-xl border border-acc-prim/20 bg-bg-sec/60 p-4 shadow-xl shadow-black/15 hover:border-acc-prim/60"
+          class="portfolio-archive-item group relative overflow-hidden rounded-xl border border-acc-prim/20 bg-bg-sec/60 p-4 shadow-xl shadow-black/15 hover:border-acc-prim-light/60"
         >
           <div
             class="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full border border-acc-prim/10"
@@ -197,6 +199,7 @@ const orbitItems = [
                 :to="project.liveUrl"
                 target="_blank"
                 rel="noopener noreferrer"
+                class="hover:border-acc-prim hover:text-acc-prim"
                 :class="actionClass"
               >
                 <ArrowTopRightOnSquareIcon class="size-4" />
@@ -208,13 +211,18 @@ const orbitItems = [
                 :to="project.gitHub"
                 target="_blank"
                 rel="noopener noreferrer"
+                class="hover:border-acc-sec hover:text-acc-sec"
                 :class="actionClass"
               >
                 <CodeBracketIcon class="size-4" />
                 Code
               </NuxtLink>
 
-              <NuxtLink :to="project.path" :class="actionClass">
+              <NuxtLink
+                :to="project.path"
+                :class="actionClass"
+                class="hover:border-acc-prim-light hover:text-acc-prim-light"
+              >
                 <ArrowRightStartOnRectangleIcon class="size-4" />
                 More Info
               </NuxtLink>

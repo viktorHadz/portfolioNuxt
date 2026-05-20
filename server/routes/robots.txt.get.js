@@ -3,10 +3,7 @@ import { defineEventHandler, setHeader } from 'h3'
 export default defineEventHandler((event) => {
   setHeader(event, 'content-type', 'text/plain; charset=utf-8')
 
-  const siteUrl = (
-    process.env.NUXT_SITE_URL ||
-    useRuntimeConfig(event).public.siteUrl
-  ).replace(/\/+$/, '')
+  const siteUrl = (getSiteConfig(event).url || 'https://bitsbyvik.com').replace(/\/+$/, '')
 
   return [
     'User-agent: *',

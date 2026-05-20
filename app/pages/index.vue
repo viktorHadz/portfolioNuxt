@@ -4,30 +4,63 @@ import ArchiveSection from '~/components/home/ArchiveSection.vue'
 import ContactSection from '~/components/home/ContactSection.vue'
 import FeaturedSection from '~/components/home/FeaturedSection.vue'
 import HeroSection from '~/components/home/HeroSection.vue'
-import ProcessSection from '~/components/home/ProcessSection.vue'
+import StatsSection from '~/components/home/StatsSection.vue'
 import SkillsSection from '~/components/home/SkillsSection.vue'
 
-const title = 'Home'
-const description =
-  'Portfolio of Viktor Hadzhiyski, featuring projects in Go, SQL, Express, Node, Vue, Nuxt, React and work around networks, automation and deployment.'
-const canonical = withSiteUrl('/')
+definePageMeta({ sitemap: { images: [{ loc: '/og-image-bits-by-vik.png' }] } })
 
-useSeoMeta({
-  title,
-  ogTitle: `${title} | Bits By Vik`,
-  description,
-  ogDescription: description,
-  ogUrl: canonical,
-})
+const site = useSiteConfig()
+const title = 'Viktor Hadzhiyski | Full-Stack Developer in London'
+const socialTitle = `${title} | ${site.name || 'Bits By Vik'}`
+const description =
+  'Portfolio of Viktor Hadzhiyski, a London full-stack developer and software engineer building production-ready apps with Go, Vue, React, Node, SQL, and Nuxt.'
+const canonical = withSiteUrl('/')
+const socialImage = withSiteUrl(site.seoImage || '/og-image-bits-by-vik.png')
+
+if (import.meta.server) {
+  useSeoMeta({
+    title,
+    ogTitle: socialTitle,
+    twitterTitle: socialTitle,
+    description,
+    ogDescription: description,
+    twitterDescription: description,
+    ogType: 'website',
+    ogUrl: canonical,
+    ogImage: socialImage,
+    ogImageAlt: 'Bits By Vik portfolio preview',
+    twitterCard: 'summary_large_image',
+    twitterImage: socialImage,
+  })
+}
 
 useHead({
   link: [{ rel: 'canonical', href: canonical }],
+  script: [
+    {
+      key: 'home-structured-data',
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'Person',
+            name: 'Viktor Hadzhiyski',
+            url: canonical.value,
+            jobTitle: 'Full-stack developer',
+            sameAs: ['https://github.com/viktorHadz'],
+          },
+          { '@type': 'WebSite', name: site.name || 'Bits By Vik', url: canonical.value },
+        ],
+      }),
+    },
+  ],
 })
 
 const portfolioRoot = ref(null)
 let gsapContext
 
-onMounted(async () => {
+async function initPortfolioReveal() {
   const { default: gsap } = await import('gsap')
   const { ScrollTrigger } = await import('gsap/ScrollTrigger')
 
@@ -59,11 +92,7 @@ onMounted(async () => {
           y: 0,
           duration: 0.75,
           ease: 'power3.out',
-          scrollTrigger: {
-            trigger: element,
-            start: 'top 84%',
-            once: true,
-          },
+          scrollTrigger: { trigger: element, start: 'top 84%', once: true },
         },
       )
     })
@@ -81,11 +110,7 @@ onMounted(async () => {
             y: 0,
             duration: 0.7,
             ease: 'power3.out',
-            scrollTrigger: {
-              trigger: element,
-              start: 'top 86%',
-              once: true,
-            },
+            scrollTrigger: { trigger: element, start: 'top 86%', once: true },
           },
         )
       })
@@ -110,6 +135,10 @@ onMounted(async () => {
 
     requestAnimationFrame(() => ScrollTrigger.refresh())
   }, portfolioRoot.value)
+}
+
+onMounted(() => {
+  initPortfolioReveal().catch(() => {})
 })
 
 onBeforeUnmount(() => {
@@ -119,12 +148,11 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <SiteHeader />
     <main ref="portfolioRoot" class="portfolio-view min-h-screen bg-bg-prim">
       <HeroSection />
       <FeaturedSection />
       <SkillsSection />
-      <ProcessSection />
+      <StatsSection />
       <ArchiveSection />
       <ContactSection />
     </main>

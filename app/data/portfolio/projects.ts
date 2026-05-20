@@ -6,6 +6,7 @@ import posterIDO from '~/assets/images/projects/posters/ido-group-bg-poster.webp
 import posterInvoice from '~/assets/images/projects/posters/invoice-and-go-poster.webp'
 import posterSamCreations from '~/assets/images/projects/posters/sam-creations-poster.webp'
 import posterWatchmaker from '~/assets/images/projects/posters/watch-maker-poster.webp'
+import posterCprint from '~/assets/images/projects/posters/cPrint-poster.webp'
 
 type ProjectBase = {
     id: string
@@ -23,21 +24,11 @@ type ProjectBase = {
     stack: string[]
 }
 
-type ProjectFact = {
-    label: string
-    value: string
-}
+type ProjectFact = { label: string; value: string }
 
-type ProjectStorySection = {
-    title: string
-    body: string
-}
+type ProjectStorySection = { title: string; body: string }
 
-type FeaturedTeaser = {
-    channel: string
-    blurb: string
-    highlights: string[]
-}
+type FeaturedTeaser = { channel: string; blurb: string; highlights: string[] }
 
 export type FeaturedProject = ProjectBase & {
     pageVariant: 'product' | 'marketing'
@@ -71,6 +62,7 @@ const projectImages = {
     samCreations: posterSamCreations,
     surveyGenerator: surveyGeneratorImage,
     watchMaker: posterWatchmaker,
+    cprint: posterCprint,
 }
 
 export const featuredProjects = [
@@ -83,7 +75,7 @@ export const featuredProjects = [
         eyebrow: 'Production finance workflow',
         image: projectImages.invoiceAndGo,
         imageAlt: 'Invoicing app interface with invoice management controls.',
-        seoTitle: 'Invoice and Go',
+        seoTitle: 'Invoice and Go | Go and Vue Invoicing App',
         seoDescription:
             'A full-stack invoicing app with Google sign-in, billing, SQLite persistence, and exports for real finance work.',
         summary:
@@ -136,7 +128,7 @@ export const featuredProjects = [
         eyebrow: 'Client marketing site',
         image: projectImages.carPPF,
         imageAlt: 'IDOGroupBg.com generated business website preview.',
-        seoTitle: 'Detailing Website IDOGroupBg',
+        seoTitle: 'IDO Elite Protection | SEO-first Detailing Website',
         seoDescription:
             'A static-generated business site with SEO-first pages, a validated serverless contact flow, and low-overhead hosting.',
         summary: 'A fast marketing site designed to earn trust and turn visits into enquiries.',
@@ -188,7 +180,7 @@ export const featuredProjects = [
         eyebrow: 'Production content site',
         image: projectImages.watchMaker,
         imageAlt: 'Watch Maker website interface with product and admin content.',
-        seoTitle: 'The Watch Maker',
+        seoTitle: 'The Watch Maker | Vue and Express Content Site',
         seoDescription:
             'A craft-led service site with a custom blog, protected admin publishing, SQLite content storage, and enquiry handling.',
         summary: 'A craft-led service site with its own publishing workflow, not just a brochure.',
@@ -240,7 +232,7 @@ export const featuredProjects = [
         eyebrow: 'Client marketing site',
         image: projectImages.samCreations,
         imageAlt: 'S.A.M. Creations website homepage for a garment manufacturer.',
-        seoTitle: 'S.A.M. Creations',
+        seoTitle: 'S.A.M. Creations | Next.js Studio Website',
         seoDescription:
             'An editorial marketing site with MDX-driven content, structured visitor journeys, and a production-ready enquiry path.',
         summary:
@@ -296,7 +288,7 @@ export const archiveProjects = [
         eyebrow: 'Browser creative tool',
         image: projectImages.asciiGenerator,
         imageAlt: 'Browser-based ASCII generator interface.',
-        seoTitle: 'ASCII Generator',
+        seoTitle: 'ASCII Generator | JavaScript Canvas Tool',
         seoDescription:
             'A browser-based Canvas API image-to-ASCII utility with live controls for density, contrast, and brightness.',
         summary:
@@ -312,7 +304,7 @@ export const archiveProjects = [
         eyebrow: 'Python automation',
         image: projectImages.surveyGenerator,
         imageAlt: 'Python-generated survey report document.',
-        seoTitle: 'Survey Generator',
+        seoTitle: 'Survey Generator | Python Report Automation',
         seoDescription:
             'A Python automation project that turns survey data into Word reports with charts and summaries.',
         summary:
@@ -328,7 +320,7 @@ export const archiveProjects = [
         eyebrow: 'Beauty Salon website',
         image: projectImages.fukla,
         imageAlt: 'FUKLA salon website homepage.',
-        seoTitle: 'FUKLA',
+        seoTitle: 'FUKLA | React Salon Website',
         seoDescription:
             'A React and Firebase salon website with gallery management, caching, Cloudflare Pages deployment, and Tailwind styling.',
         summary:
@@ -343,9 +335,9 @@ export const archiveProjects = [
         gitHub: 'https://github.com/viktorHadz/cprint',
         year: '2025',
         eyebrow: 'Go CLI utility',
-        image: null,
+        image: projectImages.cprint,
         imageAlt: 'cprint command line output.',
-        seoTitle: 'cprint',
+        seoTitle: 'cprint | Go CLI File Printer',
         seoDescription:
             'A small Go CLI that prints file contents to stdout from relative or absolute paths, with Cobra-powered help output and simple argument validation.',
         summary:
@@ -403,8 +395,8 @@ export function getProjectById(id: string) {
     return allProjects.find((project) => project.id === id) ?? null
 }
 
-export function isFeaturedProject(project: PortfolioProject | null): project is FeaturedProject & {
-    category: 'Featured work'
-} {
+export function isFeaturedProject(
+    project: PortfolioProject | null,
+): project is FeaturedProject & { category: 'Featured work' } {
     return Boolean(project && 'pageVariant' in project)
 }

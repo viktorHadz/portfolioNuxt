@@ -8,22 +8,73 @@ import {
 import ManFloppy from '~/components/home/archive/ManFloppy.vue'
 import { allProjects } from '~/data/portfolio/projects'
 
-const title = 'Projects'
+definePageMeta({
+  sitemap: {
+    images: [{ loc: '/og-image-bits-by-vik.png' }],
+  },
+})
+
+const site = useSiteConfig()
+const title = 'Projects by Viktor Hadzhiyski'
+const socialTitle = `${title} | ${site.name || 'Bits By Vik'}`
 const description =
-  'Browse my featured work and smaller projects, from production builds to smaller experiments and tools.'
+  'Projects by Viktor Hadzhiyski, a London full-stack developer building production apps, marketing sites, and tools with Go, Vue, React, Node, and Nuxt.'
 const canonical = withSiteUrl('/projects')
+const socialImage = withSiteUrl(site.seoImage || '/og-image-bits-by-vik.png')
+const pageIntro =
+  'Every project page lives here, from production client work to smaller experiments, tools, and side builds that shape my portfolio.'
 const actionClass =
   'inline-flex min-h-10 items-center gap-2 rounded-lg border border-brdr px-3 text-xs font-bold text-fg-prim transition hover:border-acc-prim hover:text-acc-prim'
 
-useSeoMeta({
-  title,
-  ogTitle: `${title} | Bits By Vik`,
-  description,
-  ogDescription: description,
-  ogUrl: canonical,
-})
+if (import.meta.server) {
+  useSeoMeta({
+    title,
+    ogTitle: socialTitle,
+    twitterTitle: socialTitle,
+    description,
+    ogDescription: description,
+    twitterDescription: description,
+    ogType: 'website',
+    ogUrl: canonical,
+    ogImage: socialImage,
+    ogImageAlt: 'Bits By Vik projects overview',
+    twitterCard: 'summary_large_image',
+    twitterImage: socialImage,
+  })
+}
 
-useHead({ link: [{ rel: 'canonical', href: canonical }] })
+useHead({
+  link: [{ rel: 'canonical', href: canonical }],
+  script: [
+    {
+      key: 'projects-structured-data',
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'CollectionPage',
+            name: 'Featured work and smaller projects',
+            url: canonical.value,
+            description: pageIntro,
+          },
+          {
+            '@type': 'ItemList',
+            itemListElement: allProjects.map((project, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              item: {
+                '@type': 'CreativeWork',
+                name: project.name,
+                url: withSiteUrl(project.path).value,
+              },
+            })),
+          },
+        ],
+      }),
+    },
+  ],
+})
 </script>
 
 <template>

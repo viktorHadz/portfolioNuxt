@@ -17,8 +17,9 @@ import pythonIcon from '~/assets/icons/tech/python.svg'
 import sqliteIcon from '~/assets/icons/tech/sqlite.svg'
 import typescriptIcon from '~/assets/icons/tech/typescript.svg'
 import vueIcon from '~/assets/icons/tech/vue-js.svg'
-import VsCodeIcon from './process/art/VsCodeIcon.vue'
+import VsCodeIcon from './stats/art/VsCodeIcon.vue'
 import ArchiveArtStats from './archive/art/ArchiveArtStats.vue'
+import BackgroundArtStats from './stats/BackgroundArtStats.vue'
 
 type WakaTimeData = {
   year: number
@@ -103,11 +104,14 @@ function formatTick(value: number) {
 
 <template>
   <section
-    class="relative overflow-hidden bg-bg-sec py-20 text-fg-prim sm:py-28"
+    class="relative isolate overflow-hidden bg-bg-sec py-20 text-fg-prim sm:py-28"
     aria-labelledby="process-title"
   >
     <SectionDivider colour="text-bg-prim" position="top" />
-    <div class="mx-auto max-w-7xl px-6 py-20 sm:px-12">
+
+    <BackgroundArtStats />
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 py-20 sm:px-12">
       <div class="relative flex flex-col justify-between gap-12 md:flex-row md:items-center">
         <header class="portfolio-reveal z-10 max-w-xl">
           <HandleBar txt="Build log" />
@@ -138,17 +142,13 @@ function formatTick(value: number) {
           </div>
         </header>
 
-        <SpeedLines />
-
-        <div class="flex-1">
-          <div class="relative z-20 place-self-end opacity-80">
-            <ArchiveArtStats class="max-w-2xs min-w-2xs sm:max-w-sm sm:min-w-sm" />
-          </div>
+        <div class="relative z-20 place-self-center opacity-80 lg:place-self-end">
+          <ArchiveArtStats class="w-xs sm:w-sm md:w-md lg:w-lg" />
         </div>
       </div>
 
       <!-- Stats -->
-      <!-- <InvertedBorder css-class="p-4 lg:p-8 bg-bg-ter mt-20"> -->
+      <!-- <InvertedBorder css-class="p-4 lg:p-8 bg-bg-prim mt-20"> -->
       <div class="mt-20 grid grid-cols-1 gap-6 lg:grid-cols-[40%_60%]">
         <!-- Stats left -->
         <div>
@@ -162,7 +162,7 @@ function formatTick(value: number) {
             <div
               v-for="stat in wakatime?.consistencyStats || []"
               :key="stat.id"
-              class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-ter p-4"
+              class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-prim p-4 hover:border-acc-prim-light/40"
             >
               <div class="flex items-center gap-2 text-fg-sec">
                 <component :is="statIcons[stat.name]" class="size-5" />
@@ -188,13 +188,13 @@ function formatTick(value: number) {
             <span>Current week</span>
             <span>Daily hours</span>
           </div>
-          <div v-if="wakatime" class="mt-5 rounded-lg border border-brdr-subtle bg-bg-ter p-4">
-            <div class="mb-3 flex items-center justify-between text-xs text-fg-sec">
-              <p>Current week from WakaTime totals</p>
-              <span class="font-mono uppercase">Hours</span>
+          <div v-if="wakatime" class="mt-5 rounded-lg border border-brdr-subtle bg-bg-prim p-4">
+            <div class="flex items-center justify-between font-mono text-xs text-fg-sec uppercase">
+              <p>Current week totals</p>
+              <span>Hours</span>
             </div>
 
-            <div class="grid grid-cols-[1rem_1fr] gap-3">
+            <div class="mt-5 grid grid-cols-[1rem_1fr] gap-3">
               <div
                 class="flex h-56 flex-col justify-between text-right font-mono text-tiny text-fg-ter"
               >
@@ -255,7 +255,7 @@ function formatTick(value: number) {
             <div
               v-for="stat in wakatime?.timeStats || []"
               :key="stat.id"
-              class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-ter p-4"
+              class="flex h-full flex-col justify-between rounded-lg border border-brdr-subtle bg-bg-prim p-4 hover:border-acc-prim-light/40"
             >
               <div class="flex items-center gap-2 text-fg-sec">
                 <component :is="statIcons[stat.name]" class="size-5" />
@@ -282,14 +282,16 @@ function formatTick(value: number) {
             <span class="size-2 bg-acc-sec" />
             <span>Language mix</span>
           </div>
-          <div class="mt-5 flex flex-1 flex-col rounded-lg border border-brdr-subtle bg-bg-ter p-4">
-            <div class="mt-3 grid grid-cols-[6fr_1fr_1fr] items-center gap-4 text-xs text-fg-sec">
-              <p>What I spent the year reaching for</p>
-              <span class="font-mono uppercase">Hours</span>
-              <span class="font-mono uppercase">Percent</span>
+          <div
+            class="mt-5 flex flex-1 flex-col rounded-lg border border-brdr-subtle bg-bg-prim p-4"
+          >
+            <div class="flex items-center font-mono text-xs text-fg-sec uppercase">
+              <p class="line-clamp-1 flex-1">My top languages</p>
+              <span class="mr-12">Hours</span>
+              <span class="">Percent</span>
             </div>
 
-            <div class="mt-5 flex flex-1 flex-col justify-between">
+            <div class="mt-5 flex flex-1 flex-col justify-between gap-4">
               <div
                 v-for="lang in languageStats"
                 :key="lang.name"
@@ -306,7 +308,7 @@ function formatTick(value: number) {
                   <span>{{ lang.name }}</span>
                 </div>
 
-                <div class="h-3 overflow-hidden rounded-sm bg-bg-ter">
+                <div class="h-3 overflow-hidden rounded-sm bg-bg-sec/60">
                   <div
                     class="h-full rounded-sm"
                     :class="lang.barClass"
@@ -333,8 +335,7 @@ function formatTick(value: number) {
         class="mb-4 flex flex-col items-center justify-between gap-8 text-sm text-fg-sec lg:flex-row lg:items-start"
       >
         <div>
-          Source: WakaTime API
-          <span v-if="wakatime?.updatedLabel">• Updated {{ wakatime.updatedLabel }}</span>
+          <span v-if="wakatime?.updatedLabel">Updated: {{ wakatime.updatedLabel }}</span>
         </div>
         <div class="flex gap-2">
           <p>Top Editor:</p>

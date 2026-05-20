@@ -1,7 +1,9 @@
 import alpineIcon from '~/assets/icons/tech/alpine-js.svg'
 import canvasApiIcon from '~/assets/icons/tech/canvas-api.svg'
+import cliIcon from '~/assets/icons/tech/cli.svg'
 import cloudflareIcon from '~/assets/icons/tech/cloudflare.svg'
 import cloudflarePagesIcon from '~/assets/icons/tech/cloudflare-pages.svg'
+import cobraCliIcon from '~/assets/icons/tech/cobraCli.svg'
 import cssIcon from '~/assets/icons/tech/css3.svg'
 import debianIcon from '~/assets/icons/tech/debian.svg'
 import expressIcon from '~/assets/icons/tech/express.svg'
@@ -11,7 +13,9 @@ import goIcon from '~/assets/icons/tech/go.svg'
 import gsapIcon from '~/assets/icons/tech/gsap.svg'
 import htmlIcon from '~/assets/icons/tech/html5.svg'
 import javascriptIcon from '~/assets/icons/tech/javascript.svg'
+import mdxIcon from '~/assets/icons/tech/mdx.svg'
 import nextIcon from '~/assets/icons/tech/next-js.svg'
+import matplotlibIcon from '~/assets/icons/tech/matplotlib.svg'
 import nginxIcon from '~/assets/icons/tech/nginx.svg'
 import nodeIcon from '~/assets/icons/tech/node-js.svg'
 import oauthIcon from '~/assets/icons/tech/oauth2.svg'
@@ -19,6 +23,7 @@ import pythonIcon from '~/assets/icons/tech/python.svg'
 import pythonDocxIcon from '~/assets/icons/tech/python-docx.svg'
 import reactIcon from '~/assets/icons/tech/react.svg'
 import resendIcon from '~/assets/icons/tech/resend.svg'
+import stripeIcon from '~/assets/icons/tech/stripe.svg'
 import sqliteIcon from '~/assets/icons/tech/sqlite.svg'
 import svgIcon from '~/assets/icons/tech/svg.svg'
 import supabaseIcon from '~/assets/icons/tech/supabase.svg'
@@ -29,9 +34,11 @@ import vueIcon from '~/assets/icons/tech/vue-js.svg'
 const techIcons = {
     'Alpine.js': alpineIcon,
     Canvas: canvasApiIcon,
+    CLI: cliIcon,
     Cloudflare: cloudflareIcon,
     'Cloudflare Pages': cloudflarePagesIcon,
     'Cloudflare Pages Functions': cloudflarePagesIcon,
+    Cobra: cobraCliIcon,
     CSS3: cssIcon,
     Express: expressIcon,
     Firebase: firebaseIcon,
@@ -41,6 +48,8 @@ const techIcons = {
     HTML5: htmlIcon,
     JavaScript: javascriptIcon,
     Linux: debianIcon,
+    Matplotlib: matplotlibIcon,
+    MDX: mdxIcon,
     Next: nextIcon,
     'Next.js': nextIcon,
     Nginx: nginxIcon,
@@ -54,6 +63,7 @@ const techIcons = {
     Resend: resendIcon,
     SQL: sqliteIcon,
     SQLite: sqliteIcon,
+    Stripe: stripeIcon,
     Supabase: supabaseIcon,
     SVG: svgIcon,
     Tailwind: tailwindIcon,

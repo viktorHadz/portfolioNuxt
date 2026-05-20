@@ -3,10 +3,19 @@ import tailwindcss from '@tailwindcss/vite'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
-    devtools: { enabled: true },
+    devtools: { enabled: process.env.NODE_ENV !== 'production' },
 
     modules: ['@nuxtjs/sitemap', '@nuxt/eslint'],
     css: ['~/assets/css/main.css'],
+
+    site: {
+        url: process.env.NUXT_SITE_URL || 'https://bitsbyvik.com',
+        name: 'Bits By Vik',
+        description:
+            'Portfolio of Viktor Hadzhiyski, a London full-stack developer building production-ready apps, websites, and tools with Go, Vue, React, Node, SQL, and Nuxt.',
+        seoImage: '/og-image-bits-by-vik.png',
+        indexable: true,
+    },
 
     app: {
         head: {
@@ -16,15 +25,22 @@ export default defineNuxtConfig({
         },
     },
 
-    sitemap: { defaults: { changefreq: 'monthly', priority: 0.7 } },
+    nitro: {
+        prerender: {
+            routes: ['/robots.txt'],
+        },
+    },
 
-    // TODO: Remove vue devtools before launching Prod
+    sitemap: {
+        zeroRuntime: true,
+        discoverImages: false,
+        defaults: { changefreq: 'monthly', priority: 0.7 },
+    },
+
     vite: {
         plugins: [tailwindcss()],
         optimizeDeps: {
             include: [
-                '@vue/devtools-core',
-                '@vue/devtools-kit',
                 'gsap',
                 'gsap/MorphSVGPlugin',
                 'gsap/ScrollTrigger',

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BinaryPattern from '../background/BinaryPattern.vue'
 import { onBeforeUnmount, onMounted } from 'vue'
 import { skillCards } from '~/data/portfolio/skills'
 import FormCharacter from './skills/FormCharacter.vue'
@@ -49,6 +50,7 @@ onBeforeUnmount(() => {
     aria-labelledby="capability-map-title"
   >
     <div class="absolute inset-0 bg-stars opacity-50" aria-hidden="true" />
+    <BinaryPattern seed="skills-section" :count="18" />
     <SectionDivider position="top" colour="text-bg-sec" :flip="true" />
 
     <div class="relative mx-auto max-w-7xl px-6 sm:px-8">

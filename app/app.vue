@@ -1,27 +1,31 @@
 <script setup lang="ts">
 import PageTransition from './components/PageTransition.vue'
+import SiteHeader from './components/SiteHeader.vue'
 
-const siteName = 'Bits By Vik'
-const siteUrl = 'https://bitsbyvik.com'
-const defaultTitle = 'Bits By Vik | Developer Portfolio'
+const site = useSiteConfig()
+const siteName = site.name || 'Bits By Vik'
+const defaultTitle = `${siteName} | Developer Portfolio`
 const defaultDescription =
-  'Portfolio of Viktor Hadzhiyski, featuring projects in Go, SQL, Express, Node, Vue, Nuxt, React and work around networks, automation and deployment.'
+  site.description ||
+  'Portfolio of Viktor Hadzhiyski, a London full-stack developer building production-ready apps, websites, and tools with Go, Vue, React, Node, SQL, and Nuxt.'
+const socialImage = withSiteUrl(site.seoImage || '/og-image-bits-by-vik.png')
+const robots =
+  site.indexable === false ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'
 
 if (import.meta.server) {
   useSeoMeta({
-    title: defaultTitle,
     ogTitle: defaultTitle,
     description: defaultDescription,
     ogDescription: defaultDescription,
     ogSiteName: siteName,
     ogType: 'website',
-    ogImage: `${siteUrl}/og-image-bits-by-vik.png`,
+    ogImage: socialImage,
+    ogImageAlt: 'Bits By Vik portfolio preview',
     twitterCard: 'summary_large_image',
     twitterTitle: defaultTitle,
     twitterDescription: defaultDescription,
-    twitterImage: `${siteUrl}/og.png`,
-    // Control crawler behaviour on the site
-    robots: 'index, follow',
+    twitterImage: socialImage,
+    robots,
   })
 }
 
@@ -33,14 +37,14 @@ useHead({
       tagPosition: 'head',
     },
   ],
-  titleTemplate: (titleChunk) =>
-    titleChunk ? `${titleChunk} | Bits By Vik` : 'Bits By Vik | Developer Portfolio',
+  titleTemplate: (titleChunk) => (titleChunk ? `${titleChunk} | ${siteName}` : defaultTitle),
 })
 </script>
 
 <template>
   <PageTransition />
   <NuxtLayout>
+    <SiteHeader />
     <NuxtPage />
   </NuxtLayout>
 </template>

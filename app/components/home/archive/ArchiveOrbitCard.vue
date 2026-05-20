@@ -1,5 +1,5 @@
 <script setup>
-import ArchiveFrame from '../process/ArchiveFrame.vue'
+import ArchiveFrame from '../stats/ArchiveFrame.vue'
 
 defineProps({
   title: { type: String, required: true },
